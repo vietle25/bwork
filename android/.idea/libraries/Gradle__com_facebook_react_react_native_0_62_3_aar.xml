@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="Gradle: com.facebook.react:react-native:0.62.3@aar">
+    <ANNOTATIONS>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e02ace009c66b8033f97b5c3c2aaf8df/jetified-react-native-0.62.3/annotations.zip!/" />
+    </ANNOTATIONS>
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e02ace009c66b8033f97b5c3c2aaf8df/jetified-react-native-0.62.3/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e02ace009c66b8033f97b5c3c2aaf8df/jetified-react-native-0.62.3/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e02ace009c66b8033f97b5c3c2aaf8df/jetified-react-native-0.62.3/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../node_modules/react-native/android/com/facebook/react/react-native/0.62.3/react-native-0.62.3-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../node_modules/react-native/android/com/facebook/react/react-native/0.62.3/react-native-0.62.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

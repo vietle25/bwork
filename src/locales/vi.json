@@ -1,0 +1,561 @@
+{
+    "login": {
+        "login_title": "Đăng nhập",
+        "login_button": "ĐĂNG NHẬP",
+        "vali_email_or_phone": "Vui lòng nhập Email hoặc Số điện thoại!",
+        "vali_fill_password": "Vui lòng nhập Mật khẩu!",
+        "input_email_or_phone": "Email hoặc Số điện thoại",
+        "password": "Mật khẩu",
+        "notAccountYet": "Đăng ký ngay!",
+        "register": "Đăng ký ngay",
+        "accountNotExist": "Tài khoản hoặc mật khẩu không đúng.",
+        "userHasBeenDeleted": "Tài khoản của bạn đang bị khóa, vui lòng liên hệ admin để được hỗ trợ!",
+        "waitingForApproval": "Tài khoản của bạn đang chờ phê duyệt",
+        "loginFacebook": "Đăng nhập bằng Facebook",
+        "loginGoogle": "Kết nối với Google",
+        "login_or": "Đăng nhập bằng",
+        "or_text": "HOẶC"
+    },
+    "setting": {
+        "input_password": "Mật khẩu cũ",
+        "input_new_password": "Mật khẩu mới",
+        "repeat_new_password": "Nhập lại mật khẩu mới",
+        "change_password": "Đổi mật khẩu",
+        "log_out": "Đăng xuất",
+        "back": "Quay lại",
+        "change_pass_success": "Đổi mật khẩu thành công.",
+        "enterOldPass": "Vui lòng nhập Mật khẩu cũ!",
+        "enterNewPass": "Vui lòng nhập Mật khẩu mới!",
+        "enterConfPass": "Vui lòng nhập lại Mật khẩu mới!",
+        "logoutSuccess": "Bạn đã đăng xuất thành công.",
+        "oldPassFail": "Mật khẩu cũ không chính xác.",
+        "passLength": "Mật khẩu phải từ 6 đến 20 ký tự, ít nhất một ký tự viết hoa.",
+        "passSpaces": "Mật khẩu không được chứa khoản trắng."
+    },
+
+    "forgot_password": {
+        "titleForgotPassword": "Quên mật khẩu",
+        "titleChangePassword": "Đổi mật khẩu",
+        "forgot_password": "Quên mật khẩu?",
+        "update_phone_number": "Cập nhật số điện thoại",
+        "accountNotExist": "Email chưa được đăng ký.",
+        "input_email": "Vui lòng nhập Email!",
+        "input_newPass": "Mật khẩu mới",
+        "input_confirm_newPass": "Nhập lại mật khẩu mới",
+        "receive_password": "Lấy lại mật khẩu",
+        "forget_success": "Thành công! Vui lòng kiểm tra email của bạn để lấy mật khẩu",
+        "invalidEmail": "Vui lòng nhập Email đúng định dạng!",
+        "phoneNumber": "Số điện thoại",
+        "email": "Email của bạn",
+        "confirmPass": "Nhập lại mật khẩu",
+        "existsPhone": "Số điện thoại này đã tồn tại",
+        "noteForgotPassword": "Nhập vào số điện thoại đã đăng kí trước đó để lấy lại mật khẩu",
+        "noteChangePassword": "Mật khẩu từ 6 - 32 kí tự",
+        "btnSendPassword": "GỬI MẬT KHẨU MỚI",
+        "btnUpdate": "CẬP NHẬT",
+        "btnChangePass": "HOÀN TẤT",
+        "btnSave": "LƯU LẠI"
+    },
+    "confirmPassword":{
+        "vali_fill_repeat_password": "Vui lòng nhập lại Mật khẩu!",
+        "vali_confirm_password": "Mật khẩu nhập lại không trùng khớp.",
+        "vali_character_password":"Mật khẩu phải từ 6 đến 20 ký tự, ít nhất một ký tự viết hoa.",
+        "enterNewPass": "Vui lòng nhập Mật khẩu mới!"
+    },
+    "register": {
+        "input_password": "Mật khẩu",
+        "register_button": "ĐĂNG KÝ",
+        "register_title": "Đăng ký",
+        "register_success": "Tài khoản đã được tạo thành công, vui lòng đợi admin duyệt!",
+        "vali_confirm_password": "Mật khẩu nhập lại không trùng khớp.",
+        "vali_fill_repeat_password": "Vui lòng nhập lại Mật khẩu!",
+        "vali_fill_password": "Vui lòng nhập Mật khẩu!",
+        "vali_fill_address": "Vui lòng nhập Địa chỉ!",
+        "vali_fill_dayOfBirth": "Vui lòng nhập Ngày sinh!",
+        "vali_fill_fullname": "Vui lòng nhập Họ tên!",
+        "vali_fullname_length":"Họ tên không được quá 60 ký tự.",
+        "vali_fill_email": "Vui lòng nhập Email!",
+        "vali_dayOfBirth": "Vui lòng nhập Ngày sinh đúng định dạng!",
+        "vali_fill_phone": "Vui lòng nhập Số điện thoại!",
+        "vali_email": "Vui lòng nhập Email đúng định dạng!",
+        "vali_phone": "Vui lòng nhập Số điện thoại hợp lệ!",
+        "vali_fullname": "Họ và tên không được chứa ký tự đặc biệt.",
+        "vali_character_password":"Mật khẩu phải từ 6 đến 20 ký tự, ít nhất một ký tự viết hoa.",
+        "alreadyAcc": "Bạn đã có tài khoản?",
+        "contactName": "Họ tên",
+        "phone": "Số điện thoại",
+        "email": "Email",
+        "address":"Địa chỉ",
+        "password":"Mật khẩu",
+        "confirmPass": "Nhập lại mật khẩu",
+        "otpNumber":"Nhập mã xác nhận",
+        "errorPhone": "Số điện thoại phải có 10 số, bắt đầu bằng số 0.",
+        "loginNow": "Đăng nhập ngay",
+        "confirmOTP_title": "Kích hoạt thành công",
+        "noteRegister": "Nhập thông tin để hoàn thành đăng ký!",
+        "next": "TIẾP TỤC",
+        "registerCode": "Mã công ty (trải nghiệm: BWORK)",
+        "vali_fill_registerCode": "Vui lòng nhập Mã công ty!",
+        "wrongRegister": "Mã đăng ký không trùng khớp!"
+    },
+    "slidingMenu": {
+        "want_out": "Bạn có chắc chắn muốn đăng xuất?",
+        "wantOutFb": "Bạn có muốn hủy liên kết Facebook không?",
+        "wantOutGg": "Bạn có muốn hủy liên kết Google không?"
+    },
+
+    "userProfileView": {
+        "edit_infor_success": "Cập nhật thông tin thành công",
+        "existMobile": "Số điện thoại này đã được đăng ký.",
+        "existEmail": "Email này đã được đăng ký.",
+        "notExistCompany": "Mã công ty không đúng.",
+        "existFacebook": "Tài khoản Facebook này đã được liên kết với một tài khoản khác",
+        "existGoogle": "Tài khoản Google này đã được liên kết với một tài khoản khác",
+        "connectFBSuccess":"Đã liên kết Facebook thành công",
+        "connectGGSuccess":"Đã liên kết Google thành công",
+        "choosePartner": "Chọn đơn vị",
+        "upLoadImgError": "Tải ảnh lên bị lỗi, vui lòng thử lại!",
+        "userInfo": "Thông tin cá nhân",
+        "message":"Tin nhắn",
+        "partner": "Đơn vị của bạn",
+        "prescriptionList": "Danh sách toa thuốc",
+        "changePassword": "Đổi mật khẩu",
+        "cancelConnect": "Hủy liên kết",
+        "editProfile": "Chỉnh sửa thông tin"
+    },
+    
+    "userInfoView": {
+        "title": "Thông tin cá nhân",
+        "chooseImages": "Chọn hình ảnh",
+        "saveSucsess": "Lưu thông tin thành công!",
+        "gender" : "Giới tính của bạn .....",
+        "personalId" : "Số CMND/căn cước công dân .....",
+        "male": "Nam",
+        "female": "Nữ",
+        "other": "Khác",
+        "invalidPersonalId" : "Vui lòng nhập đúng định dạng CMND",
+        "phoneChange" : "Số điện thoại không thể thay đổi, vui lòng liên hệ admin",
+        "dayOfBirth" : "Nhập ngày sinh(DD/MM/YYYY)",
+        "country": "Nhập quê quán của bạn",
+        "fillPersonalId": "Vui lòng nhập CMND!",
+        "fillAddress": "Vui lòng nhập địa chỉ!",
+        "fillDomicile": "Vui lòng nhập quê quán!",
+        "invalidPersonalImages": "Vui lòng Upload đầy đủ cả 2 mặt CMDN!",
+        "personalIdentification": "Giấy tờ tùy thân (CMND hoặc bằng lái xe)",
+        "personalIdentificationImages": "Hình ảnh giấy tờ tùy thân (CMND hoặc bằng lái xe)",
+        "personalIdentificationName": "Ảnh CMND/GPLX"
+    },
+
+    "homeView": {
+        "no_login": "Đăng nhập ngay",
+        "no_card_member": "Bạn chưa có sổ khám, tạo ngay!",
+        "title_315_recent": "Phòng khám gần tôi",
+        "title_bmi": "Tính chỉ số BMI",
+        "title_contact": "Liên hệ tư vấn",
+        "updateNewVersion":"Cập nhật phiên bản mới ",
+        "utils315": "Tiện ích NHI ĐỒNG 315",
+        "contact315": "LIÊN HỆ PHÒNG KHÁM 315",
+        "chat": "Chat",
+        "call": "Gọi",
+        "youWantToCallDirectly": "Bạn muốn gọi trực tiếp ",
+        "orChatWithAdmin": " hay chat với admin?",
+        "notWrongTime": "Thời gian trên hệ thống của bạn bị sai lệch!",
+        "noCoordinate": "Đang lấy vị trí của bạn",
+        "notWiFi": "Chưa cấu hình Wi-Fi",
+        "notShift": "Chưa cấu hình ca làm việc",
+        "reasonCheckOutWorkTime": "Bạn đang ngoài giờ làm việc, vui lòng nhập lý do ",
+        "noComeToWorkTime": "Xin lỗi, chưa tới giờ làm việc.",
+        "wiFiOutList": "Bạn đang kết nối Wi-Fi ngoài danh sách cho phép, vui lòng nhập lý do ",
+        "emptyListCheckIn": "Hôm nay bạn chưa Checkin!",
+        "wifi": "Wifi",
+        "month": "Tháng",
+        "isTimekeeping": "Hôm nay bạn đã chấm công trong khung giờ này"
+    },
+
+    "notificationView": {
+        "title": "Thông báo",
+        "just":"vừa mới",
+        "oneMinuteAgo":"1 phút trước",
+        "minAgo":" phút trước",
+        "hoursAgo":" giờ trước",
+        "oneHoursAgo":"1 giờ trước",
+        "yesterday":"hôm qua",
+        "sometime":" ngày trước",
+        "lastweek":" tuần trước",
+        "lastmonth":" tháng trước",
+        "notification": "Thông báo",
+        "searchNull": "Không tìm được thông báo nào",
+        "notData": "Bạn chưa có thông báo nào",
+        "notNewNotification": "Không có thông báo mới",
+        "notNotification": "Chưa có thông báo nào!"
+    },
+
+    "currentService": {
+        "upComing": "Upcoming",
+        "subscription": "Order history",
+        "contentClean": "Staff will come clean at: ",
+        "contentLaundry": "Staff will pick up clothes: ",
+        "viewDetail": "View order detail"
+    },
+
+    "comfirmPayment": {
+        "total": "Sub Total",
+        "payMethod": "Subscription Plan",
+        "vat": "VAT",
+        "totalPay": "Total",
+        "specialRequest": "Special Request",
+        "pickupDate": "Pick Up Date",
+        "deliveryDate": "Delivery Date",
+        "titleConfirm": "Confirm order",
+        "titleDetail": "Order Details"
+    },
+
+    "payment": {
+        "title": "Payment",
+        "payment": "Complete Payment",
+        "byCod": "Cash",
+        "noteCod": "We will come to collect your payment. Please select a payment collection date",
+        "yourAcc": "Your Balance",
+        "serviceType": "Total Payment",
+        "remainAcc": "Remaining Balance After Payment",
+        "notEnoughMoney": "Not enough LinCare Credits to make a payment. Please top up your LinPay!",
+        "insufficient": "Insufficient LinPay Credits",
+        "topUpNow": "Top Up Now",
+        "checkPaymentMethod": "Change Payment Method",
+        "infoPaySuccess": "Thank you for choosing LinCare. Our staff will contact you to finalize your order.",
+        "byLinCareCard": "LinPay",
+        "errorDateTime": "Please select a date and time in the future",
+        "paySuccessPay": "Order received"
+    },
+    "laundry": {
+        "title": "Laundry",
+        "titleIntro": "Laundry",
+        "noAddress": "Please enter your Residence",
+        "booking": "Next",
+        "noService": "Please select at least one type of service",
+        "specialRequest": "Notes",
+        "deliveryInstructions": "Delivery Instructions",
+        "noApartment": "Please enter your apartment no.",
+        "inputAddress": "Enter your Residence",
+        "inputApartment": "Example: T3-A2310",
+        "apartmentNo": "Apartment No.",
+        "dryClean": "Dry - Cleaning",
+        "laundryKg":"Load Washing (Kg)",
+        "pickupDate": "Pick Up Date",
+        "time": "Time",
+        "address": "Residence",
+        "dryCleaning": "Dry - Cleaning",
+        "termsAndConditions": "I accept LinCare’s Terms & Conditions for Laundry",
+        "intro": "About Laundry"
+    },
+    "homecleaning": {
+        "title": "Cleaning Subscription",
+        "titleIntro": "Cleaning Subscription",
+        "titlePrice": "Price List",
+        "noFrequency": "Please select cleaning frequency",
+        "errExceed": "You canonly select",
+        "daysWeek": "days per week",
+        "noAddress": "Please enter your Residence",
+        "noDaysWeek": "Please select days perweek",
+        "noApartment": "Please enter your apartment no.",
+        "inputAddress": "Enter your Residence",
+        "inputApartment": "Example: T3-A2310",
+        "deliveryInstructions": "Special Request",
+        "bathroom": "Bathroom",
+        "bedroom": "Bedroom",
+        "booking": "Next",
+        "address": "Residence",
+        "timeSlot": "Time Slot",
+        "startDate": "Start Date",
+        "dishWashing": "Dish Washing",
+        "limitWeek": "You can only select a maximum of one week",
+        "noEnoughDays": "Please select enough days per week",
+        "noWeek": "Please select a start date",
+        "frequency": "Cleaning Frequency (Price (VND)/ Month)",
+        "others": "Extra options",
+        "specialRequest": "Special Request",
+        "apartmentNo": "Apartment No.",
+        "termsAndConditions": "I accept LinCare’s Terms & Conditions for Cleaning Subscription",
+        "errorDate": "Please select start date in the future",
+        "intro": "About Cleaning Subscription"
+    },
+    "essential": {
+        "titleIntro": "Household Goods",
+        "titlePrice": "Product List",
+        "essential": "Household Goods",
+        "noAddress": "Please enter your address",
+        "deliveryInstructions": "Notes",
+        "booking": "Next",
+        "address": "Residence",
+        "noApartment": "Please enter your apartment no.",
+        "inputAddress": "Enter your address",
+        "inputApartment": "Example: T3-A2310",
+        "apartmentNo": "Apartment No.",
+        "noService": "Please select at least one item",
+        "termsAndConditions": "I accept LinCare’s Terms & Conditions for Household Goods",
+        "intro": "About Household Goods"
+    },
+    "otp": {
+        "title": "Xác nhận số điện thoại",
+        "errOTP": "Mã xác minh không chính xác, vui lòng nhập lại!",
+        "succesOTP": "Kích hoạt tài khoản thành công",
+        "resendOTP": "Gửi lại",
+        "sendOTP": "Gửi mã xác nhận",
+        "otp": "Mã xác nhận",
+        "auThenTime": "Thời gian chờ xác thực: ",
+        "noteOTP": "Mã đã được gửi đến ",
+        "noteOTPConfirm": "Vui lòng nhập mã để xác nhận!",
+        "errorCode": "Mã OTP không đúng",
+        "errorSendCode": "Gửi OTP lỗi, Vui lòng thử lại!",
+        "valiCode": "Vui lòng nhập đủ 4 số OTP!",
+        "btnConfirm": "XÁC NHẬN"
+    },
+
+    "lincare": {
+        "faqs": "FAQS",
+        "contact": "Contact us",
+        "legal": "Terms of Use",
+        "about":"About LinCare",
+        "working_policy": "Working Policy"
+    },
+    "modalWeek": {
+        "noPreviousMonth": "You can not select months in the past"
+    },
+
+    "branch":{
+        "titleAddress": "Địa chỉ: ",
+        "titleDistance": "Khoảng cách: ",
+        "calculating": "Đang tính",
+        "noData": "Chưa Có Chi Nhánh Nào",
+        "chooseBranch": "Chọn Chi Nhánh",
+        "branchNearBy": "Phòng khám gần tôi"
+    },
+
+    "transactionHistory": {
+        "transactionHistory": "LỊCH SỬ GIAO DỊCH",
+        "informationUser": "THÔNG TIN KHÁCH HÀNG",
+        "errSendFeedback": "Gửi phản hồi đã bị lỗi. Vui lòng thử lại",
+        "target": "Chi tiêu",
+        "sendFeedback": "Gửi phản hồi",
+        "staffInCharge": "Nhân viên phụ trách",
+        "yourFeedback":"Phản hồi của bạn",
+        "inputMyFeedback": "Nhập phản hồi của bạn tại đây",
+        "noteTarget": "Chưa có giao dịch nào"
+    },
+
+    "orderDetail": {
+        "title": "CHI TIẾT GIAO DỊCH",
+        "listReplaceable": "Danh sách phụ tùng"
+    },
+
+    "registerPartner": {
+        "note": "Bạn có thuộc đơn vị nào không?",
+        "notePartner": "Chọn đơn vị của bạn",
+        "next": "Tiếp tục",
+        "confirm": "Hoàn tất",
+        "save": "Lưu lại",
+        "skip": "Bỏ qua"
+    },
+
+    "medicalHistoryDetail": {
+        "sendFeedbackPlaceholder": "Nhập phản hồi",
+        "resettingThePrescription": "Đặt lại toa thuốc này"
+    },
+
+    "baseView":{
+        "authenticateRequired": "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại!"
+    },
+
+    "scanQrCode": {
+        "title": "Quét mã QR",
+        "doesNotExist": "Không tìm thấy thông tin sổ khám ",
+        "pointTheCamera": "Hướng camera vào mã QR để quét",
+        "or": "HOẶC",
+        "enterTheCodeManually": "Nhập mã thủ công",
+        "enterTheQRCodeHere": "Nhập mã QR tại đây"
+    },
+
+    "timekeeping":{
+        "title": "Chấm công",
+        "tvCheckIn": "Checkin",
+        "tvCheckOut": "Checkout",
+        "titleHistory": "Lịch sử chấm công",
+        "reason": "Lý do: ",
+        "checkedIn": "Bạn đã checkin",
+        "checkedOut": "Bạn đã checkout",
+        "waitingApproval": "\nĐang chờ duyệt",
+        "denied": "\nĐã bị từ chối",
+        "approved": "\nĐã được duyệt"
+    },
+
+    "timekeepingHistory":{
+        "emptyTimekeepingHistory": "Tháng này bạn chưa chấm công!",
+        "emptyTimekeepingHistoryDay": "Hôm nay bạn chưa chấm công!",
+        "month": "Tháng ",
+        "messShift": "Chưa cấu hình ca làm việc",
+        "planWorkingHours": "Số giờ phải làm",
+        "workingHours": "Số giờ đã làm",
+        "lackTime": "Số giờ thiếu",
+        "lateWorkingHours": "Số giờ đi trễ",
+        "checkIn": "CheckIn",
+        "checkOut": "CheckOut"
+    },
+
+    "timekeepingHistoryDetail":{
+        "planWorkingHours": "Số giờ phải làm",
+        "workingHours": "Số giờ đã làm",
+        "lackTime": "Số giờ thiếu",
+        "lateWorkingHours": "Số giờ đi trễ",
+        "detailCheck": "Chi tiết checkin/checkout"
+    },
+
+    "workingPolicy":{
+        "title": "Nội quy công ty",
+        "next": "TIẾP THEO"
+    },
+
+    "day": {
+        "day": "Ngày ",
+        "fromDay": "Từ ",
+        "toDay": " đến "
+    },
+    "sabbatical": {
+        "sabbaticalTitle": "Xin phép",
+        "approvalSabbatical": "DUYỆT ĐƠN XIN PHÉP",
+        "deniedSabbatical": "TỪ CHỐI ĐƠN XIN PHÉP",
+        "contentSabbatical": "NỘI DUNG ĐƠN XIN PHÉP",
+        "staff": "Nhân viên: ",
+        "phone": "Số điện thoại: ",
+        "department": "Phòng ban: ",
+        "dayReason": "Ngày nghỉ phép: ",
+        "approvalSabbaticalSuccess": "Duyệt đơn xin phép thành công",
+        "deniedSabbaticalSuccess": "Từ chối đơn xin phép thành công",
+        "fillReasonDenied": "Vui lòng nhập lý do từ chối",
+        "vali_reasonDenied": "Lý do từ chối chỉ được phép nhập tối đa 250 kí tự",
+        "approval": "Duyệt",
+        "denied": "Từ chối",
+        "reason": "Lý do",
+        "reasonDenied": "Lý do từ chối: ",
+        "close": "Đóng",
+        "cancel": "Hủy bỏ",
+        "shiftOffWork": "Ca nghỉ",
+        "morningWorkShift": "Ca sáng",
+        "afternoonWorkShift": "Ca chiều",
+        "allDay": "Cả ngày"
+    },
+    "department": {
+        "departmentTitle": "Danh sách phòng ban",
+        "approvalStaffSuccess": "Duyệt thành công.",
+        "deniedStaffSuccess": "Từ chối thành công.",
+        "deleteStaffSuccess": "Xóa vĩnh viễn tài khoản thành công.",
+        "suspendedStaffSuccess": "Xóa tạm thời tài khoản thành công.",
+        "restoreStaffSuccess": "Khôi phục tài khoản thành công."
+    },
+    "salaryStaff": {
+        "salaryStaffTitle": "Lương"
+    },
+
+    "salaryHistory":{
+        "title": "LỊCH SỬ LƯƠNG THÁNG",
+        "month": "Tháng",
+        "amount": "Mức Lương",
+        "numDayOffInMonth": "Số ngày được nghỉ",
+        "workingDays": "Công trong tháng",
+        "planWorkingHours": "Số giờ phải làm",
+        "workingHours": "Số giờ đã làm",
+        "lackTime": "Số giờ còn thiếu",
+        "temporaryAmount": "Lương tạm tính ",
+        "to": "đến",
+        "bonus": "Tiền Thưởng",
+        "fine": "Tiền Phạt",
+        "netAmount": "Lương chính thức",
+        "payAmount": "Lương thực trả",
+        "numDayOffSabbatical": "Số ngày nghỉ xin phép",
+        "numLateForWork": "Số lần đi trễ"
+    },
+
+    "salaryHistoryDetail":{
+        "titleBonus": "CHI TIẾT THƯỞNG THÁNG",
+        "titleFine": "CHI TIẾT PHẠT THÁNG",
+        "just": "vừa mới",
+        "sometime": " ngày trước",
+        "total": "TỔNG",
+        "bonus": "THƯỞNG",
+        "fine": "PHẠT",
+        "emptyBonus":"Tháng này bạn chưa có thưởng!",
+        "emptyFine":"Tháng này bạn chưa bị phạt!"
+    },
+
+    "chat": {
+        "title": "Tin nhắn",
+        "vali_fill_fullname": "Vui lòng nhập tên nhóm",
+        "vali_fullname_length":"Tên nhóm không được quá 60 ký tự.",
+        "vali_fullname": "Tên nhóm không được chứa ký tự đặc biệt"
+    },
+
+    "timeAgo": {
+        "just": "Vừa mới",
+        "oneMinuteAgo": "1 phút",
+        "minAgo": " phút",
+        "hoursAgo": " giờ",
+        "oneHoursAgo": "1 giờ",
+        "yesterday": "Hôm qua lúc ",
+        "at": " lúc ",
+        "day": " ngày",
+        "today": "Hôm nay",
+        "yesterdayMessage": "Hôm qua"
+    },
+    
+    "face":{
+        "title": "Nhận diện khuôn mặt"
+    },
+
+    "listChatView": {
+        "deleteChatSuccess": "Xóa cuộc trò chuyện thành công",
+        "exitGroupSuccess": "Bạn đã rời khỏi cuộc trò chuyện",
+        "confirmExitGroup": "Bạn có chắc chắn muốn rời khỏi nhóm này?"
+    },
+    "task": {
+        "noData": "Chưa có công việc nào"
+    },
+    "close": "Đóng",
+    "viewAll": "Xem tất cả",
+    "heightUnit" : "cm",
+    "ageUnit" : "tuổi",
+    "weightUnit" : "kg",
+    "choose": "Chọn",
+    "camera": "Chụp ảnh",
+    "cancel": "Hủy",
+    "image": "Thư viện",
+    "confirm":"Xác nhận",
+    "renewalCardMember": "Bạn muốn gửi yêu cầu gia hạn sổ khám này?",
+    "error_in_process": "Có lỗi xảy ra, vui lòng thử lại",    
+    "error_connect_to_server": "Không kết nối được máy chủ, vui lòng kiểm tra lại",    
+    "error_network": "Không kết nối được mạng, vui lòng kiểm tra lại",    
+    "notBackPress": "You cannot rotate back screen",
+    "exitApp": "Exit App",
+    "exitingApp": "Exiting the application?",
+    "notification": "Thông báo",
+    "paymentSuccess": "Payment Success",
+    "pay": "Pay",
+    "yes": "Đồng ý",
+    "no": "Không",
+    "submit": "Submit",
+    "exitGroup": "Rời khỏi nhóm",
+    "noCheckTerms": "Vui lòng đồng ý với nội quy của công ty",
+    "exTerms": "Tạo tài khoản, tôi đồng ý với nội quy về Quy định làm việc của công ty",
+    "terms": "Điều khoản sử dụng ",
+    "conditions": "Chính sách bảo mật ",
+    "and": "và ",
+    "btn_add": "Add",
+    "noData": "Không có dữ liệu",
+    "bookService": "Book A Service",
+    "uploadImageError": "Tải ảnh lên gặp lỗi. Vui lòng thử lại",
+    "uploadImageSuccess": "Tải ảnh lên thành công",
+    "title_app": "BÉ KHỎE BÉ NGOAN",
+    "search": "Tìm kiếm",
+    "cancelExitApp": "Không, cảm ơn",
+    "exit": "Thoát",
+    "contentDialogExitApp": "Bạn muốn thoát ứng dụng?",
+    "delete": "Xóa"
+}

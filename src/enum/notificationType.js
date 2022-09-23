@@ -1,0 +1,7 @@
+export default NotificationType = {
+    BONUS_NOTIFICATION: 1, 
+    FINE_NOTIFICATION: 2,
+    ORDER_NOTIFICATION: 3,
+    ALARM_NOTIFICATION: 4,
+    TASK_NOTIFICATION: 5
+}

@@ -1,0 +1,115 @@
+{
+  "project_info": {
+    "project_number": "670691437318",
+    "firebase_url": "https://boot-timekeeping-release.firebaseio.com",
+    "project_id": "boot-timekeeping-release",
+    "storage_bucket": "boot-timekeeping-release.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:670691437318:android:f8631a151682fb3fa1cc87",
+        "android_client_info": {
+          "package_name": "com.boot.timekeeping.company"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "670691437318-t5jnqcj5is6qo5r09td0a1hrk0jbogma.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.boot.timekeeping.company",
+            "certificate_hash": "6272bbcdacf668f8af43d4552e2b4071da74254c"
+          }
+        },
+        {
+          "client_id": "670691437318-jp2ab7q6971lip0pogfj4ep8h917s0tm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.boot.timekeeping.company",
+            "certificate_hash": "4d05616faf943388bc54e90ada8e8ebd576f7bcc"
+          }
+        },
+        {
+          "client_id": "670691437318-9e1qev4uskqrtsde1grv08k48gbrgeuf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDd7GWHc9FP989VhfFx62_roCxJGf_6biw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "670691437318-9e1qev4uskqrtsde1grv08k48gbrgeuf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "670691437318-nboslaqkjrrfs3btkld3iha1bjq2ooqv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.boot.timekeeping.company"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:670691437318:android:6f42d445ddc8f4aaa1cc87",
+        "android_client_info": {
+          "package_name": "com.boot.timekeeping.company.admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "670691437318-ti94e30jp2gr8bg56v7qlor5q701iogh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.boot.timekeeping.company.admin",
+            "certificate_hash": "6272bbcdacf668f8af43d4552e2b4071da74254c"
+          }
+        },
+        {
+          "client_id": "670691437318-qq907asla4cvnjlfk1coamurgu8lormm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.boot.timekeeping.company.admin",
+            "certificate_hash": "4d05616faf943388bc54e90ada8e8ebd576f7bcc"
+          }
+        },
+        {
+          "client_id": "670691437318-9e1qev4uskqrtsde1grv08k48gbrgeuf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDd7GWHc9FP989VhfFx62_roCxJGf_6biw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "670691437318-9e1qev4uskqrtsde1grv08k48gbrgeuf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "670691437318-nboslaqkjrrfs3btkld3iha1bjq2ooqv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.boot.timekeeping.company"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

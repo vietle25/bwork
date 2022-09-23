@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CLIENT_ID</key>
+  <string>818526497560-v4c8rqvla84biodbi22tkh8heku4u4tr.apps.googleusercontent.com</string>
+  <key>REVERSED_CLIENT_ID</key>
+  <string>com.googleusercontent.apps.818526497560-v4c8rqvla84biodbi22tkh8heku4u4tr</string>
+  <key>API_KEY</key>
+  <string>AIzaSyDz9MBwVD1pkCVnTjRVzz3f6TH_bwLKdJ0</string>
+  <key>GCM_SENDER_ID</key>
+  <string>818526497560</string>
+  <key>PLIST_VERSION</key>
+  <string>1</string>
+  <key>BUNDLE_ID</key>
+  <string>vn.evotek.evowork.dev</string>
+  <key>PROJECT_ID</key>
+  <string>evo-work-test</string>
+  <key>STORAGE_BUCKET</key>
+  <string>evo-work-test.appspot.com</string>
+  <key>IS_ADS_ENABLED</key>
+  <false></false>
+  <key>IS_ANALYTICS_ENABLED</key>
+  <false></false>
+  <key>IS_APPINVITE_ENABLED</key>
+  <true></true>
+  <key>IS_GCM_ENABLED</key>
+  <true></true>
+  <key>IS_SIGNIN_ENABLED</key>
+  <true></true>
+  <key>GOOGLE_APP_ID</key>
+  <string>1:818526497560:ios:ea7b0088cb45ef575d8c6d</string>
+</dict>
+</plist>

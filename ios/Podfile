@@ -1,0 +1,63 @@
+# Uncomment the next line to define a global platform for your project
+require_relative '../node_modules/react-native/scripts/react_native_pods'
+require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+
+
+platform :ios, '10.0'
+
+target 'ielts' do
+  config = use_native_modules!
+  use_react_native!(:path => config["reactNativePath"])
+  
+  use_flipper!({ 'Flipper-Folly' => '2.5.3', 'Flipper' => '0.87.0', 'Flipper-RSocket' => '1.3.1' })
+
+  
+  pod 'Firebase', '~> 5.2.0'
+  pod 'Firebase/Core'
+  # pod 'Firebase/Messaging'
+  pod 'Firebase/Database'
+  # pod 'Firebase/Storage'
+  # pod 'Firebase/Analytics'
+  pod 'Firebase/Auth'
+  pod 'SDWebImage'
+
+  
+
+    target 'ieltsTests' do
+      inherit! :complete
+      # Pods for testing
+    end
+#target 'Admin' do
+  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
+  #  use_frameworks!
+  #  shared_pods
+#end
+end
+
+pre_install do |installer|
+  installer.pod_targets.each do |pod|
+    if pod.name.start_with?('RNFB')
+      def pod.build_type;
+        Pod::BuildType.static_library
+      end
+    end
+  end
+end
+#swift4 = ['Charts']
+post_install do |installer|
+    flipper_post_install(installer)
+  installer.pods_project.build_configuration_list.build_configurations.each do |configuration|
+    configuration.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+    configuration.build_settings['ENABLE_BITCODE'] = 'NO'
+  end
+  installer.pods_project.targets.each do |target|
+#    if target.name == "React"
+#      target.remove_from_project
+#    end
+    target.build_configurations.each do |config|
+      config.build_settings['SWIFT_VERSION'] = '4.2'
+#      config.build_settings['ONLY_ACTIVE_ARCH'] = 'NO'
+    end
+  end
+  
+end
