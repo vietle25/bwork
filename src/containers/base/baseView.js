@@ -3,7 +3,7 @@ import { ErrorCode } from "config/errorCode";
 import HeaderView from "containers/common/headerView";
 import { localizes } from "locales/i18n";
 import { Spinner } from "native-base";
-import React, { Component } from "react";
+import { Component } from "react";
 import { Alert, Dimensions, Keyboard, Linking, NativeModules, PermissionsAndroid, Platform, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
 import { NavigationActions, StackActions } from 'react-navigation';
 import commonStyles from 'styles/commonStyles';
@@ -16,7 +16,6 @@ import ReactNativeAN from "containers/common/alarmModule";
 import imageRatio from "enum/imageRatio";
 import statusType from "enum/statusType";
 import DeviceInfo from 'react-native-device-info';
-import { LoginManager } from 'react-native-fbsdk';
 import Toast from 'react-native-root-toast';
 import Utils from 'utils/utils';
 import { Fonts } from "values/fonts";
@@ -245,18 +244,7 @@ class BaseView extends Component {
         }
     };
 
-    /**
-     * Sign out FB
-     */
-    signOutFB = async (data) => {
-        if (!Utils.isNull(data)) {
-            LoginManager.logOut()
-        }
-    };
 
-    /**
-     * Handler back button
-     */
     handlerBackButton() {
         console.log(this.className, 'back pressed')
         if (this.props.navigation) {

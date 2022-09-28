@@ -18,7 +18,6 @@ import { localizes } from 'locales/i18n';
 import { Container, Content, Form, Header, Root } from 'native-base';
 import { BackHandler, Image, Keyboard, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import { AccessToken, GraphRequest, GraphRequestManager, LoginManager } from 'react-native-fbsdk';
 import { connect } from 'react-redux';
 import commonStyles from 'styles/commonStyles';
 import StorageUtil from 'utils/storageUtil';
@@ -29,7 +28,6 @@ import { configConstants } from 'values/configConstants';
 import { Constants } from 'values/constants';
 import { Fonts } from 'values/fonts';
 import styles from './styles';
-import React from 'react';
 
 class LoginView extends BaseView {
 
@@ -141,63 +139,6 @@ class LoginView extends BaseView {
         }
     }
 
-    /**
-     * Login via Facebook
-     */
-    loginFacebook = async () => {
-        console.log("Login facebook")
-        try {
-            // await GoogleSignin.signOut();
-            LoginManager.logInWithReadPermissions(['public_profile', 'email'])
-                .then((result) => {
-                    if (result.isCancelled) {
-                        return;
-                    }
-                    AccessToken.getCurrentAccessToken().then((data) => {
-                        console.log(data); // output 1:
-                        const responseInfoCallback = (error, profile) => {
-                            if (error) {
-                                console.log(error);
-                            } else {
-                                console.log("Data facebook: ", profile); // output 2:
-                                let data = {
-                                    userName: profile.name,
-                                    email: profile.email,
-                                    phone: "",
-                                    countryCode: "",
-                                    avatarPath: "",
-                                    userType: null,
-                                    socialId: profile.id,
-                                    gender: GenderType.MALE,
-                                    token: "",
-                                    rememberToken: "",
-                                    name: profile.name,
-                                    birthDate: null,
-                                    password: ""
-                                }
-                                this.props.loginFacebook(data)
-                            }
-                        };
-                        const accessToken = data.accessToken;
-                        const infoRequest = new GraphRequest(
-                            '/me',
-                            {
-                                accessToken,
-                                parameters: {
-                                    fields: {
-                                        string: 'name,gender,email',
-                                    },
-                                },
-                            },
-                            responseInfoCallback,
-                        );
-                        new GraphRequestManager().addRequest(infoRequest).start();
-                    });
-                });
-        } catch (e) {
-            console.log(e);
-        }
-    }
 
     async componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', this.handlerBackButton);
@@ -470,42 +411,6 @@ class LoginView extends BaseView {
                                         </TouchableOpacity>
                                         <Text style={{ flex: 1 }}></Text>
                                     </View>
-                                    {/* Hr */}
-                                    {/* <Hr style={{ margin: Constants.MARGIN_XX_LARGE }}
-                                        color={Colors.COLOR_DRK_GREY} width={1}>
-                                        <Text style={[commonStyles.text, {
-                                            color: Colors.COLOR_DRK_GREY,
-                                            paddingHorizontal: Constants.MARGIN_LARGE
-                                        }]}>{localizes('login.or_text')}</Text>
-                                    </Hr>
-                                    <Text style={[commonStyles.text, { color: Colors.COLOR_DRK_GREY }]}>{localizes('login.login_or')}</Text>
-                                    <View style={{ flexDirection: 'row' }}> */}
-                                    {/* Login facebook */}
-                                    {/* <TouchableOpacity
-                                            activeOpacity={Constants.ACTIVE_OPACITY}
-                                            onPress={
-                                                () => {
-                                                    this.loginFacebook()
-                                                }
-                                            } style={[{
-                                                margin: Constants.MARGIN_LARGE
-                                            }]}
-                                        >
-                                            <Image resizeMode={'contain'} source={ic_facebook} />
-                                        </TouchableOpacity> */}
-                                    {/* Login google */}
-                                    {/* <TouchableOpacity
-                                            activeOpacity={Constants.ACTIVE_OPACITY}
-                                            onPress={
-                                                () => {
-                                                    this.loginGoogle()
-                                                }
-                                            } block style={[{
-                                                margin: Constants.MARGIN_LARGE
-                                            }]} >
-                                            <Image resizeMode={'contain'} source={ic_google} />
-                                        </TouchableOpacity>
-                                    </View> */}
                                 </View>
                             </Form>
                         </View>

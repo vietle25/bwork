@@ -4,24 +4,15 @@
 
 'use strict';
 
-import React, {
-    Component,
+import {
+    Component
 } from 'react';
 
 import {
-    StyleSheet,
-    Dimensions,
-    View,
-    Text,
-    TouchableWithoutFeedback,
-    TouchableNativeFeedback,
-    TouchableOpacity,
-    TouchableHighlight,
-    Modal,
-    ActivityIndicator,
+    ActivityIndicator, Dimensions, Modal, StyleSheet, Text, TouchableHighlight, TouchableNativeFeedback,
+    TouchableOpacity, TouchableWithoutFeedback, View
 } from 'react-native';
 
-import ListView from "deprecated-react-native-listview";
 import PropTypes from 'prop-types';
 
 const TOUCHABLE_ELEMENTS = [
@@ -282,25 +273,25 @@ export default class ModalDropdown extends Component {
 
     _renderDropdown() {
         const { scrollEnabled, renderSeparator, showsVerticalScrollIndicator, keyboardShouldPersistTaps } = this.props;
-        return (
-            <ListView scrollEnabled={scrollEnabled}
-                style={styles.list}
-                dataSource={this._dataSource}
-                renderRow={this._renderRow}
-                renderSeparator={renderSeparator || this._renderSeparator}
-                automaticallyAdjustContentInsets={false}
-                showsVerticalScrollIndicator={showsVerticalScrollIndicator}
-                keyboardShouldPersistTaps={keyboardShouldPersistTaps}
-            />
-        );
+        // return (
+        //     <ListView scrollEnabled={scrollEnabled}
+        //         style={styles.list}
+        //         dataSource={this._dataSource}
+        //         renderRow={this._renderRow}
+        //         renderSeparator={renderSeparator || this._renderSeparator}
+        //         automaticallyAdjustContentInsets={false}
+        //         showsVerticalScrollIndicator={showsVerticalScrollIndicator}
+        //         keyboardShouldPersistTaps={keyboardShouldPersistTaps}
+        //     />
+        // );
     }
 
     get _dataSource() {
         const { options } = this.props;
-        const ds = new ListView.DataSource({
-            rowHasChanged: (r1, r2) => r1 !== r2
-        });
-        return ds.cloneWithRows(options);
+        // const ds = new ListView.DataSource({
+        //     rowHasChanged: (r1, r2) => r1 !== r2
+        // });
+        // return ds.cloneWithRows(options);
     }
 
     _renderRow = (rowData, sectionID, rowID, highlightRow) => {

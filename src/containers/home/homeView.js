@@ -1430,25 +1430,25 @@ class HomeView extends GeoLocationView {
     renderWebView = link => {
         Linking.openURL(link);
     };
+}
+const mapStateToProps = state => ({
+    userInfo: state.home.data,
+    isLoading: state.home.isLoading,
+    error: state.home.error,
+    errorCode: state.home.errorCode,
+    action: state.home.action,
+    screen: state.home.screen
+});
 
-    const mapStateToProps = state => ({
-        userInfo: state.home.data,
-        isLoading: state.home.isLoading,
-        error: state.home.error,
-        errorCode: state.home.errorCode,
-        action: state.home.action,
-        screen: state.home.screen
-    });
-
-    const mapDispatchToProps = {
-        ...actions,
-        ...timekeepingActions,
-        ...locationActions,
-        ...commonActions,
-        ...faceActions
-    };
+const mapDispatchToProps = {
+    ...actions,
+    ...timekeepingActions,
+    ...locationActions,
+    ...commonActions,
+    ...faceActions
+};
 
 export default connect(
-        mapStateToProps,
-        mapDispatchToProps
-    )(HomeView);
+    mapStateToProps,
+    mapDispatchToProps
+)(HomeView);

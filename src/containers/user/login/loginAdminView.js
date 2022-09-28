@@ -18,7 +18,6 @@ import { localizes } from 'locales/i18n';
 import { Container, Content, Form, Root } from 'native-base';
 import { BackHandler, Image, Keyboard, Text, TouchableHighlight, View } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import { AccessToken, GraphRequest, GraphRequestManager, LoginManager } from 'react-native-fbsdk';
 import { connect } from 'react-redux';
 import commonStyles from 'styles/commonStyles';
 import StorageUtil from 'utils/storageUtil';
@@ -139,63 +138,6 @@ class LoginAdminView extends BaseView {
         }
     }
 
-    /**
-     * Login via Facebook
-     */
-    loginFacebook = async () => {
-        console.log("Login facebook")
-        try {
-            // await GoogleSignin.signOut();
-            LoginManager.logInWithReadPermissions(['public_profile', 'email'])
-                .then((result) => {
-                    if (result.isCancelled) {
-                        return;
-                    }
-                    AccessToken.getCurrentAccessToken().then((data) => {
-                        console.log(data); // output 1:
-                        const responseInfoCallback = (error, profile) => {
-                            if (error) {
-                                console.log(error);
-                            } else {
-                                console.log("Data facebook: ", profile); // output 2:
-                                let data = {
-                                    userName: profile.name,
-                                    email: profile.email,
-                                    phone: "",
-                                    countryCode: "",
-                                    avatarPath: "",
-                                    userType: null,
-                                    socialId: profile.id,
-                                    gender: GenderType.MALE,
-                                    token: "",
-                                    rememberToken: "",
-                                    name: profile.name,
-                                    birthDate: null,
-                                    password: ""
-                                }
-                                this.props.loginFacebook(data)
-                            }
-                        };
-                        const accessToken = data.accessToken;
-                        const infoRequest = new GraphRequest(
-                            '/me',
-                            {
-                                accessToken,
-                                parameters: {
-                                    fields: {
-                                        string: 'name,gender,email',
-                                    },
-                                },
-                            },
-                            responseInfoCallback,
-                        );
-                        new GraphRequestManager().addRequest(infoRequest).start();
-                    });
-                });
-        } catch (e) {
-            console.log(e);
-        }
-    }
 
     async componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', this.handlerBackButton);

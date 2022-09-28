@@ -29,7 +29,6 @@ import {
     TouchableOpacity,
     View
 } from "react-native";
-import { AccessToken, GraphRequest, GraphRequestManager, LoginManager } from 'react-native-fbsdk';
 import {
     Menu, MenuOption, MenuOptions, MenuTrigger
 } from "react-native-popup-menu";
@@ -313,45 +312,6 @@ class UserProfileView extends BaseView {
     )
 
     /**
-     * show dialog cancel connect social
-     */
-    cancelConnectDialog = () => (
-        <DialogCustom
-            visible={this.state.isAlertSocial}
-            isVisibleTitle={true}
-            isVisibleContentText={true}
-            isVisibleTwoButton={true}
-            contentTitle={localizes("userProfileView.cancelConnect")}
-            textBtnOne={localizes("no")}
-            textBtnTwo={localizes("yes")}
-            contentText={this.state.loginType == loginType.FACEBOOK ? localizes("slidingMenu.wantOutFb") : localizes("slidingMenu.wantOutGg")}
-            onTouchOutside={() => { this.setState({ isAlertSocial: false }) }}
-            onPressX={() => { this.setState({ isAlertSocial: false }) }}
-            onPressBtnPositive={() => {
-                let data = {
-                    email: this.userInfo.email,
-                    phone: this.userInfo.phone,
-                    avatarPath: this.userInfo.photo,
-                    socialId: null,
-                    gender: GenderType.MALE,
-                    token: "",
-                    rememberToken: "",
-                    name: this.userInfo.name,
-                    birthDate: this.userInfo.birthDate,
-                }
-                this.state.loginType == loginType.FACEBOOK ?
-                    this.props.loginFacebook(data) :
-                    this.props.loginGoogle(data);
-                this.setState({
-                    isAlertSocial: false
-                })
-                this.signOutFB(this.state.loginType)
-                this.signOutGG(this.state.loginType)
-            }}
-        />
-    )
-
-    /**
      * Render View
      */
     render() {
@@ -430,7 +390,6 @@ class UserProfileView extends BaseView {
                         </Tab>
                     </Tabs>
                     {this.logoutDialog()}
-                    {this.cancelConnectDialog()}
                     {this.state.refreshing ? null : this.showLoadingBar(this.props.isLoading)}
                 </Root>
             </Container>
@@ -754,54 +713,6 @@ class UserProfileView extends BaseView {
         );
     }
 
-    /**
-     * Login via Facebook
-     */
-    loginFacebook = async () => {
-        console.log("Connect Facebook")
-        this.setState({ loginType: loginType.FACEBOOK })
-        try {
-            LoginManager.logInWithReadPermissions(['public_profile', 'email'])
-                .then((result) => {
-                    if (result.isCancelled) {
-                        return;
-                    }
-                    AccessToken.getCurrentAccessToken().then((data) => {
-                        console.log(data); // output 1:
-                        const responseInfoCallback = (error, profile) => {
-                            if (error) {
-                                console.log(error);
-                            } else {
-                                console.log("Data facebook: ", profile); // output 2:
-                                let data = {
-                                    email: profile.email,
-                                    phone: this.userInfo.phone,
-                                    socialId: profile.id,
-                                    gender: GenderType.MALE,
-                                }
-                                this.props.loginFacebook(data)
-                            }
-                        };
-                        const accessToken = data.accessToken;
-                        const infoRequest = new GraphRequest(
-                            '/me',
-                            {
-                                accessToken,
-                                parameters: {
-                                    fields: {
-                                        string: 'name,gender,email',
-                                    },
-                                },
-                            },
-                            responseInfoCallback,
-                        );
-                        new GraphRequestManager().addRequest(infoRequest).start();
-                    });
-                });
-        } catch (error) {
-            this.saveException(error, 'loginFacebook')
-        }
-    }
 
     /**
      * Login via Google

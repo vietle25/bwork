@@ -1,28 +1,23 @@
-import React, { Component } from 'react';
+import { ActionEvent, getActionSuccess } from "actions/actionEvent";
+import * as commonActions from "actions/commonActions";
+import * as actions from "actions/userActions";
+import ImageLoader from 'components/imageLoader';
+import { ErrorCode } from "config/errorCode";
+import BaseView from 'containers/base/baseView';
+import { Container, Content, Header, Root } from 'native-base';
 import {
-    View,
-    Text,
-    RefreshControl,
     BackHandler,
     Dimensions,
-    Linking
+    Linking, RefreshControl, Text, View
 } from 'react-native';
-import BaseView from 'containers/base/baseView';
-import { Container, Root, Header, Content } from 'native-base';
-import styles from './styles';
+import HTML from 'react-native-render-html';
+import { connect } from "react-redux";
 import commonStyles from 'styles/commonStyles';
+import Utils from 'utils/utils';
 import { Colors } from 'values/colors';
 import { Constants } from 'values/constants';
-import * as actions from "actions/userActions";
-import * as commonActions from "actions/commonActions";
-import { connect } from "react-redux";
-import StorageUtil from "utils/storageUtil";
-import { ActionEvent, getActionSuccess } from "actions/actionEvent";
-import { ErrorCode } from "config/errorCode";
-import Utils from 'utils/utils';
-import ImageLoader from 'components/imageLoader';
 import { Fonts } from 'values/fonts';
-import HTML from 'react-native-render-html';
+import styles from './styles';
 
 const window = Dimensions.get("window");
 
