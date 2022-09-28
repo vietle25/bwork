@@ -1,16 +1,7 @@
-import React, { Component } from 'react';
-import {
-    SafeAreaView, TouchableOpacity, View, Image,
-    Text, Dimensions, Platform, Keyboard, BackHandler
-} from "react-native";
-import { Constants } from 'values/constants';
+import { Component } from 'react';
+import { Dimensions, Keyboard, Platform, SafeAreaView, TouchableOpacity, View } from "react-native";
 import { Colors } from 'values/colors';
-import StorageUtil from 'utils/storageUtil';
-import BaseView from 'containers/base/baseView';
-import Utils from 'utils/utils';
-import firebase from 'react-native-firebase';
-import StringUtil from 'utils/stringUtil';
-import commonStyles from 'styles/commonStyles';
+import { Constants } from 'values/constants';
 
 const screen = Dimensions.get("window");
 

@@ -1,95 +1,39 @@
-import React, { Component } from "react";
-import {
-    ImageBackground,
-    View,
-    Image,
-    TouchableOpacity,
-    BackHandler,
-    Linking,
-    NativeEventEmitter,
-    DeviceEventEmitter,
-    Platform,
-    RefreshControl,
-    Dimensions,
-    NativeModules,
-    AppState
-} from "react-native";
-import {
-    Container,
-    Header,
-    Title,
-    Left,
-    Icon,
-    Right,
-    Button,
-    Body,
-    Content,
-    Text,
-    Card,
-    CardItem,
-    Root
-} from "native-base";
-import styles from "./styles";
-import BaseView from "containers/base/baseView";
-import commonStyles from "styles/commonStyles";
-import { Colors } from "values/colors";
-import ic_down_grey from "images/ic_down_grey.png";
-import ic_wi_fi_grey from "images/ic_wi_fi_grey.png";
-import { Constants } from "values/constants";
-import Utils from "utils/utils";
-import ic_back_white from "images/ic_back_white.png";
-import * as actions from "actions/userActions";
-import * as timekeepingActions from "actions/timekeepingActions";
-import * as companyActions from "actions/companyActions";
-import * as commonActions from "actions/commonActions";
-import { connect } from "react-redux";
-import StorageUtil from "utils/storageUtil";
 import { ActionEvent, getActionSuccess } from "actions/actionEvent";
-import { ErrorCode } from "config/errorCode";
-import { localizes } from "locales/i18n";
-import firebase from "react-native-firebase";
-import { Fonts } from "values/fonts";
-import statusType from "enum/statusType";
-import GeoLocationView from "containers/location/geoLocationView";
+import * as commonActions from "actions/commonActions";
+import * as companyActions from "actions/companyActions";
+import * as timekeepingActions from "actions/timekeepingActions";
+import * as actions from "actions/userActions";
+import { CalendarScreen } from "components/calendarScreen";
 import DialogCustom from "components/dialogCustom";
-import userType from "enum/userType";
-import ic_qr_code from "images/ic_qr_code.png";
-import { configConstants } from "values/configConstants";
-import FlatListCustom from "components/flatListCustom";
-import white_shadow_android from "images/white_blur_shadow.png";
-import shadow_black_163 from "images/shadow_black_163.png";
-import shadow_black_32 from "images/shadow_black_32.png";
-import DateUtil from "utils/dateUtil";
-import screenType from "enum/screenType";
-import ic_account_white from "images/ic_account_white.png";
-import ic_lib_add_white from "images/ic_lib_add_white.png";
-import BackgroundTopView from "components/backgroundTopView";
-import background_top_view from "images/background_top_view.png";
-import ImageLoader from "components/imageLoader";
-import DeviceInfo from 'react-native-device-info';
-import Hr from "components/hr";
-import ModalWiFiList from "./modal/modalWiFiList";
-import BackgroundTimer from 'react-native-background-timer';
-import ItemTimekeeping from "./timekeeping/itemTimekeeping";
-import ModalAddNote from "./modal/modalAddNote";
-import submitType from "enum/submitType";
-import timekeepingType from "enum/timekeepingType";
-import workingTimeType from "enum/workingTimeType";
-import moment from 'moment';
-import { DeviceErrorCode } from "config/deviceErrorCode";
-import workingTimeShiftType from "enum/workingTimeShiftType";
-import TimeCurrent from "./timeCurrent";
-import notificationType from "enum/notificationType";
-import img_calendar from "images/img_calendar.png";
-import img_bg_statistical from "images/img_bg_statistical.png";
-import ic_sabbatical_gray from "images/ic_sabbatical_gray.png";
-import ic_darts_gray from "images/ic_darts_gray.png";
+import { ErrorCode } from "config/errorCode";
+import BaseView from "containers/base/baseView";
+import dashboardType from "enum/dashboardType";
+import slidingMenuType from "enum/slidingMenuType";
+import statusType from "enum/statusType";
 import ic_camera_gray from "images/ic_camera_gray.png";
+import ic_darts_gray from "images/ic_darts_gray.png";
 import ic_equalizer_gray from "images/ic_equalizer_gray.png";
 import ic_next_grey from "images/ic_next_grey.png";
-import { CalendarScreen } from "components/calendarScreen";
-import slidingMenuType from "enum/slidingMenuType";
-import dashboardType from "enum/dashboardType";
+import ic_sabbatical_gray from "images/ic_sabbatical_gray.png";
+import img_bg_statistical from "images/img_bg_statistical.png";
+import img_calendar from "images/img_calendar.png";
+import { localizes } from "locales/i18n";
+import {
+    Container, Content, Header, Root, Text
+} from "native-base";
+import {
+    BackHandler, Dimensions, Image, ImageBackground, Linking, RefreshControl, TouchableOpacity, View
+} from "react-native";
+import DeviceInfo from 'react-native-device-info';
+import { connect } from "react-redux";
+import commonStyles from "styles/commonStyles";
+import DateUtil from "utils/dateUtil";
+import StorageUtil from "utils/storageUtil";
+import Utils from "utils/utils";
+import { Colors } from "values/colors";
+import { Constants } from "values/constants";
+import { Fonts } from "values/fonts";
+import styles from "./styles";
 
 const screen = Dimensions.get("window");
 
@@ -157,16 +101,16 @@ class HomeView extends BaseView {
         }
     }
 
-	/**
-	 * Press back exit app
-	 */
+    /**
+     * Press back exit app
+     */
     onExitApp() {
         this.setState({ isAlertExitApp: true });
     }
 
-	/**
-	 * Get profile user
-	 */
+    /**
+     * Get profile user
+     */
     getProfile() {
         StorageUtil.retrieveItem(StorageUtil.USER_PROFILE).then(user => {
             //this callback is executed when your Promise is resolved
@@ -229,9 +173,9 @@ class HomeView extends BaseView {
         super.componentWillUnmount();
     }
 
-	/**
-	 * Handle data when request
-	 */
+    /**
+     * Handle data when request
+     */
     handleData() {
         let data = this.props.data;
         if (this.props.errorCode != ErrorCode.ERROR_INIT) {

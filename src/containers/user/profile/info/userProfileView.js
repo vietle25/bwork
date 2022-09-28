@@ -1,79 +1,49 @@
-import React, { Component } from "react";
-import { Root, Header, Title, Content, Container, Tabs, Tab, List, Col, TabHeading } from "native-base";
-import {
-    Image,
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View,
-    TextInput,
-    Dimensions,
-    RefreshControl,
-    processColor,
-    Item,
-    Input,
-    Modal,
-    TouchableHighlight,
-    ToastAndroid,
-    SafeAreaView, DeviceEventEmitter, NativeModules, ImageBackground, Platform
-} from "react-native";
-import commonStyles from "styles/commonStyles";
-import { Constants } from "values/constants"
-import { Colors } from "values/colors";
-import { localizes } from "locales/i18n";
-import BaseView from "containers/base/baseView";
-import ic_back_white from "images/ic_back_white.png";
-import ic_pen_black from 'images/ic_pen_black.png'
-import img_avatar_default from 'images/ic_default_user.png';
-import Dialog, { DIALOG_WIDTH } from 'components/dialog'
-import FlatListCustom from "components/flatListCustom";
-import GenderType from "enum/genderType";
-import * as actions from "actions/userActions";
-import * as commonActions from "actions/commonActions";
-import { connect } from "react-redux";
-import { ErrorCode } from "config/errorCode";
+import { GoogleSignin } from '@react-native-community/google-signin';
 import { ActionEvent, getActionSuccess } from "actions/actionEvent";
-import Utils from 'utils/utils';
-import StringUtil from 'utils/stringUtil';
-import StorageUtil from "utils/storageUtil";
-import DateUtil from "utils/dateUtil";
-import styles from "./styles";
-import moment from 'moment';
-import ScreenType from 'enum/screenType'
-import { ServerPath } from "config/Server";
-import Upload from 'react-native-background-upload'
-import ApiUtil from "utils/apiUtil";
-import ImageLoader from "components/imageLoader"
-import { Fonts } from "values/fonts";
-import { CalendarScreen } from 'components/calendarScreen';
+import * as commonActions from "actions/commonActions";
+import * as actions from "actions/userActions";
+import BackgroundShadow from "components/backgroundShadow";
+import DialogCustom from "components/dialogCustom";
+import FlatListCustom from "components/flatListCustom";
+import Hr from "components/hr";
+import ImageLoader from "components/imageLoader";
+import { ErrorCode } from "config/errorCode";
+import BaseView from "containers/base/baseView";
+import GenderType from "enum/genderType";
+import loginType from "enum/loginType";
+import screenType from "enum/screenType";
+import slidingMenuType from "enum/slidingMenuType";
+import UserResourceType from 'enum/userResourceType';
 import ic_facebook from 'images/ic_facebook.png';
 import ic_google from 'images/ic_google.png';
-import ic_add_grey_dark from 'images/ic_add_grey_dark.png';
-import ic_chat_black from 'images/ic_chat_black.png';
-import DialogCustom from "components/dialogCustom";
-import { AccessToken, LoginManager, GraphRequest, GraphRequestManager, LoginButton } from 'react-native-fbsdk';
-import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-community/google-signin';
-import loginType from "enum/loginType";
-import firebase from 'react-native-firebase';
-import BackgroundShadow from "components/backgroundShadow";
-import screenType from "enum/screenType";
-import BackgroundTopView from "components/backgroundTopView";
+import ic_menu_vertical from "images/ic_menu_vertical.png";
+import ic_next_grey from "images/ic_next_grey.png";
+import ic_send_image from "images/ic_send_image.png";
 import shadow_black_42 from "images/shadow_black_42.png";
 import shadow_black_44 from "images/shadow_black_44.png";
-import ic_send_image from "images/ic_send_image.png";
-import ItemSlidingMenu from "./itemSlidingMenu";
-import slidingMenuType from "enum/slidingMenuType";
-import Hr from "components/hr";
-import { configConstants } from "values/configConstants";
-import ic_next_grey from "images/ic_next_grey.png";
-import ic_menu_vertical from "images/ic_menu_vertical.png";
+import { localizes } from "locales/i18n";
+import { Container, Content, Header, Root, Tab, TabHeading, Tabs } from "native-base";
 import {
-    Menu,
-    MenuOptions,
-    MenuOption,
-    MenuTrigger
+    DeviceEventEmitter, Dimensions, Image, Platform, RefreshControl, ScrollView,
+    Text,
+    TouchableOpacity,
+    View
+} from "react-native";
+import { AccessToken, GraphRequest, GraphRequestManager, LoginManager } from 'react-native-fbsdk';
+import {
+    Menu, MenuOption, MenuOptions, MenuTrigger
 } from "react-native-popup-menu";
-import UserResourceType from 'enum/userResourceType';
+import { connect } from "react-redux";
+import commonStyles from "styles/commonStyles";
+import DateUtil from "utils/dateUtil";
+import StorageUtil from "utils/storageUtil";
+import Utils from 'utils/utils';
+import { Colors } from "values/colors";
+import { configConstants } from "values/configConstants";
+import { Constants } from "values/constants";
+import { Fonts } from "values/fonts";
+import ItemSlidingMenu from "./itemSlidingMenu";
+import styles from "./styles";
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;

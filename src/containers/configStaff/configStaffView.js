@@ -1,55 +1,32 @@
-import React, { Component } from 'react';
-import {
-    View,
-    Text,
-    Image,
-    TouchableOpacity,
-    BackHandler,
-    RefreshControl,
-    Dimensions
-} from 'react-native';
-import {
-    Content,
-    Container,
-    Root,
-    Header
-} from 'native-base';
-import BaseView from 'containers/base/baseView';
-import * as actions from "actions/userActions";
-import * as commonActions from "actions/commonActions";
-import * as timekeepingActions from "actions/timekeepingActions";
-import * as salaryAction from "actions/salaryAction";
-import { connect } from "react-redux";
-import { ErrorCode } from "config/errorCode";
 import { ActionEvent, getActionSuccess } from "actions/actionEvent";
-import { Constants } from 'values/constants';
-import Utils from 'utils/utils';
-import styles from './styles';
-import commonStyles from "styles/commonStyles";
-import { Colors } from 'values/colors';
-import { localizes } from 'locales/i18n';
-import ic_add_black from "images/ic_add_black.png";
-import ic_check from "images/ic_check.png";
-import TextInputCustom from 'components/textInputCustom';
-import ic_calendar_grey from "images/ic_calendar_grey.png";
-import Hr from 'components/hr';
-import { TextInputMask } from 'react-native-masked-text'
+import * as commonActions from "actions/commonActions";
+import * as salaryAction from "actions/salaryAction";
+import * as timekeepingActions from "actions/timekeepingActions";
+import * as actions from "actions/userActions";
 import { CalendarScreen } from 'components/calendarScreen';
-import DateUtil from 'utils/dateUtil';
-import workingTimeShiftType from 'enum/workingTimeShiftType';
-import ic_down_grey from 'images/ic_down_grey.png';
-import {
-    Menu,
-    MenuOptions,
-    MenuOption,
-    MenuTrigger
-} from "react-native-popup-menu";
-import StringUtil from 'utils/stringUtil';
-import sabbaticalOffType from 'enum/sabbaticalOffType';
-import { RadioGroup, RadioButton } from 'react-native-ui-lib';
+import Hr from 'components/hr';
+import TextInputCustom from 'components/textInputCustom';
+import { ErrorCode } from "config/errorCode";
+import BaseView from 'containers/base/baseView';
 import salaryInputType from 'enum/salaryInputType';
+import workingTimeShiftType from 'enum/workingTimeShiftType';
+import ic_check from "images/ic_check.png";
+import {
+    Container, Content, Header, Root
+} from 'native-base';
+import {
+    BackHandler, Dimensions, Image, RefreshControl, Text, TouchableOpacity, View
+} from 'react-native';
+import { TextInputMask } from 'react-native-masked-text';
+import { connect } from "react-redux";
+import commonStyles from "styles/commonStyles";
+import DateUtil from 'utils/dateUtil';
+import StringUtil from 'utils/stringUtil';
+import Utils from 'utils/utils';
+import { Colors } from 'values/colors';
+import { Constants } from 'values/constants';
 import ModalConfigStaff from './modalConfigStaff';
-import moment, { locales } from "moment";
+import styles from './styles';
 
 const screen = Dimensions.get("window");
 
@@ -278,13 +255,13 @@ class ConfigStaffView extends BaseView {
                                 marginHorizontal: Constants.MARGIN_X_LARGE,
                                 color: Colors.COLOR_PRIMARY
                             }]}>Cấu hình lương</Text>
-                            <RadioGroup
+                            {/* <RadioGroup
                                 style={styles.radioGroup}
                                 initialValue={salaryInput}
                                 onValueChange={(salaryInput) => {
                                     this.setState({ salaryInput })
-                                }}>
-                                <RadioButton
+                                }}> */}
+                            {/* <RadioButton
                                     color={Colors.COLOR_PRIMARY}
                                     label={"Lương tháng"}
                                     value={salaryInputType.MONTH}
@@ -297,8 +274,8 @@ class ConfigStaffView extends BaseView {
                                     value={salaryInputType.HOUR}
                                     size={16}
                                     labelStyle={{ marginRight: Constants.MARGIN_X_LARGE }}
-                                />
-                            </RadioGroup>
+                                /> */}
+                            {/* </RadioGroup> */}
                             {/* Salary */}
                             <View style={{ marginHorizontal: Constants.MARGIN_X_LARGE }}>
                                 <Text style={[commonStyles.text, {
@@ -337,7 +314,7 @@ class ConfigStaffView extends BaseView {
                                 marginHorizontal: Constants.MARGIN_X_LARGE,
                                 color: Colors.COLOR_PRIMARY
                             }]}>Cấu hình ca làm việc</Text>
-                            <RadioGroup
+                            {/* <RadioGroup
                                 style={styles.radioGroup}
                                 initialValue={workingTimeShift}
                                 onValueChange={(workingTimeShift) => {
@@ -348,8 +325,8 @@ class ConfigStaffView extends BaseView {
                                     }
                                     state.workingTimeShift = workingTimeShift;
                                     this.setState(state);
-                                }}>
-                                <RadioButton
+                                }}> */}
+                            {/* <RadioButton
                                     color={Colors.COLOR_PRIMARY}
                                     label={"Ca gãy"}
                                     value={workingTimeShiftType.FULL_WORKING_DAY}
@@ -362,8 +339,8 @@ class ConfigStaffView extends BaseView {
                                     value={workingTimeShiftType.PARTLY_WORKING_DAY}
                                     size={16}
                                     labelStyle={{ marginRight: Constants.MARGIN_X_LARGE }}
-                                />
-                            </RadioGroup>
+                                /> */}
+                            {/* </RadioGroup> */}
                             <View style={styles.boxInput}>
                                 <View style={{ flex: 1, marginHorizontal: Constants.MARGIN_LARGE }}>
                                     <Text style={[commonStyles.text, {

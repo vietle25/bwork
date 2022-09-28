@@ -1,51 +1,34 @@
 'use strict';
-import React, { Component } from 'react';
-import { View, TextInput, Image, StyleSheet, Text, ImageBackground, TouchableOpacity, TouchableHighlight, Keyboard, SafeAreaView, BackHandler } from 'react-native';
-import { Container, Form, Content, Item, Input, Button, Right, Icon, Header, Root, Left, Body, Title, Toast } from 'native-base';
-import ButtonComp from 'components/button';
-import StringUtil from 'utils/stringUtil';
-import cover from 'images/bg_launch.png';
-import styles from './styles';
-import { localizes } from 'locales/i18n';
-import BaseView from 'containers/base/baseView';
-import * as actions from 'actions/userActions';
+import { GoogleSignin } from '@react-native-community/google-signin';
+import { ActionEvent, getActionSuccess } from 'actions/actionEvent';
 import * as commonActions from 'actions/commonActions';
+import * as actions from 'actions/userActions';
+import TextInputCustom from 'components/textInputCustom';
+import { ErrorCode } from 'config/errorCode';
+import BaseView from 'containers/base/baseView';
+import GenderType from 'enum/genderType';
+import screenType from 'enum/screenType';
+import statusType from 'enum/statusType';
+import ic_account_grey from "images/ic_account_grey.png";
+import ic_key_grey from "images/ic_key_grey.png";
+import ic_lock_grey from 'images/ic_lock_grey.png';
+import ic_logo_admin_green from "images/ic_logo_admin_green.png";
+import ic_unlock_grey from 'images/ic_unlock_grey.png';
+import { localizes } from 'locales/i18n';
+import { Container, Content, Form, Root } from 'native-base';
+import { BackHandler, Image, Keyboard, Text, TouchableHighlight, View } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
+import { AccessToken, GraphRequest, GraphRequestManager, LoginManager } from 'react-native-fbsdk';
 import { connect } from 'react-redux';
 import commonStyles from 'styles/commonStyles';
-import { Fonts } from 'values/fonts';
-import ic_facebook_blue from 'images/ic_facebook_blue.png'
-import ic_google_red from 'images/ic_google_red.png'
-import ic_unlock_grey from 'images/ic_unlock_grey.png'
-import ic_lock_grey from 'images/ic_lock_grey.png'
-import { Constants } from 'values/constants';
-import { Colors } from 'values/colors';
-import ic_avatar_small_red from 'images/ic_avatar_small_red.png'
-import ic_back_white from 'images/ic_back_white.png'
-import { ErrorCode } from 'config/errorCode';
-import Utils from 'utils/utils';
 import StorageUtil from 'utils/storageUtil';
-import { dispatch } from 'rxjs/internal/observable/pairs';
-import { ActionEvent, getActionSuccess } from 'actions/actionEvent';
-import { GoogleSignin, statusCodes } from '@react-native-community/google-signin';
-import { AccessToken, LoginManager, GraphRequest, GraphRequestManager, LoginButton } from 'react-native-fbsdk';
-import GenderType from 'enum/genderType';
-import ic_facebook from 'images/ic_facebook.png'
-import ic_google from 'images/ic_google.png'
-import statusType from 'enum/statusType';
-import screenType from 'enum/screenType';
-import firebase from 'react-native-firebase';
-import bannerType from 'enum/bannerType';
-import TextInputCustom from 'components/textInputCustom';
-import ic_logo_admin_green from "images/ic_logo_admin_green.png";
-import ic_key_grey from "images/ic_key_grey.png";
-import ic_account_grey from "images/ic_account_grey.png";
-import Hr from 'components/hr';
-import shadow_black_42 from "images/shadow_black_42.png";
-import BackgroundTopView from 'components/backgroundTopView';
+import StringUtil from 'utils/stringUtil';
+import Utils from 'utils/utils';
+import { Colors } from 'values/colors';
 import { configConstants } from 'values/configConstants';
-import DialogCustom from 'components/dialogCustom';
-import DeviceInfo from 'react-native-device-info';
-import userType from 'enum/userType';
+import { Constants } from 'values/constants';
+import { Fonts } from 'values/fonts';
+import styles from './styles';
 
 console.disableYellowBox = true;
 class LoginAdminView extends BaseView {

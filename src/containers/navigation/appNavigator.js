@@ -1,10 +1,4 @@
-import BranchListView from "containers/branch/branchListView";
-import ChatView from "containers/chat/chat/chatView";
-import CreateConversationGroupView from "containers/chat/createGroup/createConversationGroupView";
-import CreateConversationNewView from "containers/chat/createGroup/createConversationNewView";
-import EditInfoChatView from "containers/chat/edit/editInfoChatView";
-import ListChatView from "containers/chat/list/listChatView";
-import ListMemberChatView from "containers/chat/member/listMemberChatView";
+// import BranchListView from "containers/branch/branchListView";
 import CompanyListView from "containers/company/companyListView";
 import ConfigStaffView from "containers/configStaff/configStaffView";
 import Demo from 'containers/demo/demo';
@@ -12,8 +6,6 @@ import ListDepartmentView from "containers/department/listDepartment/listDepartm
 import ListStaffDepartmentView from "containers/department/listStaffDepartment/listStaffDepartment";
 import CompanyDetailView from "containers/home/company/companyDetailView";
 import Main from 'containers/main/bottomTabNavigator';
-import MainAdmin from 'containers/main/bottomTabNavigatorAdmin';
-import SabbaticalAdminView from "containers/sabbatical/admin/sabbaticalAdminView";
 import RegisterSabbaticalView from "containers/sabbatical/register/registerSabbaticalView";
 import SalaryHistoryDetailView from "containers/salary/detail/salaryHistoryDetailView";
 import SalaryHistoryView from "containers/salary/history/salaryHistoryView";
@@ -22,13 +14,11 @@ import TaskDetailView from 'containers/task/details/taskDetailView';
 import TaskManagerView from 'containers/task/taskManagerView';
 import TimekeepingHistoryDetailView from "containers/timekeeping/history/detail/timekeepingHistoryDetailView";
 import TimekeepingHistoryView from "containers/timekeeping/history/timekeepingHistoryView";
-import TimekeepingAdminView from "containers/timekeeping/timekeepingAdminView";
 import ChangePasswordView from 'containers/user/changePassword/changePasswordView';
 import QuestionAnswerView from 'containers/user/faq/questionAnswerView';
 import WorkingPolicyView from "containers/user/faq/workingPolicyView";
 import ConfirmPasswordView from 'containers/user/forgotPassword/confirmPassword/confirmPasswordView';
 import ForgotPasswordView from 'containers/user/forgotPassword/forgotPasswordView';
-import LoginAdminView from "containers/user/login/loginAdminView";
 import LoginView from 'containers/user/login/loginView';
 import NotificationView from 'containers/user/notification/notificationView';
 import OTPView from 'containers/user/otp//otpView';
@@ -45,11 +35,11 @@ const AppNavigator = createStackNavigator(
     {
         Splash: SplashView,
         Login: LoginView,
-        LoginAdmin: LoginAdminView,
+        // LoginAdmin: LoginAdminView,
         Register: RegisterView,
         Profile: UserProfileView,
         Main: Main,
-        MainAdmin: MainAdmin,
+        // MainAdmin: MainAdmin,
         Notification: NotificationView,
         QuestionAnswer: QuestionAnswerView,
         Demo: Demo,
@@ -65,23 +55,21 @@ const AppNavigator = createStackNavigator(
         TimekeepingHistoryDetail: TimekeepingHistoryDetailView,
         WorkingPolicy: WorkingPolicyView,
         SettingAlarm: SettingAlarmView,
-        EditInfoChat: EditInfoChatView,
-        ListMemberChat: ListMemberChatView,
+        // EditInfoChat: EditInfoChatView,
+        // ListMemberChat: ListMemberChatView,
         CompanyDetail: CompanyDetailView,
         RegisterSabbatical: RegisterSabbaticalView,
         Department: DepartmentView,
         DepartmentList: ListDepartmentView,
         StaffDepartmentList: ListStaffDepartmentView,
         CompanyList: CompanyListView,
-        BranchList: BranchListView,
-        SabbaticalAdminHome: SabbaticalAdminView,
-        TimekeepingAdminHome: TimekeepingAdminView,
+        // BranchList: BranchListView,
+        // SabbaticalAdminHome: SabbaticalAdminView,
+        // TimekeepingAdminHome: TimekeepingAdminView,
         // FaceDetection: FaceDetectionView,
         ConfigStaff: ConfigStaffView,
-        CreateConversationGroup: CreateConversationGroupView,
-        CreateConversationNew: CreateConversationNewView,
-        Chat: ChatView,
-        ListChat: ListChatView,
+        // CreateConversationGroup: CreateConversationGroupView,
+        // CreateConversationNew: CreateConversationNewView,
         TaskManager: TaskManagerView,
         TaskDetail: TaskDetailView
     }, {

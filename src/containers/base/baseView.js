@@ -1,42 +1,28 @@
-import React, { Component } from "react";
-import {
-    BackHandler, ImageBackground, View, StatusBar, DeviceEventManager, Image, Text,
-    TouchableOpacity, Dimensions, Platform, Alert, Linking, DeviceEventEmitter,
-    Keyboard, NativeModules, ToastAndroid, PermissionsAndroid
-} from "react-native";
-import {
-    Root, Form, Textarea, Container, Header, Title, Left, Icon, Right,
-    Button, Body, Content, Card, CardItem,
-    Fab, Footer, Input, Item, ActionSheet, Spinner,
-} from "native-base";
-import { StackActions, NavigationActions } from 'react-navigation';
 import NetInfo from "@react-native-community/netinfo";
-import { Constants } from "values/constants";
-import HeaderView from "containers/common/headerView";
-import commonStyles from 'styles/commonStyles';
-import { Colors } from "values/colors";
 import { ErrorCode } from "config/errorCode";
+import HeaderView from "containers/common/headerView";
 import { localizes } from "locales/i18n";
+import { Spinner } from "native-base";
+import React, { Component } from "react";
+import { Alert, Dimensions, Keyboard, Linking, NativeModules, PermissionsAndroid, Platform, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
+import { NavigationActions, StackActions } from 'react-navigation';
+import commonStyles from 'styles/commonStyles';
 import StorageUtil from "utils/storageUtil";
-import firebase, { Notification, NotificationOpen, RemoteMessage } from 'react-native-firebase';
-import DateUtil from "utils/dateUtil";
-import Utils from 'utils/utils'
-import Toast from 'react-native-root-toast';
-import DeviceInfo from 'react-native-device-info';
-import statusType from "enum/statusType";
-import { AccessToken, LoginManager, GraphRequest, GraphRequestManager, LoginButton } from 'react-native-fbsdk';
-import { GoogleSignin, statusCodes } from '@react-native-community/google-signin';
-import StringUtil from "utils/stringUtil";
-import { async } from "rxjs/internal/scheduler/async";
-import { Fonts } from "values/fonts";
-import BackgroundShadow from "components/backgroundShadow";
-import img_error_404 from 'images/img_error_404.png';
-import shadow_horizontal from 'images/shadow_horizontal.png';
-import imageRatio from "enum/imageRatio";
+import { Colors } from "values/colors";
+import { Constants } from "values/constants";
+// import firebase, { Notification, NotificationOpen, RemoteMessage } from 'react-native-firebase';
+import { GoogleSignin } from '@react-native-community/google-signin';
 import ReactNativeAN from "containers/common/alarmModule";
+import imageRatio from "enum/imageRatio";
+import statusType from "enum/statusType";
+import DeviceInfo from 'react-native-device-info';
+import { LoginManager } from 'react-native-fbsdk';
+import Toast from 'react-native-root-toast';
+import Utils from 'utils/utils';
+import { Fonts } from "values/fonts";
 
-import { configConstants } from "values/configConstants";
 import notificationType from "enum/notificationType";
+import { configConstants } from "values/configConstants";
 
 const screen = Dimensions.get("window");
 
@@ -726,81 +712,81 @@ class BaseView extends Component {
         /*
          * Triggered for data only payload in foreground
          * */
-        this.messageListener = firebase.messaging().onMessage((message) => {
-            // Process your message as required
-        });
+        // this.messageListener = firebase.messaging().onMessage((message) => {
+        //     // Process your message as required
+        // });
 
         /*
          * Triggered when a particular notification has been received in foreground
          * */
-        this.notificationListener = firebase.notifications().onNotification(async (notification) => {
-            console.log("Notification base foreground", notification);
-            const localNotification = new firebase.notifications.Notification({
-                sound: 'default',
-                show_in_foreground: true
-            })
-                .setNotificationId(notification.notificationId)
-                .setTitle(notification.title)
-                .setSubtitle(notification.subtitle)
-                .setBody(notification.body)
-                .setData(notification.data)
-                .android.setSmallIcon('@mipmap/ic_notification')
-                .android.setPriority(firebase.notifications.Android.Priority.High);
-            if (Platform.OS === 'android' && localNotification.android.channelId == null) {
-                const channel = new firebase.notifications.Android.Channel(
-                    CHANNEL_ID,
-                    CHANNEL_NAME,
-                    firebase.notifications.Android.Importance.Max
-                ).setDescription('In stock channel');
-                // Create the channel
-                firebase.notifications().android.createChannel(channel);
-                localNotification.android.setChannelId(channel.channelId);
-            }
-            try {
-                await firebase.notifications().displayNotification(localNotification);
-                notification.android.setAutoCancel(true)
-                this.countNewNotification() // count nti
-            } catch (e) {
-                console.log('catch', e)
-            }
-        });
+        // this.notificationListener = firebase.notifications().onNotification(async (notification) => {
+        //     console.log("Notification base foreground", notification);
+        //     const localNotification = new firebase.notifications.Notification({
+        //         sound: 'default',
+        //         show_in_foreground: true
+        //     })
+        //         .setNotificationId(notification.notificationId)
+        //         .setTitle(notification.title)
+        //         .setSubtitle(notification.subtitle)
+        //         .setBody(notification.body)
+        //         .setData(notification.data)
+        //         .android.setSmallIcon('@mipmap/ic_notification')
+        //         .android.setPriority(firebase.notifications.Android.Priority.High);
+        //     if (Platform.OS === 'android' && localNotification.android.channelId == null) {
+        //         const channel = new firebase.notifications.Android.Channel(
+        //             CHANNEL_ID,
+        //             CHANNEL_NAME,
+        //             firebase.notifications.Android.Importance.Max
+        //         ).setDescription('In stock channel');
+        //         // Create the channel
+        //         firebase.notifications().android.createChannel(channel);
+        //         localNotification.android.setChannelId(channel.channelId);
+        //     }
+        //     try {
+        //         await firebase.notifications().displayNotification(localNotification);
+        //         notification.android.setAutoCancel(true)
+        //         this.countNewNotification() // count nti
+        //     } catch (e) {
+        //         console.log('catch', e)
+        //     }
+        // });
 
         /*
          * Process your notification as required
          * */
-        this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification) => {
-            // Process your notification as required
-            // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
-        });
+        // this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification) => {
+        //     // Process your notification as required
+        //     // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
+        // });
 
         /*
          * If your app is in background, you can listen for when a notification is clicked / tapped / opened as follows:
          * */
-        this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
-            console.log("Notification base background", notificationOpen);
-            firebase.notifications().removeAllDeliveredNotifications()
-            this.countNewNotification() // count nti
-            console.log("11111111111111111111", notificationOpen.notification.data)
-            this.goToScreen(notificationOpen.notification.data);
-        });
+        // this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
+        //     console.log("Notification base background", notificationOpen);
+        //     firebase.notifications().removeAllDeliveredNotifications()
+        //     this.countNewNotification() // count nti
+        //     console.log("11111111111111111111", notificationOpen.notification.data)
+        //     this.goToScreen(notificationOpen.notification.data);
+        // });
 
         /*
          * If your app is closed, you can check if it was opened by a notification being clicked / tapped / opened as follows:
          * */
-        const notificationOpen = await firebase.notifications().getInitialNotification();
-        if (notificationOpen) {
-            console.log("Notification base closed", notificationOpen);
-            StorageUtil.retrieveItem(StorageUtil.NOTIFICATION_ID).then((id) => {
-                if (id != notificationOpen.notification.notificationId) {
-                    setTimeout(() => {
-                        this.goToScreen(notificationOpen.notification.data);
-                    }, 1000)
-                }
-            }).catch((error) => {
-                console.log(error)
-            })
-            StorageUtil.storeItem(StorageUtil.NOTIFICATION_ID, notificationOpen.notification.notificationId);
-        }
+        // const notificationOpen = await firebase.notifications().getInitialNotification();
+        // if (notificationOpen) {
+        //     console.log("Notification base closed", notificationOpen);
+        //     StorageUtil.retrieveItem(StorageUtil.NOTIFICATION_ID).then((id) => {
+        //         if (id != notificationOpen.notification.notificationId) {
+        //             setTimeout(() => {
+        //                 this.goToScreen(notificationOpen.notification.data);
+        //             }, 1000)
+        //         }
+        //     }).catch((error) => {
+        //         console.log(error)
+        //     })
+        //     StorageUtil.storeItem(StorageUtil.NOTIFICATION_ID, notificationOpen.notification.notificationId);
+        // }
     }
 
     /**

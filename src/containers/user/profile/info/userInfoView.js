@@ -1,78 +1,55 @@
-import React, { Component } from "react";
-import {
-    View,
-    Text,
-    BackHandler,
-    Keyboard,
-    Dimensions,
-    TouchableOpacity,
-    Image,
-    Icon,
-    Platform,
-    RefreshControl,
-    Alert
-} from "react-native";
-import BackgroundTopView from "components/backgroundTopView";
-import {
-    Container,
-    Root,
-    Header,
-    Content,
-    Form,
-    Item
-} from "native-base";
-import BaseView from "containers/base/baseView";
-import shadow_black_44 from "images/shadow_black_44.png";
-import { Constants } from "values/constants";
-import TextInputCustom from "components/textInputCustom";
-import { localizes } from "locales/i18n";
+import { ActionEvent, getActionSuccess } from "actions/actionEvent";
+import * as commonActions from "actions/commonActions";
+import * as faceActions from "actions/faceActions";
+import * as actions from "actions/userActions";
 import { CalendarScreen } from "components/calendarScreen";
-import ic_calendar_grey from "images/ic_calendar_grey.png";
+import DialogCustom from "components/dialogCustom";
+import ImageLoader from "components/imageLoader";
+import TextInputCustom from "components/textInputCustom";
+import { ErrorCode } from "config/errorCode";
+import ServerPath from "config/Server";
+import BaseView from "containers/base/baseView";
+import CompanyType from "enum/companyType";
+import genderType from "enum/genderType";
+import screenType from "enum/screenType";
+import statusType from "enum/statusType";
 import ic_account_grey from "images/ic_account_grey.png";
-import ic_payment_grey from "images/ic_payment_grey.png";
-import ic_place_grey from "images/ic_place_grey.png";
+import ic_calendar_grey from "images/ic_calendar_grey.png";
 import ic_camera_radio from "images/ic_camera_radio.png";
-import ic_phone_number_grey from "images/ic_phone_number_grey.png";
+import ic_down_grey from 'images/ic_down_grey.png';
 import ic_gender_grey from "images/ic_gender_grey.png";
 import ic_gmail_grey from "images/ic_gmail_grey.png";
-import DateUtil from "utils/dateUtil";
-import { Colors } from "values/colors";
-import styles from "./styles";
-import commonStyles from "styles/commonStyles";
-import * as actions from "actions/userActions";
-import * as faceActions from "actions/faceActions";
-import * as commonActions from "actions/commonActions";
-import { connect } from "react-redux";
-import { ErrorCode } from "config/errorCode";
-import { ActionEvent, getActionSuccess } from "actions/actionEvent";
-import Utils from "utils/utils";
-import StringUtil from "utils/stringUtil";
-import moment, { locales } from "moment";
-import ImageLoader from "components/imageLoader";
-import DialogCustom from "components/dialogCustom";
-import ImagePicker from "react-native-image-picker";
-import ServerPath from "config/Server";
+import ic_menu_vertical from "images/ic_menu_vertical.png";
+import ic_payment_grey from "images/ic_payment_grey.png";
+import ic_phone_number_grey from "images/ic_phone_number_grey.png";
+import ic_place_grey from "images/ic_place_grey.png";
+import { localizes } from "locales/i18n";
+import moment from "moment";
+import {
+    Container, Content, Header, Root
+} from "native-base";
+import {
+    BackHandler, Dimensions, Image, Platform,
+    RefreshControl, Text, TouchableOpacity, View
+} from "react-native";
 import Upload from "react-native-background-upload";
-import FlatListCustom from "components/flatListCustom";
-import UploadPersonalImages from "./uploadPersonalImages";
-import { getTimekeepingHistorySuccess } from "actions/timekeepingActions";
-import screenType from "enum/screenType";
+import ImagePicker from "react-native-image-picker";
 import ImageResizer from 'react-native-image-resizer';
 import { TextInputMask } from 'react-native-masked-text';
-import StorageUtil from "utils/storageUtil";
-import ic_down_grey from 'images/ic_down_grey.png';
-import genderType from "enum/genderType";
 import {
-    Menu,
-    MenuOptions,
-    MenuOption,
-    MenuTrigger
+    Menu, MenuOption, MenuOptions, MenuTrigger
 } from "react-native-popup-menu";
+import { connect } from "react-redux";
+import commonStyles from "styles/commonStyles";
+import DateUtil from "utils/dateUtil";
+import StorageUtil from "utils/storageUtil";
+import StringUtil from "utils/stringUtil";
+import Utils from "utils/utils";
+import { Colors } from "values/colors";
 import { configConstants } from "values/configConstants";
-import ic_menu_vertical from "images/ic_menu_vertical.png";
-import statusType from "enum/statusType";
-import firebase from 'react-native-firebase';
-import CompanyType from "enum/companyType";
+import { Constants } from "values/constants";
+import styles from "./styles";
+import UploadPersonalImages from "./uploadPersonalImages";
 
 const FILE_SELECTOR = [
     localizes("camera"),

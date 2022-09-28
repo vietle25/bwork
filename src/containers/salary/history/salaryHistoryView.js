@@ -1,69 +1,30 @@
-import React, { Component } from "react";
-import {
-    ImageBackground,
-    View,
-    Image,
-    TouchableOpacity,
-    BackHandler,
-    Linking,
-    NativeEventEmitter,
-    DeviceEventEmitter,
-    Platform,
-    RefreshControl,
-    Dimensions,
-    NativeModules
-} from "react-native";
-import {
-    Container,
-    Header,
-    Title,
-    Left,
-    Icon,
-    Right,
-    Button,
-    Body,
-    Content,
-    Text,
-    Card,
-    CardItem,
-    Root
-} from "native-base";
-import img_map_banner from "images/img_map_banner.png";
-import img_baby from "images/img_baby.png";
-import img_banner_ads from "images/img_banner_ads.png";
-import img_consultation from "images/img_consultation.png";
-import BaseView from "containers/base/baseView";
-import commonStyles from "styles/commonStyles";
-import { Colors } from "values/colors";
-import ic_google_map from "images/ic_google_map.png";
-import { Constants } from "values/constants";
-import Utils from "utils/utils";
-import ic_back_white from "images/ic_back_white.png";
-import * as actions from "actions/userActions";
-import * as salaryActions from "actions/salaryAction";
-import * as commonActions from "actions/commonActions";
-import { connect } from "react-redux";
-import StorageUtil from "utils/storageUtil";
 import { ActionEvent, getActionSuccess } from "actions/actionEvent";
+import * as commonActions from "actions/commonActions";
+import * as salaryActions from "actions/salaryAction";
+import * as actions from "actions/userActions";
 import { ErrorCode } from "config/errorCode";
-import { localizes } from "locales/i18n";
-import firebase from "react-native-firebase";
-import { Fonts } from "values/fonts";
-import statusType from "enum/statusType";
-import DialogCustom from "components/dialogCustom";
-import userType from "enum/userType";
-import { configConstants } from "values/configConstants";
-import FlatListCustom from "components/flatListCustom";
-import DateUtil from "utils/dateUtil";
-import ImageLoader from "components/imageLoader";
-import DeviceInfo from 'react-native-device-info';
-import styles from './styles';
-import salaryDetailType from "enum/salaryDetailType";
-import StringUtil from 'utils/stringUtil';
+import BaseView from "containers/base/baseView";
 import ModalMonth from "containers/common/modalMonth";
-import ic_down_grey from "images/ic_down_grey.png";
-import screenType from "enum/screenType";
+import salaryDetailType from "enum/salaryDetailType";
 import salaryInputType from "enum/salaryInputType";
+import screenType from "enum/screenType";
+import ic_down_grey from "images/ic_down_grey.png";
+import { localizes } from "locales/i18n";
+import {
+    Container, Content, Header, Root, Text
+} from "native-base";
+import {
+    BackHandler, Dimensions, Image, RefreshControl, TouchableOpacity, View
+} from "react-native";
+import { connect } from "react-redux";
+import commonStyles from "styles/commonStyles";
+import DateUtil from "utils/dateUtil";
+import StorageUtil from "utils/storageUtil";
+import StringUtil from 'utils/stringUtil';
+import Utils from "utils/utils";
+import { Colors } from "values/colors";
+import { Constants } from "values/constants";
+import styles from './styles';
 
 
 const screen = Dimensions.get("window");
@@ -115,9 +76,9 @@ class SalaryHistoryView extends BaseView {
         BackHandler.removeEventListener('hardwareBackPress', this.handlerBackButton);
     }
 
-	/**
-	 * Handle data when request
-	 */
+    /**
+     * Handle data when request
+     */
     handleData() {
         let data = this.props.data;
         if (this.props.errorCode != ErrorCode.ERROR_INIT) {
@@ -126,7 +87,7 @@ class SalaryHistoryView extends BaseView {
                     this.state.refreshing = false;
                     this.dataSalary = data;
                 } else if (this.props.action == getActionSuccess(ActionEvent.GET_TIME_TODAY)) {
-                    if (!Utils.isNull(data) && (this.props.screen == screenType.FROM_SALARY_HISTORY || this.screenType == screenType.FROM_STAFF_SALARY) ) {
+                    if (!Utils.isNull(data) && (this.props.screen == screenType.FROM_SALARY_HISTORY || this.screenType == screenType.FROM_STAFF_SALARY)) {
                         this.dayOfToDay = data;
                         this.filter.firstDayOfMonth = `${DateUtil.convertFromFormatToFormat(data, DateUtil.FORMAT_DATE_TIME_ZONE, DateUtil.FORMAT_MONTH_OF_YEAR)}-01`;
                         this.props.getSalary(this.filter);
@@ -146,13 +107,13 @@ class SalaryHistoryView extends BaseView {
     }
 
     /**
-	 * Get profile user
-	 */
+     * Get profile user
+     */
     getProfile() {
         StorageUtil.retrieveItem(StorageUtil.USER_PROFILE).then(user => {
             //this callback is executed when your Promise is resolved
-            if (!Utils.isNull(user) && Utils.isNull(this.user) && Utils.isNull(this.screenType) ) {
-                this.user =  user;
+            if (!Utils.isNull(user) && Utils.isNull(this.user) && Utils.isNull(this.screenType)) {
+                this.user = user;
                 this.filter.userId = this.user.id;
             }
         }).catch(error => {

@@ -1,39 +1,29 @@
-import React, { Component } from "react";
-import {
-    ListView, View, Alert, Image, RefreshControl,
-    FlatList, ScrollView, TouchableOpacity, TextInput,
-    ImageBackground, Keyboard, Platform,
-    BackHandler
-} from "react-native";
-import { Container, Header, Content, Button, Icon, List, ListItem, Text, SwipeRow, Body, Thumbnail, Root, Left, Title, Right, } from "native-base";
-import { localizes } from 'locales/i18n';
-import FlatListCustom from "components/flatListCustom";
-import I18n from 'react-native-i18n';
-import { Colors } from "values/colors";
-import commonStyles from "styles/commonStyles";
-import styles from "./styles";
-import { Constants } from "values/constants";
-import BaseView from "containers/base/baseView";
-import { Fonts } from "values/fonts";
-import { connect } from 'react-redux';
-import * as actions from 'actions/userActions';
-import * as commonActions from 'actions/commonActions';
-import { ErrorCode } from "config/errorCode";
-import Utils from "utils/utils";
 import { ActionEvent, getActionSuccess } from "actions/actionEvent";
-import ItemNotification from "./itemNotification";
-import ic_back_white from 'images/ic_back_white.png'
-import StorageUtil from "utils/storageUtil";
-import statusType from "enum/statusType";
-import ModalContent from "./modalContent";
-import firebase from 'react-native-firebase';
-import ic_search_white from "images/ic_search_white.png";
+import * as commonActions from 'actions/commonActions';
+import * as actions from 'actions/userActions';
+import FlatListCustom from "components/flatListCustom";
+import { ErrorCode } from "config/errorCode";
+import BaseView from "containers/base/baseView";
 import notificationType from "enum/notificationType";
-import shadow_black_46 from "images/shadow_black_46.png";
-import ic_playlist_add_check_grey from 'images/ic_playlist_add_check_grey.png';
 import ic_close from 'images/ic_close.png';
-import DateUtil from "utils/dateUtil";
-import Hr from "components/hr";
+import ic_playlist_add_check_grey from 'images/ic_playlist_add_check_grey.png';
+import ic_search_white from "images/ic_search_white.png";
+import { localizes } from 'locales/i18n';
+import { Container, Header, Root } from "native-base";
+import {
+    BackHandler, Image, Keyboard, RefreshControl, TextInput, TouchableOpacity, View
+} from "react-native";
+import I18n from 'react-native-i18n';
+import { connect } from 'react-redux';
+import commonStyles from "styles/commonStyles";
+import StorageUtil from "utils/storageUtil";
+import Utils from "utils/utils";
+import { Colors } from "values/colors";
+import { Constants } from "values/constants";
+import { Fonts } from "values/fonts";
+import ItemNotification from "./itemNotification";
+import ModalContent from "./modalContent";
+import styles from "./styles";
 
 class NotificationView extends BaseView {
 
@@ -132,7 +122,7 @@ class NotificationView extends BaseView {
                     this.showNoData = true;
                 } else if (this.props.action == getActionSuccess(ActionEvent.COUNT_NEW_NOTIFICATION)) {
                     this.state.refreshing = false;
-                    firebase.notifications().setBadge(data);
+                    // firebase.notifications().setBadge(data);
                     global.badgeCount = data;
                 } else if (this.props.action == getActionSuccess(ActionEvent.GET_NOTIFICATIONS_VIEW)) {
                     let index2 = -1

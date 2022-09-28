@@ -1,5 +1,3 @@
 <resources>
-<!--    <string name="app_name">Chấm công</string>-->
-    <string name="default_notification_channel_id" translatable="false">aaChannelId</string>
-    <string name="text_action_notification">Tắt thông báo</string>
+    <string name="app_name">Evo Work</string>
 </resources>

@@ -1,34 +1,14 @@
-import React, { Component } from "react";
+import BaseView from "containers/base/baseView";
+import statusType from "enum/statusType";
+import { localizes } from "locales/i18n";
+import { Text } from "native-base";
 import {
-    ImageBackground, View, StatusBar, Image, ScrollView,
-    TouchableWithoutFeedback, BackHandler, Alert,
-    Linking, RefreshControl, StyleSheet, TextInput,
-    Dimensions, FlatList, TouchableHighlight, TouchableOpacity
+    Dimensions, TouchableOpacity, View
 } from "react-native";
-import { Container, Header, Title, Left, Icon, Right, Button, Body, Content, Text, Card, CardItem, Form } from "native-base";
+import Modal from 'react-native-modalbox';
+import commonStyles from "styles/commonStyles";
 import { Colors } from "values/colors";
 import { Constants } from "values/constants";
-import ic_close_black from 'images/ic_close_black.png';
-import commonStyles from "styles/commonStyles";
-import BaseView from "containers/base/baseView"
-import TextInputCustom from "components/textInputCustom";
-import ModalDropdown from 'components/dropdown';
-import I18n, { localizes } from "locales/i18n";
-import StringUtil from "utils/stringUtil";
-import { Fonts } from "values/fonts";
-import { months } from "moment";
-import FlatListCustom from "components/flatListCustom";
-import Modal from 'react-native-modalbox';
-import moment from 'moment';
-import DateUtil from "utils/dateUtil";
-import Hr from "components/hr";
-import approvalStatusType from 'enum/approvalStatusType';
-import Utils from 'utils/utils';
-import sabbaticalOffType from 'enum/sabbaticalOffType';
-import checkInType from "enum/checkInType";
-import { RadioGroup, RadioButton } from 'react-native-ui-lib';
-import styles from "./styles";
-import statusType from "enum/statusType";
 
 const screen = Dimensions.get("window");
 
@@ -92,7 +72,7 @@ export default class ModalConfigStaff extends BaseView {
                     <Text style={[commonStyles.text, { margin: Constants.MARGIN_LARGE }]}>
                         {"Bạn muốn xóa nhân viên tạm thời hay xóa vĩnh viễn?".toUpperCase()}
                     </Text>
-                    <RadioGroup
+                    {/* <RadioGroup
                         style={{ flexDirection: "row", margin: Constants.MARGIN_X_LARGE }}
                         initialValue={selected}
                         onValueChange={(selected) => {
@@ -112,7 +92,7 @@ export default class ModalConfigStaff extends BaseView {
                             size={16}
                             labelStyle={{ marginRight: Constants.MARGIN_X_LARGE }}
                         />
-                    </RadioGroup>
+                    </RadioGroup> */}
                     <View style={{ flexDirection: "row", justifyContent: "flex-end", marginTop: Constants.MARGIN_X_LARGE }}>
                         {/* Button skip */}
                         <View style={{ marginVertical: Constants.MARGIN_LARGE }}>

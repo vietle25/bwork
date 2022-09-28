@@ -1,5 +1,4 @@
 import StringUtil from "./stringUtil";
-import { toArray } from "react-emoji-render";
 
 export default class Utils {
 
@@ -155,17 +154,6 @@ export default class Utils {
      * @param value
      */
     static parseEmojis = value => {
-        const emojisArray = toArray(value);
-
-        // toArray outputs React elements for emojis and strings for other
-        const newValue = emojisArray.reduce((previous, current) => {
-            if (typeof current === "string") {
-                return previous + current;
-            }
-            return previous + current.props.children;
-        }, "");
-
-        return newValue;
     };
 
     /**

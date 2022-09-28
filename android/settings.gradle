@@ -1,9 +1,11 @@
-rootProject.name = 'timekeeping'
-include ':react-native-alarm'
-project(':react-native-alarm').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-alarm/android')
-include ':react-native-android-location-services-dialog-box'
-project(':react-native-android-location-services-dialog-box').projectDir = new File(rootProject.projectDir, '../src/lib/react-native-android-location-services-dialog-box/android')
-include ':react-native-alarm'
-project(':react-native-alarm').projectDir = new File(rootProject.projectDir, '../src/lib/react-native-alarm/android')
+rootProject.name = 'EvoWork'
 apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
 include ':app'
+includeBuild('../node_modules/react-native-gradle-plugin')
+
+if (settings.hasProperty("newArchEnabled") && settings.newArchEnabled == "true") {
+    include(":ReactAndroid")
+    project(":ReactAndroid").projectDir = file('../node_modules/react-native/ReactAndroid')
+    include(":ReactAndroid:hermes-engine")
+    project(":ReactAndroid:hermes-engine").projectDir = file('../node_modules/react-native/ReactAndroid/hermes-engine')
+}

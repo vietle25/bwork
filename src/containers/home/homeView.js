@@ -1,99 +1,55 @@
-import React, { Component } from "react";
-import {
-    ImageBackground,
-    View,
-    Image,
-    TouchableOpacity,
-    BackHandler,
-    Linking,
-    NativeEventEmitter,
-    DeviceEventEmitter,
-    Platform,
-    RefreshControl,
-    Dimensions,
-    NativeModules,
-    AppState
-} from "react-native";
-import {
-    Container,
-    Header,
-    Title,
-    Left,
-    Icon,
-    Right,
-    Button,
-    Body,
-    Content,
-    Text,
-    Card,
-    CardItem,
-    Root
-} from "native-base";
 import NetInfo from "@react-native-community/netinfo";
-import styles from "./styles";
-import BaseView from "containers/base/baseView";
-import commonStyles from "styles/commonStyles";
-import { Colors } from "values/colors";
-import ic_down_grey from "images/ic_down_grey.png";
-import ic_wi_fi_grey from "images/ic_wi_fi_grey.png";
-import { Constants } from "values/constants";
-import Utils from "utils/utils";
-import ic_back_white from "images/ic_back_white.png";
-import * as actions from "actions/userActions";
-import * as timekeepingActions from "actions/timekeepingActions";
-import * as locationActions from "actions/locationActions";
+import { ActionEvent, getActionSuccess } from "actions/actionEvent";
 import * as commonActions from "actions/commonActions";
 import * as faceActions from "actions/faceActions";
-import { connect } from "react-redux";
-import StorageUtil from "utils/storageUtil";
-import { ActionEvent, getActionSuccess } from "actions/actionEvent";
-import { ErrorCode } from "config/errorCode";
-import { localizes } from "locales/i18n";
-import firebase from "react-native-firebase";
-import { Fonts } from "values/fonts";
-import statusType from "enum/statusType";
-import GeoLocationView from "containers/location/geoLocationView";
+import * as locationActions from "actions/locationActions";
+import * as timekeepingActions from "actions/timekeepingActions";
+import * as actions from "actions/userActions";
 import DialogCustom from "components/dialogCustom";
-import userType from "enum/userType";
-import ic_qr_code from "images/ic_qr_code.png";
-import { configConstants } from "values/configConstants";
 import FlatListCustom from "components/flatListCustom";
-import white_shadow_android from "images/white_blur_shadow.png";
-import shadow_black_163 from "images/shadow_black_163.png";
-import shadow_black_32 from "images/shadow_black_32.png";
-import DateUtil from "utils/dateUtil";
-import ic_alarm_white from "images/ic_alarm_white.png";
-import screenType from "enum/screenType";
-import ic_account_white from "images/ic_account_white.png";
-import ic_lib_add_white from "images/ic_lib_add_white.png";
-import BackgroundTopView from "components/backgroundTopView";
-import background_top_view from "images/background_top_view.png";
-import ImageLoader from "components/imageLoader";
-import DeviceInfo from 'react-native-device-info';
 import Hr from "components/hr";
-import ModalWiFiList from "./modal/modalWiFiList";
-import { NetworkInfo } from "react-native-network-info";
-import BackgroundTimer from 'react-native-background-timer';
-import ItemTimekeeping from "./timekeeping/itemTimekeeping";
-import ModalAddNote from "./modal/modalAddNote";
+import { DeviceErrorCode } from "config/deviceErrorCode";
+import { ErrorCode } from "config/errorCode";
+import ReactNativeAN from "containers/common/alarmModule";
+import GeoLocationView from "containers/location/geoLocationView";
+import CompanyType from "enum/companyType";
+import notificationType from "enum/notificationType";
+import screenType from "enum/screenType";
+import statusType from "enum/statusType";
 import submitType from "enum/submitType";
 import timekeepingType from "enum/timekeepingType";
-import workingTimeType from "enum/workingTimeType";
-import moment from 'moment';
-import { DeviceErrorCode } from "config/deviceErrorCode";
-import workingTimeShiftType from "enum/workingTimeShiftType";
-import TimeCurrent from "./timeCurrent";
-import RNAlarm from "lib/react-native-alarm";
-import ReactNativeAN from "containers/common/alarmModule";
-import notificationType from "enum/notificationType";
-import LocationServicesDialogBox from "lib/react-native-android-location-services-dialog-box";
 import workingOnSaturdayType from "enum/workingOnSaturdayType";
-import ImagePicker from "react-native-image-picker";
-import ImageResizer from 'react-native-image-resizer';
-import Upload from "react-native-background-upload";
-import ServerPath from "config/Server";
+import workingTimeShiftType from "enum/workingTimeShiftType";
+import ic_down_grey from "images/ic_down_grey.png";
+import ic_wi_fi_grey from "images/ic_wi_fi_grey.png";
+import RNAlarm from "lib/react-native-alarm";
+import LocationServicesDialogBox from "lib/react-native-android-location-services-dialog-box";
+import { localizes } from "locales/i18n";
+import moment from 'moment';
+import {
+    Container, Content, Header, Root, Text
+} from "native-base";
+import {
+    AppState, BackHandler, DeviceEventEmitter, Dimensions, Image, Linking, Platform,
+    RefreshControl, TouchableOpacity, View
+} from "react-native";
+import BackgroundTimer from 'react-native-background-timer';
+import DeviceInfo from 'react-native-device-info';
 import Geolocation from 'react-native-geolocation-service';
-import CompanyType from "enum/companyType";
+import { NetworkInfo } from "react-native-network-info";
+import commonStyles from "styles/commonStyles";
+import DateUtil from "utils/dateUtil";
+import StorageUtil from "utils/storageUtil";
+import Utils from "utils/utils";
+import { Colors } from "values/colors";
+import { configConstants } from "values/configConstants";
+import { Constants } from "values/constants";
+import { Fonts } from "values/fonts";
+import ModalAddNote from "./modal/modalAddNote";
+import ModalWiFiList from "./modal/modalWiFiList";
+import styles from "./styles";
+import TimeCurrent from "./timeCurrent";
+import ItemTimekeeping from "./timekeeping/itemTimekeeping";
 
 const alarmNotificationData = {
     vibrate: true,
@@ -359,7 +315,7 @@ class HomeView extends GeoLocationView {
             }
         }
         modemMacAddress = res.join(':');
-        this.setState({ wiFiName, modemMacAddress});
+        this.setState({ wiFiName, modemMacAddress });
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -1021,7 +977,7 @@ class HomeView extends GeoLocationView {
                     localizes("homeView.wiFiOutList") + tvCheck + "!",
                     timekeepingType.CONNECTED_TO_INCORRECT_WI_FI
                 )
-            } 
+            }
             // else if (this.faceRecognizeEnable(faceRecognize)) {
             //     this.showFaceDetection(faceRecognize);
             // } 
@@ -1262,7 +1218,6 @@ class HomeView extends GeoLocationView {
                     />
                     {this.renderAlertExitApp()}
                     {this.renderAlertVersion()}
-                    {this.renderAlertFaceDetection()}
                     {this.state.refreshing ? null : this.showLoadingBar(this.props.isLoading)}
                 </Root>
             </Container>
@@ -1411,39 +1366,6 @@ class HomeView extends GeoLocationView {
     }
 
     /**
-     * Render face detection
-     */
-    renderAlertFaceDetection() {
-        const { tvCheck, isAlertFaceDetection } = this.state;
-        return (
-            <DialogCustom
-                visible={isAlertFaceDetection}
-                isVisibleTitle={true}
-                isVisibleContentText={true}
-                isVisibleTwoButton={true}
-                contentTitle={localizes("notification")}
-                textBtnOne={"Chụp hình"}
-                textBtnTwo={"Thử lại"}
-                contentText={"Nhận diện sai quá 3 lần, bạn muốn thử lại hay chụp hình để hoàn tất chấm công?"}
-                onPressX={() => {
-                    this.setState({ isAlertFaceDetection: false });
-                }}
-                onPressBtnOne={() => {
-                    this.setState({ isAlertFaceDetection: false });
-                    // Open camera
-                    this.takePhoto();
-                }}
-                onPressBtnPositive={() => {
-                    this.setState({ isAlertFaceDetection: false });
-                    let checkInRule = !Utils.isNull(this.checkInRule.textValue) ? JSON.parse(this.checkInRule.textValue) : {};
-                    let faceRecognize = checkInRule.faceRecognize || {};
-                    this.showFaceDetection(faceRecognize);
-                }}
-            />
-        );
-    }
-
-    /**
      * Check update version
      */
     checkUpdateVersion = (data, appVersion) => {
@@ -1501,101 +1423,32 @@ class HomeView extends GeoLocationView {
         });
     }
 
-    /**
-     * Take a photo
-     */
-    takePhoto = () => {
-        ImagePicker.launchCamera(optionsCamera, response => {
-            const { error, uri, originalRotation, didCancel } = response;
-            if (uri && !error) {
-                let rotation = Utils.rotateImage(originalRotation);
-                ImageResizer.createResizedImage(uri, 800, 600, "JPEG", 80, rotation).then(({ uri }) => {
-                    let uriReplace = uri;
-                    if (Platform.OS == "android") {
-                        uriReplace = uriReplace.replace('file://', '');
-                    };
-                    let file = {
-                        fileType: "image/*",
-                        filePath: uriReplace
-                    };
-                    const options = {
-                        url: ServerPath.API_URL + "timekeeping/upload/image-path",
-                        path: file.filePath,
-                        method: "POST",
-                        field: "file",
-                        type: "multipart",
-                        headers: {
-                            "Content-Type": "application/json", // Customize content-type
-                            "X-APITOKEN": global.token
-                        },
-                        notification: {
-                            enabled: true,
-                            onProgressTitle: "Đang tải ảnh lên...",
-                            autoClear: false
-                        }
-                    };
-                    Upload.startUpload(options).then(uploadId => {
-                        console.log("Upload started");
-                        Upload.addListener("progress", uploadId, data => {
-                            console.log(`Progress: ${data.progress}%`);
-                        });
-                        Upload.addListener("error", uploadId, data => {
-                            console.log(`Error: ${data.error}%`);
-                        });
-                        Upload.addListener("cancelled", uploadId, data => {
-                            console.log(`Cancelled!`);
-                        });
-                        Upload.addListener("completed", uploadId, data => {
-                            // data includes responseCode: number and responseBody: Object
-                            console.log("Completed!", data);
-                            if (!Utils.isNull(data.responseBody)) {
-                                let result = JSON.parse(data.responseBody);
-                                if (!Utils.isNull(result.data)) {
-                                    this.state.imgPathTimekeeping = result.data;
-                                    this.check();
-                                }
-                            }
-                        });
-                    }).catch(error => {
-                        this.saveException(error, "takePhoto");
-                    });
-                }).catch(err => {
-                    console.log(err)
-                })
-            } else if (error) {
-                console.log("The photo picker errored. Check ImagePicker.launchCamera func")
-                console.log(error)
-            }
-        });
+    saveStorage = data => {
+        StorageUtil.storeItem(StorageUtil.VERSION, data);
     };
-}
 
-saveStorage = data => {
-    StorageUtil.storeItem(StorageUtil.VERSION, data);
-};
+    renderWebView = link => {
+        Linking.openURL(link);
+    };
 
-renderWebView = link => {
-    Linking.openURL(link);
-};
+    const mapStateToProps = state => ({
+        userInfo: state.home.data,
+        isLoading: state.home.isLoading,
+        error: state.home.error,
+        errorCode: state.home.errorCode,
+        action: state.home.action,
+        screen: state.home.screen
+    });
 
-const mapStateToProps = state => ({
-    userInfo: state.home.data,
-    isLoading: state.home.isLoading,
-    error: state.home.error,
-    errorCode: state.home.errorCode,
-    action: state.home.action,
-    screen: state.home.screen
-});
-
-const mapDispatchToProps = {
-    ...actions,
-    ...timekeepingActions,
-    ...locationActions,
-    ...commonActions,
-    ...faceActions
-};
+    const mapDispatchToProps = {
+        ...actions,
+        ...timekeepingActions,
+        ...locationActions,
+        ...commonActions,
+        ...faceActions
+    };
 
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(HomeView);
+        mapStateToProps,
+        mapDispatchToProps
+    )(HomeView);
