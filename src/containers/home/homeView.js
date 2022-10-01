@@ -50,6 +50,7 @@ import ModalWiFiList from "./modal/modalWiFiList";
 import styles from "./styles";
 import TimeCurrent from "./timeCurrent";
 import ItemTimekeeping from "./timekeeping/itemTimekeeping";
+import { connect } from 'react-redux'
 
 const alarmNotificationData = {
     vibrate: true,

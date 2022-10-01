@@ -1,33 +1,21 @@
-import React, { Component } from "react";
-import { FlatList, ScrollView, Dimensions, ImageBackground, View, StatusBar, StyleSheet, Alert, Animated, Easing, Platform } from "react-native";
-import { Container, Header, Title, Left, Icon, Right, Button, Body, Content, Text, Card, CardItem, Image } from "native-base";
-import { Colors } from "values/colors";
 import BaseView from "containers/base/baseView";
+import screenType from "enum/screenType";
+import { View } from "react-native";
 import StorageUtil from "utils/storageUtil";
 import Utils from 'utils/utils';
-import SplashScreen from 'react-native-splash-screen';
-import DeviceInfo from 'react-native-device-info';
-import screenType from "enum/screenType";
-import userType from "enum/userType";
-import { configConstants } from "values/configConstants";
+import * as React from 'react';
 
 class SplashView extends BaseView {
-
     constructor(props) {
         super(props)
         this.state = {
             user: null,
             companyInfo: null
         }
-        this.animate = new Animated.Value(1)
     }
 
     render() {
-        const animateStyle = this.animate.interpolate({
-            inputRange: [0, 0],
-            outputRange: [0.5, 1],
-        })
-        Platform.OS === 'android' ? StatusBar.setBackgroundColor(Colors.COLOR_PRIMARY, true) : null;
+
         return (
             <View
                 style={{
@@ -122,32 +110,29 @@ class SplashView extends BaseView {
     login() {
         const { user } = this.state;
         if (!Utils.isNull(user)) {
-            if (global.bundleId == configConstants.APP_ADMIN) {
-                this.validateCompany();
-            } else {
-                if (Utils.isNull(user.branch) && !Utils.isNull(user.company.branches)) {
-                    this.props.navigation.navigate("Department", {
-                        userId: user.id,
-                        company: user.company,
-                        fromScreen: screenType.FROM_SPLASH,
-                        callback: () => {
-                            if (this.validate(user)) {
-                                this.goHomeScreen();
-                            } else {
-                                this.gotoUserInfo();
-                            }
+            if (Utils.isNull(user.branch) && !Utils.isNull(user.company.branches)) {
+                this.props.navigation.navigate("Department", {
+                    userId: user.id,
+                    company: user.company,
+                    fromScreen: screenType.FROM_SPLASH,
+                    callback: () => {
+                        if (this.validate(user)) {
+                            this.goHomeScreen();
+                        } else {
+                            this.gotoUserInfo();
                         }
-                    });
-                } else if (this.validate(user)) {
-                    this.goHomeScreen();
-                } else {
-                    this.gotoUserInfo();
-                }
+                    }
+                });
+            } else if (this.validate(user)) {
+                this.goHomeScreen();
+            } else {
+                this.gotoUserInfo();
             }
+
         } else {
             this.goLoginScreen();
         }
-        SplashScreen.hide();
+        // SplashScreen.hide();
     }
 
     gotoUserInfo = () => {
@@ -164,15 +149,13 @@ class SplashView extends BaseView {
      */
     getToken() {
         StorageUtil.retrieveItem(StorageUtil.USER_TOKEN).then((token) => {
-            //this callback is executed when your Promise is resolved
             global.token = token;
             this.login();
         }).catch((error) => {
-            //this callback is executed when your Promise is rejected
             console.log('Promise is rejected with error: ' + error);
             this.login();
         });
-        global.deviceId = DeviceInfo.getUniqueId();
+        // global.deviceId = DeviceInfo.getUniqueId();
     }
 }
 

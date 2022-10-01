@@ -3,16 +3,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import {
-  Text,
-  Clipboard,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ViewPropTypes,
-  Platform,
+  Clipboard, Platform, StyleSheet, Text, TouchableOpacity,
+  View
 } from 'react-native';
 
-import { MessageText, MessageImage, Time, utils } from 'react-native-gifted-chat';
+import { MessageImage, MessageText, Time, utils } from 'react-native-gifted-chat';
 
 const { isSameUser, isSameDay } = utils;
 
@@ -37,13 +32,13 @@ export default class Bubble extends React.Component {
           options,
           cancelButtonIndex,
         },
-        (buttonIndex) => {
-          switch (buttonIndex) {
-            case 0:
-              Clipboard.setString(this.props.currentMessage.text);
-              break;
-          }
-        });
+          (buttonIndex) => {
+            switch (buttonIndex) {
+              case 0:
+                Clipboard.setString(this.props.currentMessage.text);
+                break;
+            }
+          });
       }
     }
   }
@@ -269,23 +264,5 @@ Bubble.propTypes = {
   nextMessage: PropTypes.object,
   previousMessage: PropTypes.object,
   user: PropTypes.object,
-  containerStyle: PropTypes.shape({
-    left: ViewPropTypes.style,
-    right: ViewPropTypes.style,
-  }),
-  wrapperStyle: PropTypes.shape({
-    left: ViewPropTypes.style,
-    right: ViewPropTypes.style,
-  }),
-  messageTextStyle: Text.propTypes.style,
-  usernameStyle: Text.propTypes.style,
-  tickStyle: Text.propTypes.style,
-  containerToNextStyle: PropTypes.shape({
-    left: ViewPropTypes.style,
-    right: ViewPropTypes.style,
-  }),
-  containerToPreviousStyle: PropTypes.shape({
-    left: ViewPropTypes.style,
-    right: ViewPropTypes.style,
-  }),
+
 };

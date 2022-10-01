@@ -1,20 +1,11 @@
-import React, { Component } from 'react';
 import background_top_view from "images/background_top_view.png";
-import PropTypes from 'prop-types';
+import { Component } from 'react';
 import {
-    ListView,
-    Platform,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
-    ViewPropTypes as RNViewPropTypes,
-    FlatList,
     Dimensions,
     ImageBackground
 } from 'react-native';
-import { Colors } from 'values/colors';
 import Utils from 'utils/utils';
+import { Colors } from 'values/colors';
 import { Constants } from 'values/constants';
 
 const window = Dimensions.get('window');

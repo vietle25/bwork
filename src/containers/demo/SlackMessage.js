@@ -3,9 +3,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import {
-  View,
-  ViewPropTypes,
-  StyleSheet,
+  StyleSheet, View
 } from 'react-native';
 
 import { Avatar, Day, utils } from 'react-native-gifted-chat';
@@ -120,8 +118,5 @@ Message.propTypes = {
   nextMessage: PropTypes.object,
   previousMessage: PropTypes.object,
   user: PropTypes.object,
-  containerStyle: PropTypes.shape({
-    left: ViewPropTypes.style,
-    right: ViewPropTypes.style,
-  }),
+
 };

@@ -1,7 +1,6 @@
-import React from 'react';
 import PropTypes from 'prop-types';
-import { Text, View, ViewPropTypes as RNViewPropTypes } from 'react-native';
-const ViewPropTypes = RNViewPropTypes || View.propTypes;
+import React from 'react';
+import { Text } from 'react-native';
 
 /**
  * A customizable countdown component for React Native.
@@ -15,7 +14,7 @@ export default class TimerCountDown extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      Seconds: this.props.seconds*1000,
+      Seconds: this.props.seconds * 1000,
       timeoutId: null,
       previousSeconds: null
     };
@@ -41,7 +40,7 @@ export default class TimerCountDown extends React.Component {
     if (this.props.seconds != newProps.seconds) {
       this.setState({ previousSeconds: null, Seconds: newProps.seconds * 1000 });
     } else {
-      this.setState({previousSeconds: this.state.previousSeconds});
+      this.setState({ previousSeconds: this.state.previousSeconds });
     }
   }
 
@@ -57,40 +56,40 @@ export default class TimerCountDown extends React.Component {
   }
 
   tick() {
-    if(this.props.isEnable) {
-    const currentSeconds = Date.now();
-    const dt = this.state.previousSeconds ? (currentSeconds - this.state.previousSeconds) : 0;
-    const interval = this.props.interval;
+    if (this.props.isEnable) {
+      const currentSeconds = Date.now();
+      const dt = this.state.previousSeconds ? (currentSeconds - this.state.previousSeconds) : 0;
+      const interval = this.props.interval;
 
-    // correct for small variations in actual timeout time
-    const intervalSecondsRemaing = (interval - (dt % interval));
-    let timeout = intervalSecondsRemaing;
+      // correct for small variations in actual timeout time
+      const intervalSecondsRemaing = (interval - (dt % interval));
+      let timeout = intervalSecondsRemaing;
 
-    if (intervalSecondsRemaing < (interval / 2.0)) {
-      timeout += interval;
+      if (intervalSecondsRemaing < (interval / 2.0)) {
+        timeout += interval;
+      }
+
+      const Seconds = Math.max(this.state.Seconds - dt, 0);
+      const isComplete = (this.state.previousSeconds && Seconds <= 0);
+
+      if (this.mounted) {
+        if (this.state.timeoutId) { clearTimeout(this.state.timeoutId); }
+        this.setState({
+          timeoutId: isComplete ? null : setTimeout(this.tick, timeout),
+          previousSeconds: currentSeconds,
+          Seconds: Seconds
+        });
+      }
+
+      if (isComplete) {
+        if (this.props.onTimeElapsed) { this.props.onTimeElapsed(); }
+        return;
+      }
+
+      if (this.props.onTick) {
+        this.props.onTick(Seconds);
+      }
     }
-
-    const Seconds = Math.max(this.state.Seconds - dt, 0);
-    const isComplete = (this.state.previousSeconds && Seconds <= 0);
-
-    if (this.mounted) {
-      if (this.state.timeoutId) { clearTimeout(this.state.timeoutId); }
-      this.setState({
-        timeoutId: isComplete ? null : setTimeout(this.tick, timeout),
-        previousSeconds: currentSeconds,
-        Seconds: Seconds
-      });
-    }
-
-    if (isComplete) {
-      if (this.props.onTimeElapsed) { this.props.onTimeElapsed(); }
-      return;
-    }
-
-    if (this.props.onTick) {
-      this.props.onTick(Seconds);
-    }
-  }
   }
 
   getFormattedTime(milliseconds) {
@@ -109,7 +108,7 @@ export default class TimerCountDown extends React.Component {
   }
 
   getCurrentTime() {
-    return this.state.Seconds/1000
+    return this.state.Seconds / 1000
   }
 
   render() {
@@ -119,7 +118,7 @@ export default class TimerCountDown extends React.Component {
         allowFontScaling={this.props.allowFontScaling}
         style={this.props.style}
       >
-      {this.getFormattedTime(Seconds)}
+        {this.getFormattedTime(Seconds)}
       </Text>
     );
   }
@@ -131,7 +130,6 @@ TimerCountDown.defaultProps = {
   onTick: null,
   onTimeElapsed: null,
   allowFontScaling: false,
-  style: {}
 };
 
 TimerCountDown.propTypes = {
@@ -142,5 +140,4 @@ TimerCountDown.propTypes = {
   onTick: PropTypes.func,
   onTimeElapsed: PropTypes.func,
   allowFontScaling: PropTypes.bool,
-  style: Text.propTypes.style,
 };

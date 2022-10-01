@@ -3,7 +3,7 @@ import { ErrorCode } from "config/errorCode";
 import HeaderView from "containers/common/headerView";
 import { localizes } from "locales/i18n";
 import { Spinner } from "native-base";
-import { Component } from "react";
+import React from "react";
 import { Alert, Dimensions, Keyboard, Linking, NativeModules, PermissionsAndroid, Platform, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
 import { NavigationActions, StackActions } from 'react-navigation';
 import commonStyles from 'styles/commonStyles';
@@ -41,7 +41,7 @@ const RNAlarm = NativeModules.RNAlarm;
 /**
  * Base view class
  */
-class BaseView extends Component {
+class BaseView extends React.Component {
 
     constructor(props) {
         super(props)
@@ -277,22 +277,11 @@ class BaseView extends Component {
      * Go to home screen
      */
     goHomeScreen() {
-        if (global.bundleId == configConstants.APP_ADMIN) {
-            this.props.navigation.dispatch(resetAction("MainAdmin"))
-        } else {
-            this.props.navigation.dispatch(resetAction("Main"))
-        }
+        this.props.navigation.dispatch(resetAction("Main"))
     }
 
-    /**
-     * Go to login screen
-     */
     goLoginScreen() {
-        if (global.bundleId == configConstants.APP_ADMIN) {
-            this.props.navigation.dispatch(resetActionLogin("LoginAdmin"))
-        } else {
-            this.props.navigation.dispatch(resetActionLogin("Login"))
-        }
+        this.props.navigation.dispatch(resetActionLogin("Login"))
     }
 
     /**

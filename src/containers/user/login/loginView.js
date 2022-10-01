@@ -29,6 +29,8 @@ import { Constants } from 'values/constants';
 import { Fonts } from 'values/fonts';
 import styles from './styles';
 
+import * as React from 'react';
+
 class LoginView extends BaseView {
 
     constructor() {

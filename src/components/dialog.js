@@ -1,26 +1,18 @@
-import React, { Component } from 'react'
-import {
-    Modal,
-    View,
-    ViewPropTypes,
-    TouchableWithoutFeedback,
-    Text,
-    Platform,
-    Dimensions
-} from 'react-native'
-const { OS } = Platform;
-import commonStyles from 'styles/commonStyles';
-import { Constants } from "values/constants";
-import { Fonts } from 'values/fonts';
 import PropTypes from 'prop-types';
+import { Component } from 'react';
+import {
+    Dimensions, Modal, Platform, Text, TouchableWithoutFeedback, View
+} from 'react-native';
+import commonStyles from 'styles/commonStyles';
 import { Colors } from 'values/colors';
+const { OS } = Platform;
 const width = Dimensions.get('window').width
 const height = Dimensions.get('window').height
-export const DIALOG_WIDTH = width/1.2
+export const DIALOG_WIDTH = width / 1.2
 
 class Dialog extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props)
         this.state = {
             visible: props.visible
@@ -56,12 +48,12 @@ class Dialog extends Component {
                     // fontSize:Fonts.FONT_SIZE_MEDIUM ,
                     margin: 24,
                     marginBottom: 8,
-                    textAlign:'center'
+                    textAlign: 'center'
                 }, titleStyle]}>
                     {title}
                 </Text>
             )
-        } 
+        }
     }
 
     renderButtons() {
@@ -91,7 +83,7 @@ class Dialog extends Component {
         // if (!onTouch) return view;
 
         return (
-            <TouchableWithoutFeedback onPress={()=> {
+            <TouchableWithoutFeedback onPress={() => {
                 this.showDialog(false)
                 onTouch && onTouch()
             }} style={{ flex: 1, width: '100%' }}>
@@ -169,7 +161,7 @@ class Dialog extends Component {
         })
     }
 
-    showDialog(show = true){
+    showDialog(show = true) {
         this.setState({
             visible: show
         })
@@ -177,10 +169,6 @@ class Dialog extends Component {
 }
 
 Dialog.propTypes = {
-    dialogStyle: ViewPropTypes.style,
-    contentStyle: ViewPropTypes.style,
-    buttonsStyle: ViewPropTypes.style,
-    overlayStyle: ViewPropTypes.style,
     buttons: PropTypes.element,
     visible: PropTypes.bool,
     animationType: PropTypes.oneOf(['none', 'slide', 'fade']),
@@ -190,7 +178,6 @@ Dialog.propTypes = {
     onTouchOutside: PropTypes.func,
     supportedOrientations: PropTypes.arrayOf(PropTypes.oneOf(['portrait', 'portrait-upside-down', 'landscape', 'landscape-left', 'landscape-right'])),
     title: PropTypes.string,
-    titleStyle: Text.propTypes.style
 }
 
 Dialog.defaultProps = {

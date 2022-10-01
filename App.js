@@ -4,10 +4,9 @@
  * @flow
  */
 import { AppNavigator } from 'containers/navigation';
-import { Root } from 'native-base';
 import React from 'react';
 import {
-  Platform, StatusBar, StyleSheet
+  Platform, StatusBar
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import KeyboardManager from 'react-native-keyboard-manager';
@@ -32,17 +31,12 @@ export default class App extends React.Component {
     Platform.OS === 'android' ? StatusBar.setBackgroundColor(Colors.COLOR_PRIMARY, true) : null;
     return (
       <Provider store={store}>
-        <Root>
-          <MenuProvider>
-            <AppNavigator />
-          </MenuProvider>
-        </Root>
+        <MenuProvider>
+          <AppNavigator />
+        </MenuProvider>
       </Provider>
     );
   }
 }
 
-const styles = StyleSheet.create({
-
-});
 

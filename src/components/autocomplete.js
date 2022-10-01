@@ -1,18 +1,15 @@
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Component } from 'react';
 import {
   ListView,
   Platform,
   StyleSheet,
   Text,
   TextInput,
-  View,
-  ViewPropTypes as RNViewPropTypes,
-  FlatList
+  View
 } from 'react-native';
 import { Colors } from 'values/colors';
 
-const ViewPropTypes = RNViewPropTypes || View.propTypes;
 
 class Autocomplete extends Component {
   static propTypes = {
@@ -21,7 +18,6 @@ class Autocomplete extends Component {
      * These styles will be applied to the container which
      * surrounds the autocomplete component.
      */
-    containerStyle: ViewPropTypes.style,
     /**
      * Assign an array of data objects which should be
      * rendered in respect to the entered text.
@@ -35,7 +31,6 @@ class Autocomplete extends Component {
      * These styles will be applied to the container which surrounds
      * the textInput component.
      */
-    inputContainerStyle: ViewPropTypes.style,
     /*
      * Set `keyboardShouldPersistTaps` to true if RN version is <= 0.39.
      */
@@ -47,11 +42,9 @@ class Autocomplete extends Component {
      * These styles will be applied to the container which surrounds
      * the result list.
      */
-    listContainerStyle: ViewPropTypes.style,
     /**
      * These style will be applied to the result list.
      */
-    listStyle: ViewPropTypes.style,
     /**
      * `onShowResults` will be called when list is going to
      * show/hide results.
@@ -98,16 +91,16 @@ class Autocomplete extends Component {
     super(props);
 
     const ds = new ListView.DataSource({ rowHasChanged: props.rowHasChanged });
-    this.state = { 
+    this.state = {
       dataSource: ds.cloneWithRows(props.data),
-      data : props.data
-     };
+      data: props.data
+    };
     this.resultList = null;
   }
 
   UNSAFE_componentWillReceiveProps({ data }) {
     const dataSource = this.state.dataSource.cloneWithRows(data);
-    this.setState({ dataSource , data});
+    this.setState({ dataSource, data });
   }
 
   /**
@@ -148,8 +141,8 @@ class Autocomplete extends Component {
         renderSeparator={renderSeparator || this._renderSeparator}
         onEndReached={onEndReached}
         onEndReachedThreshold={onEndReachedThreshold}
-        onScrollBeginDrag = {onScrollBeginDrag}
-        onScrollEndDrag = {onScrollEndDrag}
+        onScrollBeginDrag={onScrollBeginDrag}
+        onScrollEndDrag={onScrollEndDrag}
         style={[styles.list, listStyle]}
       />
     );
@@ -203,7 +196,7 @@ class Autocomplete extends Component {
     const key = `spr_${rowID}`;
     return (
       <View style={styles.separator}
-            key={key}
+        key={key}
       />
     );
   };

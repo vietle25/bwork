@@ -25,6 +25,7 @@ import DepartmentView from "containers/user/register/department/departmentView";
 import RegisterView from 'containers/user/register/registerView';
 import { Animated, Easing } from "react-native";
 import { createAppContainer, createStackNavigator } from 'react-navigation';
+import * as React from 'react';
 
 const AppNavigator = createStackNavigator(
     {
@@ -50,13 +51,7 @@ const AppNavigator = createStackNavigator(
         DepartmentList: ListDepartmentView,
         StaffDepartmentList: ListStaffDepartmentView,
         CompanyList: CompanyListView,
-        // BranchList: BranchListView,
-        // SabbaticalAdminHome: SabbaticalAdminView,
-        // TimekeepingAdminHome: TimekeepingAdminView,
-        // FaceDetection: FaceDetectionView,
         ConfigStaff: ConfigStaffView,
-        // CreateConversationGroup: CreateConversationGroupView,
-        // CreateConversationNew: CreateConversationNewView,
         TaskManager: TaskManagerView,
         TaskDetail: TaskDetailView
     }, {
