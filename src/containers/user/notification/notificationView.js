@@ -1,32 +1,29 @@
-import { ActionEvent, getActionSuccess } from "actions/actionEvent";
+import {ActionEvent, getActionSuccess} from 'actions/actionEvent';
 import * as commonActions from 'actions/commonActions';
 import * as actions from 'actions/userActions';
-import FlatListCustom from "components/flatListCustom";
-import { ErrorCode } from "config/errorCode";
-import BaseView from "containers/base/baseView";
-import notificationType from "enum/notificationType";
+import FlatListCustom from 'components/flatListCustom';
+import {ErrorCode} from 'config/errorCode';
+import BaseView from 'containers/base/baseView';
+import notificationType from 'enum/notificationType';
 import ic_close from 'images/ic_close.png';
 import ic_playlist_add_check_grey from 'images/ic_playlist_add_check_grey.png';
-import ic_search_white from "images/ic_search_white.png";
-import { localizes } from 'locales/i18n';
-import { Container, Header, Root } from "native-base";
-import {
-    BackHandler, Image, Keyboard, RefreshControl, TextInput, TouchableOpacity, View
-} from "react-native";
+import ic_search_white from 'images/ic_search_white.png';
+import {localizes} from 'locales/i18n';
+import {Box, HStack} from 'native-base';
+import {BackHandler, Image, Keyboard, RefreshControl, TextInput, TouchableOpacity, View} from 'react-native';
 import I18n from 'react-native-i18n';
-import { connect } from 'react-redux';
-import commonStyles from "styles/commonStyles";
-import StorageUtil from "utils/storageUtil";
-import Utils from "utils/utils";
-import { Colors } from "values/colors";
-import { Constants } from "values/constants";
-import { Fonts } from "values/fonts";
-import ItemNotification from "./itemNotification";
-import ModalContent from "./modalContent";
-import styles from "./styles";
+import {connect} from 'react-redux';
+import commonStyles from 'styles/commonStyles';
+import StorageUtil from 'utils/storageUtil';
+import Utils from 'utils/utils';
+import {Colors} from 'values/colors';
+import {Constants} from 'values/constants';
+import {Fonts} from 'values/fonts';
+import ItemNotification from './itemNotification';
+import ModalContent from './modalContent';
+import styles from './styles';
 
 class NotificationView extends BaseView {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -40,19 +37,19 @@ class NotificationView extends BaseView {
             stringSearch: null,
             typing: false,
             typingTimeout: 0,
-            txtNotNotify: localizes("notificationView.notData")
+            txtNotNotify: localizes('notificationView.notData'),
         };
         this.typeIsSeen = {
             ONE_ITEM: 1,
-            ALL_ITEM: 0
-        }
+            ALL_ITEM: 0,
+        };
         this.filter = {
             userId: null,
             paging: {
                 pageSize: Constants.PAGE_SIZE,
-                page: 0
-            }
-        }
+                page: 0,
+            },
+        };
         this.listNotifications = [];
         this.itemWatching = null;
         this.showNoData = false;
@@ -70,31 +67,33 @@ class NotificationView extends BaseView {
      * Get information user profile
      */
     getUserProfile = () => {
-        StorageUtil.retrieveItem(StorageUtil.USER_PROFILE).then((user) => {
-            //this callback is executed when your Promise is resolved
-            if (!Utils.isNull(user)) {
-                this.setState({
-                    userId: user.id
-                })
-                this.filter = {
-                    userId: user.id,
-                    paging: {
-                        pageSize: Constants.PAGE_SIZE,
-                        page: 0
-                    }
+        StorageUtil.retrieveItem(StorageUtil.USER_PROFILE)
+            .then(user => {
+                //this callback is executed when your Promise is resolved
+                if (!Utils.isNull(user)) {
+                    this.setState({
+                        userId: user.id,
+                    });
+                    this.filter = {
+                        userId: user.id,
+                        paging: {
+                            pageSize: Constants.PAGE_SIZE,
+                            page: 0,
+                        },
+                    };
+                    this.props.getUserProfile(user.id);
+                    this.requestNotification();
                 }
-                this.props.getUserProfile(user.id);
-                this.requestNotification();
-            }
-        }).catch((error) => {
-            this.saveException(error, "getUserProfile");
-        });
-    }
+            })
+            .catch(error => {
+                this.saveException(error, 'getUserProfile');
+            });
+    };
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (this.props !== nextProps) {
-            this.props = nextProps
-            this.handleData()
+            this.props = nextProps;
+            this.handleData();
         }
     }
 
@@ -107,7 +106,7 @@ class NotificationView extends BaseView {
             if (this.props.errorCode == ErrorCode.ERROR_SUCCESS) {
                 this.state.isLoadingMore = false;
                 if (this.props.action == getActionSuccess(ActionEvent.GET_NOTIFICATIONS)) {
-                    console.log("GET NOTIFICATION DATA: ", data)
+                    console.log('GET NOTIFICATION DATA: ', data);
                     if (!Utils.isNull(data)) {
                         if (data.paging.page == 0) {
                             this.listNotifications = [];
@@ -115,7 +114,7 @@ class NotificationView extends BaseView {
                         if (data.data.length > 0) {
                             this.state.enableLoadMore = !(data.data.length < Constants.PAGE_SIZE);
                             data.data.forEach(item => {
-                                this.listNotifications.push({ ...item });
+                                this.listNotifications.push({...item});
                             });
                         }
                     }
@@ -125,7 +124,7 @@ class NotificationView extends BaseView {
                     // firebase.notifications().setBadge(data);
                     global.badgeCount = data;
                 } else if (this.props.action == getActionSuccess(ActionEvent.GET_NOTIFICATIONS_VIEW)) {
-                    let index2 = -1
+                    let index2 = -1;
                     for (let index = 0, size = this.listNotifications.length; index < size; index++) {
                         const element = this.listNotifications[index];
                         if (element.id == this.itemWatching.id) {
@@ -139,8 +138,8 @@ class NotificationView extends BaseView {
                 } else if (this.props.action == getActionSuccess(ActionEvent.READ_ALL_NOTIFICATION)) {
                     if (data) {
                         for (let index = 0, size = this.listNotifications.length; index < size; index++) {
-                            const element = this.listNotifications[index]
-                            element.seen = true
+                            const element = this.listNotifications[index];
+                            element.seen = true;
                         }
                         this.countNewNotification();
                     }
@@ -154,7 +153,7 @@ class NotificationView extends BaseView {
 
     componentDidMount() {
         super.componentDidMount();
-        BackHandler.addEventListener('hardwareBackPress', this.handlerBackButton)
+        BackHandler.addEventListener('hardwareBackPress', this.handlerBackButton);
         this.languageDevice = I18n.locale;
         this.getUserProfile();
     }
@@ -171,7 +170,7 @@ class NotificationView extends BaseView {
         this.filter.paging.page = 0;
         this.props.getUserProfile(this.state.userId);
         this.requestNotification();
-    }
+    };
 
     /**
      * get notification and update count
@@ -181,7 +180,7 @@ class NotificationView extends BaseView {
         this.props.getNotificationsRequest(this.filter);
         let timeOutRequestOne = setTimeout(() => {
             this.countNewNotification();
-            clearTimeout(timeOutRequestOne)
+            clearTimeout(timeOutRequestOne);
         }, timeout);
     }
 
@@ -194,17 +193,17 @@ class NotificationView extends BaseView {
             this.filter.paging.page += 1;
             this.props.getNotificationsRequest(this.filter);
         }
-    }
+    };
 
     /**
      * Update number notification seen
-     * @param {*} type 
+     * @param {*} type
      * @param {*} itemNotificationId  // id of item notification when on click item notification
      */
     updateNumberIsSeen(type, itemNotificationId) {
         if (!Utils.isNull(this.state.userId)) {
             this.filterNotificationIsSeen = {
-                notificationIds: []
+                notificationIds: [],
             };
             if (type == this.typeIsSeen.ALL_ITEM) {
                 if (this.listNotifications.length > 0) {
@@ -223,29 +222,29 @@ class NotificationView extends BaseView {
     onToggleSearch() {
         if (!Utils.isNull(this.state.stringSearch)) {
             this.setState({
-                stringSearch: ""
-            })
+                stringSearch: '',
+            });
         }
         this.setState({
-            isSearch: !this.state.isSearch
-        })
+            isSearch: !this.state.isSearch,
+        });
     }
 
     /**
-     * Manager text input search 
-     * @param {*} stringSearch 
+     * Manager text input search
+     * @param {*} stringSearch
      */
     onChangeTextInput(stringSearch) {
         const self = this;
         if (self.state.typingTimeout) {
-            clearTimeout(self.state.typingTimeout)
+            clearTimeout(self.state.typingTimeout);
         }
         self.setState({
             stringSearch: stringSearch,
             typing: false,
             typingTimeout: setTimeout(() => {
-                this.onSearch(stringSearch)
-            }, 1000)
+                this.onSearch(stringSearch);
+            }, 1000),
         });
     }
 
@@ -255,33 +254,33 @@ class NotificationView extends BaseView {
     onSearch(text) {
         if (!Utils.isNull(this.state.userId)) {
             this.filterSearch = {
-                "stringSearch": text,
-                "userId": this.state.userId
-            }
+                stringSearch: text,
+                userId: this.state.userId,
+            };
             if (!Utils.isNull(text)) {
                 this.props.searchNotification(this.filterSearch);
             } else {
-                this.handleRefresh()
+                this.handleRefresh();
             }
         }
     }
 
     /**Render view */
     render() {
-        var { data } = this.props;
+        var {data} = this.props;
         return (
-            <Container style={styles.container}>
-                <Root>
+            <Box style={styles.container}>
+                <View style={{flex: 1}}>
                     {/* <View style={{ backgroundColor: Colors.COLOR_PRIMARY }}>
                         {this.renderSearchBar()}
                     </View> */}
-                    <Header style={[commonStyles.header]}>
+                    <HStack style={[commonStyles.header]}>
                         {this.renderHeaderView({
                             visibleBack: true,
-                            title: localizes("notificationView.title"),
-                            titleStyle: { color: Colors.COLOR_WHITE }
+                            title: localizes('notificationView.title'),
+                            titleStyle: {color: Colors.COLOR_WHITE},
                         })}
-                    </Header>
+                    </HStack>
                     <FlatListCustom
                         contentContainerStyle={{}}
                         keyExtractor={item => item.code}
@@ -297,22 +296,22 @@ class NotificationView extends BaseView {
                         }
                         enableLoadMore={this.state.enableLoadMore}
                         onLoadMore={() => {
-                            this.getMoreNotifications()
+                            this.getMoreNotifications();
                         }}
                         showsVerticalScrollIndicator={false}
                         isShowEmpty={this.showNoData}
                         isShowImageEmpty={true}
-                        textForEmpty={localizes("notificationView.notNotification")}
+                        textForEmpty={localizes('notificationView.notNotification')}
                         styleEmpty={{
-                            marginTop: Constants.MARGIN_X_LARGE
+                            marginTop: Constants.MARGIN_X_LARGE,
                         }}
                     />
-                    <ModalContent
-                        ref={'modalContent'}
-                    />
-                    {this.state.isLoadingMore || this.state.refreshing ? null : this.showLoadingBar(this.props.isLoading)}
-                </Root>
-            </Container>
+                    <ModalContent ref={'modalContent'} />
+                    {this.state.isLoadingMore || this.state.refreshing
+                        ? null
+                        : this.showLoadingBar(this.props.isLoading)}
+                </View>
+            </Box>
         );
     }
 
@@ -320,42 +319,57 @@ class NotificationView extends BaseView {
      * Render search bar
      */
     renderSearchBar = () => {
-        const { stringSearch } = this.state
+        const {stringSearch} = this.state;
         return (
-            <View style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingHorizontal: Constants.PADDING_LARGE,
-                height: Constants.HEADER_HEIGHT
-            }}>
+            <View
+                style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingHorizontal: Constants.PADDING_LARGE,
+                    height: Constants.HEADER_HEIGHT,
+                }}>
                 <TouchableOpacity
                     style={{
                         paddingLeft: Constants.PADDING_LARGE,
-                        paddingVertical: Constants.PADDING_X_LARGE
+                        paddingVertical: Constants.PADDING_X_LARGE,
                     }}
                     onPress={() => {
-                        this.onToggleSearch()
-                        this.handleRefresh()
+                        this.onToggleSearch();
+                        this.handleRefresh();
                     }}>
                     <Image source={!Utils.isNull(stringSearch) ? ic_close : ic_search_white} />
                 </TouchableOpacity>
-                <View style={[commonStyles.viewHorizontal, commonStyles.viewCenter, {
-                    paddingHorizontal: Constants.PADDING_LARGE
-                }]} >
+                <View
+                    style={[
+                        commonStyles.viewHorizontal,
+                        commonStyles.viewCenter,
+                        {
+                            paddingHorizontal: Constants.PADDING_LARGE,
+                        },
+                    ]}>
                     <TextInput
-                        style={[commonStyles.text, { color: Colors.COLOR_WHITE, margin: 0, borderRadius: 0, flex: 1, fontSize: Fonts.FONT_SIZE_XX_SMALL }]}
+                        style={[
+                            commonStyles.text,
+                            {
+                                color: Colors.COLOR_WHITE,
+                                margin: 0,
+                                borderRadius: 0,
+                                flex: 1,
+                                fontSize: Fonts.FONT_SIZE_XX_SMALL,
+                            },
+                        ]}
                         placeholder={localizes('search')}
                         placeholderTextColor={Colors.COLOR_WHITE}
                         ref={r => (this.stringSearch = r)}
                         value={stringSearch}
                         onChangeText={this.onChangeTextInput}
                         onSubmitEditing={() => {
-                            Keyboard.dismiss()
-                            this.onSearch(stringSearch)
+                            Keyboard.dismiss();
+                            this.onSearch(stringSearch);
                         }}
                         keyboardType="default"
-                        underlineColorAndroid='transparent'
-                        returnKeyType={"search"}
+                        underlineColorAndroid="transparent"
+                        returnKeyType={'search'}
                         blurOnSubmit={false}
                         autoCorrect={false}
                     />
@@ -363,16 +377,16 @@ class NotificationView extends BaseView {
                 <TouchableOpacity
                     style={{
                         paddingRight: Constants.PADDING_LARGE,
-                        paddingVertical: Constants.PADDING_X_LARGE
+                        paddingVertical: Constants.PADDING_X_LARGE,
                     }}
                     onPress={() => {
-                        this.updateNumberIsSeen(this.typeIsSeen.ALL_ITEM)
+                        this.updateNumberIsSeen(this.typeIsSeen.ALL_ITEM);
                     }}>
                     <Image source={ic_playlist_add_check_grey} />
                 </TouchableOpacity>
             </View>
-        )
-    }
+        );
+    };
 
     /**
      * Render item row
@@ -387,8 +401,8 @@ class NotificationView extends BaseView {
                 indexInParent={indexInParent}
                 onPressItem={() => this.onPressedItem(item, index)}
             />
-        )
-    }
+        );
+    };
 
     /**
      * set title and content for model item
@@ -403,8 +417,8 @@ class NotificationView extends BaseView {
                 let params = {
                     taskId: data.taskId,
                     callback: null,
-                }
-                !Utils.isNull(params.taskId) && this.props.navigation.navigate("TaskDetail", params);
+                };
+                !Utils.isNull(params.taskId) && this.props.navigation.navigate('TaskDetail', params);
                 break;
             default:
                 this.openModal(item.content, item.title, item.type);
@@ -420,12 +434,12 @@ const mapStateToProps = state => ({
     data: state.notifications.data,
     isLoading: state.notifications.isLoading,
     errorCode: state.notifications.errorCode,
-    action: state.notifications.action
-})
+    action: state.notifications.action,
+});
 
 const mapDispatchToProps = {
     ...actions,
-    ...commonActions
+    ...commonActions,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(NotificationView);

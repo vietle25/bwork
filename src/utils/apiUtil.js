@@ -1,24 +1,22 @@
-import StorageUtil from "utils/storageUtil";
-import DateUtil from "utils/dateUtil";
-import { Platform } from "react-native";
+import {Platform} from 'react-native';
+import DateUtil from 'utils/dateUtil';
 
 export default class ApiUtil {
-
     /**
-     * Get header api 
+     * Get header api
      */
     static getHeader() {
         let header = new Headers({
-            "Accept": "application/json",
+            Accept: 'application/json',
             'Content-Type': 'application/json',
             'X-APITOKEN': global.token,
             'X-CLIENT-TIME': DateUtil.parseNow(DateUtil.FORMAT_DATE_TIME_ZONE),
-            'X-PLATFORM' : Platform.OS,
+            'X-PLATFORM': Platform.OS,
             'X-DEVICE-ID': global.deviceId,
-            'X-APP-TYPE' : global.bundleId
-        })
-        console.log('API header', header)
-        return header
+            'X-APP-TYPE': 'com.boot.timekeeping.company',
+        });
+        console.log('API header', header);
+        return header;
     }
 
     /**
@@ -26,10 +24,10 @@ export default class ApiUtil {
      */
     static getHeaderTenor() {
         let header = new Headers({
-            "Accept": "application/json",
-            'Content-Type': 'application/json'
-        })
-        console.log('API header', header)
-        return header
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        });
+        console.log('API header', header);
+        return header;
     }
 }

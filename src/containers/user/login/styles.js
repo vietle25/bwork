@@ -1,10 +1,8 @@
-import React from "react-native";
-import { Constants } from 'values/constants';
-import { Colors } from 'values/colors';
-import { Fonts } from 'values/fonts';
-import commonStyles from "styles/commonStyles";
+import React from 'react-native';
+import {Colors} from 'values/colors';
+import {Constants} from 'values/constants';
 
-const { StyleSheet } = React;
+const {StyleSheet} = React;
 
 export default {
     container: {
@@ -13,7 +11,7 @@ export default {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'stretch',
-        backgroundColor: Colors.COLOR_BACKGROUND
+        backgroundColor: Colors.COLOR_WHITE,
     },
     buttonLogin: {
         marginBottom: 15,
@@ -23,8 +21,12 @@ export default {
         paddingBottom: Constants.PADDING_LARGE,
     },
     images: {
-        marginLeft: 8, marginRight: 8, marginTop: 8, marginBottom: 2,
+        marginLeft: 8,
+        marginRight: 8,
+        marginTop: 8,
+        marginBottom: 2,
         alignItems: 'flex-end',
-        justifyContent: 'flex-end', alignSelf: 'flex-end'
-    }
+        justifyContent: 'flex-end',
+        alignSelf: 'flex-end',
+    },
 };

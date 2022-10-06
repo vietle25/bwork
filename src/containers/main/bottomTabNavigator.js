@@ -1,81 +1,75 @@
-import { createBottomTabNavigator } from "react-navigation";
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import TabBarCustom from 'components/tabBarCustom';
 
 // Import screens
-import HomeView from "containers/home/homeView";
-import TaskManagerView from "containers/task/taskManagerView";
-import TimekeepingHistoryView from "containers/timekeeping/history/timekeepingHistoryView";
-import UserProfileView from "containers/user/profile/info/userProfileView";
-
+import HomeView from 'containers/home/homeView';
 // import icons
-import BottomTabCustom from "components/bottomTabCustom";
-import SabbaticalView from "containers/sabbatical/sabbaticalView";
-import { Colors } from "values/colors";
-import HomeButton from "./tabIcon/homeButton";
-import ProfileButton from "./tabIcon/profileButton";
-import SabbaticalButton from "./tabIcon/sabbaticalButton";
-import TaskButton from "./tabIcon/taskButton";
-import TimekeepingHistoryButton from "./tabIcon/timekeepingHistoryButton";
+import sabbaticalView from 'containers/sabbatical/sabbaticalView';
+import taskManagerView from 'containers/task/taskManagerView';
+import timekeepingHistoryView from 'containers/timekeeping/history/timekeepingHistoryView';
+import userProfileView from 'containers/user/profile/info/userProfileView';
+import ic_calendar_grey from 'images/ic_calendar_grey.png';
+import ic_edit_task_black from 'images/ic_edit_task_black.png';
+import ic_history_timekeeping_black from 'images/ic_history_timekeeping_black.png';
+import ic_task_black from 'images/ic_task_black.png';
+import ic_user_black from 'images/ic_user_black.png';
 
-const RouteConfig = {
-	Home: {
-		screen: HomeView,
-		navigationOptions: ({ navigation }) => ({
-			tabBarIcon: ({ focused, tintColor }) => (
-				<HomeButton focused={focused} navigation={navigation} />
-			)
-		})
-	},
-	Sabbatical: {
-		screen: SabbaticalView,
-		navigationOptions: ({ navigation }) => ({
-			tabBarIcon: ({ focused, tintColor }) => (
-				<SabbaticalButton focused={focused} navigation={navigation} />
-			)
-		})
-	},
-	Task: {
-		screen: TaskManagerView,
-		navigationOptions: ({ navigation }) => ({
-			tabBarIcon: ({ focused, tintColor }) => (
-				<TaskButton focused={focused} navigation={navigation} />
-			)
-		})
-	},
-	TimekeepingHistory: {
-		screen: TimekeepingHistoryView,
-		navigationOptions: ({ navigation }) => ({
-			tabBarIcon: ({ focused, tintColor }) => (
-				<TimekeepingHistoryButton focused={focused} navigation={navigation} />
-			)
-		})
-	},
-	// ListChat: {
-	// 	screen: ListChatView,
-	// 	navigationOptions: ({ navigation }) => ({
-	// 		tabBarIcon: ({ focused, tintColor }) => (
-	// 			<ChatButton focused={focused} navigation={navigation} />
-	// 		)
-	// 	})
-	// },
-	Profile: {
-		screen: UserProfileView,
-		navigationOptions: ({ navigation }) => ({
-			tabBarIcon: ({ focused, tintColor }) => (
-				<ProfileButton focused={focused} navigation={navigation} />
-			)
-		})
-	}
+const Tab = createBottomTabNavigator();
+
+const BottomTabNavigator = props => {
+    return (
+        <Tab.Navigator
+            initialRouteName={'HomeView'}
+            backBehavior={'initialRoute'}
+            lazy={true}
+            tabBar={props => <TabBarCustom {...props} />}>
+            <Tab.Screen
+                name="HomeView"
+                component={HomeView}
+                options={{
+                    title: 'Chấm công',
+                    icon: ic_task_black,
+                    iconActive: ic_task_black,
+                }}
+            />
+            <Tab.Screen
+                name="SabbaticalView"
+                component={sabbaticalView}
+                options={{
+                    title: 'Xin phép',
+                    icon: ic_history_timekeeping_black,
+                    iconActive: ic_history_timekeeping_black,
+                }}
+            />
+            <Tab.Screen
+                name="TaskManagerView"
+                component={taskManagerView}
+                options={{
+                    title: 'Công việc',
+                    icon: ic_edit_task_black,
+                    iconActive: ic_edit_task_black,
+                }}
+            />
+            <Tab.Screen
+                name="TimekeepingHistoryView"
+                component={timekeepingHistoryView}
+                options={{
+                    title: 'Lịch sử',
+                    icon: ic_calendar_grey,
+                    iconActive: ic_calendar_grey,
+                }}
+            />
+            <Tab.Screen
+                name="UserProfileView"
+                component={userProfileView}
+                options={{
+                    title: 'Tài khoản',
+                    icon: ic_user_black,
+                    iconActive: ic_user_black,
+                }}
+            />
+        </Tab.Navigator>
+    );
 };
 
-const BottomNavigatorConfig = {
-	tabBarComponent: props => <BottomTabCustom {...props} />,
-	tabBarOptions: {
-		style: {
-			backgroundColor: Colors.COLOR_WHITE,
-		},
-		showLabel: false,
-		keyboardHidesTabBar: true
-	}
-};
-
-export default createBottomTabNavigator(RouteConfig, BottomNavigatorConfig);
+export default BottomTabNavigator;

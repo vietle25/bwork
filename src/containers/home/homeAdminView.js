@@ -1,41 +1,46 @@
-import { ActionEvent, getActionSuccess } from "actions/actionEvent";
-import * as commonActions from "actions/commonActions";
-import * as companyActions from "actions/companyActions";
-import * as timekeepingActions from "actions/timekeepingActions";
-import * as actions from "actions/userActions";
-import { CalendarScreen } from "components/calendarScreen";
-import DialogCustom from "components/dialogCustom";
-import { ErrorCode } from "config/errorCode";
-import BaseView from "containers/base/baseView";
-import dashboardType from "enum/dashboardType";
-import slidingMenuType from "enum/slidingMenuType";
-import statusType from "enum/statusType";
-import ic_camera_gray from "images/ic_camera_gray.png";
-import ic_darts_gray from "images/ic_darts_gray.png";
-import ic_equalizer_gray from "images/ic_equalizer_gray.png";
-import ic_next_grey from "images/ic_next_grey.png";
-import ic_sabbatical_gray from "images/ic_sabbatical_gray.png";
-import img_bg_statistical from "images/img_bg_statistical.png";
-import img_calendar from "images/img_calendar.png";
-import { localizes } from "locales/i18n";
+import {ActionEvent, getActionSuccess} from 'actions/actionEvent';
+import * as commonActions from 'actions/commonActions';
+import * as companyActions from 'actions/companyActions';
+import * as timekeepingActions from 'actions/timekeepingActions';
+import * as actions from 'actions/userActions';
+import {CalendarScreen} from 'components/calendarScreen';
+import DialogCustom from 'components/dialogCustom';
+import {ErrorCode} from 'config/errorCode';
+import BaseView from 'containers/base/baseView';
+import dashboardType from 'enum/dashboardType';
+import slidingMenuType from 'enum/slidingMenuType';
+import statusType from 'enum/statusType';
+import ic_camera_gray from 'images/ic_camera_gray.png';
+import ic_darts_gray from 'images/ic_darts_gray.png';
+import ic_equalizer_gray from 'images/ic_equalizer_gray.png';
+import ic_next_grey from 'images/ic_next_grey.png';
+import ic_sabbatical_gray from 'images/ic_sabbatical_gray.png';
+import img_bg_statistical from 'images/img_bg_statistical.png';
+import img_calendar from 'images/img_calendar.png';
+import {localizes} from 'locales/i18n';
+import {Container, Content, Text} from 'native-base';
 import {
-    Container, Content, Header, Root, Text
-} from "native-base";
-import {
-    BackHandler, Dimensions, Image, ImageBackground, Linking, RefreshControl, TouchableOpacity, View
-} from "react-native";
+    BackHandler,
+    Dimensions,
+    Image,
+    ImageBackground,
+    Linking,
+    RefreshControl,
+    TouchableOpacity,
+    View,
+} from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import { connect } from "react-redux";
-import commonStyles from "styles/commonStyles";
-import DateUtil from "utils/dateUtil";
-import StorageUtil from "utils/storageUtil";
-import Utils from "utils/utils";
-import { Colors } from "values/colors";
-import { Constants } from "values/constants";
-import { Fonts } from "values/fonts";
-import styles from "./styles";
+import {connect} from 'react-redux';
+import commonStyles from 'styles/commonStyles';
+import DateUtil from 'utils/dateUtil';
+import StorageUtil from 'utils/storageUtil';
+import Utils from 'utils/utils';
+import {Colors} from 'values/colors';
+import {Constants} from 'values/constants';
+import {Fonts} from 'values/fonts';
+import styles from './styles';
 
-const screen = Dimensions.get("window");
+const screen = Dimensions.get('window');
 
 class HomeView extends BaseView {
     constructor(props) {
@@ -48,7 +53,7 @@ class HomeView extends BaseView {
             refreshing: true,
             isAlertVersion: false,
             totalPersonnel: 0,
-            dateCurrent: DateUtil.now()
+            dateCurrent: DateUtil.now(),
         };
         this.userInfo = null;
         this.dataVersion = null;
@@ -57,98 +62,108 @@ class HomeView extends BaseView {
 
         this.attributes = [
             {
-                name: "Đã chấm công",
+                name: 'Đã chấm công',
                 icon: ic_equalizer_gray,
                 quantity: 0,
                 ratio: 0,
                 screen: slidingMenuType.TIMEKEEPING_ADMIN,
                 color: Colors.COLOR_PRIMARY,
-                dashboardType: dashboardType.CHECK_IN
+                dashboardType: dashboardType.CHECK_IN,
             },
             {
-                name: "Đi trễ",
+                name: 'Đi trễ',
                 icon: ic_camera_gray,
                 quantity: 0,
                 ratio: 0,
                 screen: slidingMenuType.TIMEKEEPING_ADMIN,
                 color: Colors.COLOR_PRIMARY,
-                dashboardType: dashboardType.LATE_FOR_WORKING
+                dashboardType: dashboardType.LATE_FOR_WORKING,
             },
             {
-                name: "Xin phép",
+                name: 'Xin phép',
                 icon: ic_sabbatical_gray,
                 quantity: 0,
                 ratio: 0,
                 screen: slidingMenuType.SABBATICAL_ADMIN,
                 color: Colors.COLOR_PRIMARY,
-                dashboardType: null
+                dashboardType: null,
             },
             {
-                name: "Chưa chấm công",
+                name: 'Chưa chấm công',
                 icon: ic_darts_gray,
                 quantity: 0,
                 ratio: 0,
                 screen: slidingMenuType.TIMEKEEPING_ADMIN,
                 color: Colors.COLOR_RED,
-                dashboardType: dashboardType.NOT_CHECK_IN
-            }
+                dashboardType: dashboardType.NOT_CHECK_IN,
+            },
         ];
 
         this.filter = {
             companyId: null,
             branchId: null,
-            day: DateUtil.convertFromFormatToFormat(DateUtil.now(), DateUtil.FORMAT_DATE_TIME_ZONE_T, DateUtil.FORMAT_DATE_SQL)
-        }
+            day: DateUtil.convertFromFormatToFormat(
+                DateUtil.now(),
+                DateUtil.FORMAT_DATE_TIME_ZONE_T,
+                DateUtil.FORMAT_DATE_SQL,
+            ),
+        };
     }
 
     /**
      * Press back exit app
      */
     onExitApp() {
-        this.setState({ isAlertExitApp: true });
+        this.setState({isAlertExitApp: true});
     }
 
     /**
      * Get profile user
      */
     getProfile() {
-        StorageUtil.retrieveItem(StorageUtil.USER_PROFILE).then(user => {
-            //this callback is executed when your Promise is resolved
-            if (!Utils.isNull(user)) {
-                console.log("User Storage - Home", user);
-                this.userInfo = user;
-                this.signInWithCustomToken(user.id);
-            }
-        }).catch(error => {
-            //this callback is executed when your Promise is rejected
-            this.saveException(error, "getProfile");
-        });
+        StorageUtil.retrieveItem(StorageUtil.USER_PROFILE)
+            .then(user => {
+                //this callback is executed when your Promise is resolved
+                if (!Utils.isNull(user)) {
+                    console.log('User Storage - Home', user);
+                    this.userInfo = user;
+                    this.signInWithCustomToken(user.id);
+                }
+            })
+            .catch(error => {
+                //this callback is executed when your Promise is rejected
+                this.saveException(error, 'getProfile');
+            });
     }
 
     componentDidMount() {
         super.componentDidMount();
         this.props.getUpdateVersion();
         this.getProfile();
-        StorageUtil.retrieveItem(StorageUtil.VERSION).then((version) => {
-            console.log('Version', version)
-            this.setState({
-                appVersion: version
+        StorageUtil.retrieveItem(StorageUtil.VERSION)
+            .then(version => {
+                console.log('Version', version);
+                this.setState({
+                    appVersion: version,
+                });
             })
-        }).catch((error) => {
-            this.saveException(error, 'componentDidMount')
-        });
-        StorageUtil.retrieveItem(StorageUtil.COMPANY_INFO).then((companyInfo) => {
-            console.log('companyInfo', companyInfo)
-            global.companyIdAlias = companyInfo.company.idAlias;
-            this.state.company = companyInfo.company;
-            this.state.branch = companyInfo.branch;
-            this.filter.companyId = companyInfo.company.id;
-            this.filter.branchId = !Utils.isNull(companyInfo.branch) ? companyInfo.branch.id : null;
-            this.props.getConfig(this.filter);
-            this.handleRequest();
-        }).catch((error) => {
-            this.saveException(error, 'componentDidMount')
-        });
+            .catch(error => {
+                this.saveException(error, 'componentDidMount');
+            });
+        StorageUtil.retrieveItem(StorageUtil.COMPANY_INFO)
+            .then(companyInfo => {
+                console.log('companyInfo', companyInfo);
+                global.companyIdAlias = companyInfo.company.idAlias;
+                this.state.company = companyInfo.company;
+                this.state.branch = companyInfo.branch;
+                this.filter.companyId = companyInfo.company.id;
+                this.filter.branchId = !Utils.isNull(companyInfo.branch) ? companyInfo.branch.id : null;
+                this.props.getConfig(this.filter);
+                this.handleRequest();
+            })
+            .catch(error => {
+                this.saveException(error, 'componentDidMount');
+            });
     }
 
     /**
@@ -158,8 +173,8 @@ class HomeView extends BaseView {
         let timeout = 1000;
         let timeOutRequestOne = setTimeout(() => {
             this.props.getDashboardStatistical(this.filter);
-            clearTimeout(timeOutRequestOne)
-        }, timeout)
+            clearTimeout(timeOutRequestOne);
+        }, timeout);
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -188,8 +203,7 @@ class HomeView extends BaseView {
                         if (data.status == statusType.ACTIVE) {
                             this.userInfo = data;
                         }
-                        if (data.status == statusType.DELETE
-                            || data.status == statusType.SUSPENDED) {
+                        if (data.status == statusType.DELETE || data.status == statusType.SUSPENDED) {
                             this.logout();
                             this.goLoginScreen();
                         }
@@ -206,15 +220,15 @@ class HomeView extends BaseView {
                     this.state.totalPersonnel = data.totalPersonnel;
                     if (data.totalPersonnel > 0) {
                         this.attributes[0].quantity = data.totalCheckin;
-                        this.attributes[0].ratio = Math.floor(data.totalCheckin * 100 / data.totalPersonnel);
+                        this.attributes[0].ratio = Math.floor((data.totalCheckin * 100) / data.totalPersonnel);
                         this.attributes[1].quantity = data.totalLateForWork;
-                        this.attributes[1].ratio = Math.floor(data.totalLateForWork * 100 / data.totalPersonnel);
+                        this.attributes[1].ratio = Math.floor((data.totalLateForWork * 100) / data.totalPersonnel);
                         this.attributes[2].quantity = data.totalSabbatical;
-                        this.attributes[2].ratio = Math.floor(data.totalSabbatical * 100 / data.totalPersonnel);
+                        this.attributes[2].ratio = Math.floor((data.totalSabbatical * 100) / data.totalPersonnel);
                         this.attributes[3].quantity = data.totalNotCheckin;
-                        this.attributes[3].ratio = Math.floor(data.totalNotCheckin * 100 / data.totalPersonnel);
+                        this.attributes[3].ratio = Math.floor((data.totalNotCheckin * 100) / data.totalPersonnel);
                     }
-                    console.log("GET_DASHBOARD_STATISTICAL", data)
+                    console.log('GET_DASHBOARD_STATISTICAL', data);
                 }
             } else {
                 this.handleError(this.props.errorCode, this.props.error);
@@ -224,35 +238,38 @@ class HomeView extends BaseView {
     }
 
     render() {
-        const { refreshing, company, branch, totalPersonnel, dateCurrent } = this.state;
-        console.log("RENDER HOME VIEW");
+        const {refreshing, company, branch, totalPersonnel, dateCurrent} = this.state;
+        console.log('RENDER HOME VIEW');
         let hasHttp = false;
-        let avatarCompany = "";
-        let branchName = "";
+        let avatarCompany = '';
+        let branchName = '';
         if (!Utils.isNull(company)) {
             hasHttp = !Utils.isNull(company.avatarPath) && company.avatarPath.indexOf('http') != -1;
-            avatarCompany = hasHttp ? company.avatarPath : this.resourceUrlPath.textValue + "/" + global.companyIdAlias + "/" + company.avatarPath;
+            avatarCompany = hasHttp
+                ? company.avatarPath
+                : this.resourceUrlPath.textValue + '/' + global.companyIdAlias + '/' + company.avatarPath;
         }
         if (!Utils.isNull(branch)) {
-            branchName = " - " + branch.name;
+            branchName = ' - ' + branch.name;
         }
         return (
             <Container style={styles.container}>
-                <Root>
-                    <Header style={[commonStyles.header]}>
+                <View style={{flex: 1}}>
+                    <HStack style={[commonStyles.header]}>
                         {this.renderHeaderView({
                             visibleBack: false,
-                            title: "",
+                            title: '',
                             visibleAccount: true,
                             userName: !Utils.isNull(company) ? company.name + branchName : '-',
                             source: avatarCompany,
                             gotoLogin: () => {
-                                !Utils.isNull(company) && this.props.navigation.navigate("CompanyDetail", {
-                                    companyId: company.id
-                                });
-                            }
+                                !Utils.isNull(company) &&
+                                    this.props.navigation.navigate('CompanyDetail', {
+                                        companyId: company.id,
+                                    });
+                            },
                         })}
-                    </Header>
+                    </HStack>
                     <Content
                         showsVerticalScrollIndicator={false}
                         enableRefresh={this.state.enableRefresh}
@@ -262,72 +279,90 @@ class HomeView extends BaseView {
                                 refreshing={refreshing}
                                 onRefresh={this.handleRefresh}
                             />
-                        }
-                    >
+                        }>
                         <View style={[commonStyles.viewCenter]}>
                             {/* Calendar */}
-                            <ImageBackground source={img_calendar}
-                                style={[commonStyles.viewCenter, {
-                                    width: screen.width / 2, height: screen.width / 2
-                                }]}
-                            >
+                            <ImageBackground
+                                source={img_calendar}
+                                style={[
+                                    commonStyles.viewCenter,
+                                    {
+                                        width: screen.width / 2,
+                                        height: screen.width / 2,
+                                    },
+                                ]}>
                                 <TouchableOpacity
                                     activeOpacity={Constants.ACTIVE_OPACITY}
                                     style={{
-                                        paddingHorizontal: Constants.PADDING_XX_LARGE + Constants.MARGIN_LARGE
+                                        paddingHorizontal: Constants.PADDING_XX_LARGE + Constants.MARGIN_LARGE,
                                     }}
                                     onPress={this.showCalendarDate}>
-                                    <View style={{ flex: 1 }} />
-                                    <View style={[commonStyles.viewCenter, { flex: 1 }]}>
-                                        <Text style={[commonStyles.textBold, { margin: 0, color: Colors.COLOR_WHITE }]}>
-                                            Tháng {DateUtil.convertFromFormatToFormat(dateCurrent, DateUtil.FORMAT_DATE_TIME_ZONE_T, "M")}
+                                    <View style={{flex: 1}} />
+                                    <View style={[commonStyles.viewCenter, {flex: 1}]}>
+                                        <Text style={[commonStyles.textBold, {margin: 0, color: Colors.COLOR_WHITE}]}>
+                                            Tháng{' '}
+                                            {DateUtil.convertFromFormatToFormat(
+                                                dateCurrent,
+                                                DateUtil.FORMAT_DATE_TIME_ZONE_T,
+                                                'M',
+                                            )}
                                         </Text>
                                     </View>
-                                    <View style={[commonStyles.viewCenter, { flex: 0.75 }]}>
-                                        <Text style={[commonStyles.text, { margin: 0 }]}>
+                                    <View style={[commonStyles.viewCenter, {flex: 0.75}]}>
+                                        <Text style={[commonStyles.text, {margin: 0}]}>
                                             {DateUtil.getDateOfWeek(dateCurrent)}
                                         </Text>
                                     </View>
-                                    <View style={[commonStyles.viewCenter, { flex: 1 }]}>
-                                        <Text style={[commonStyles.textBold, { margin: 0, fontSize: 40 }]}>
-                                            {DateUtil.convertFromFormatToFormat(dateCurrent, DateUtil.FORMAT_DATE_TIME_ZONE_T, DateUtil.FORMAT_DAY)}
+                                    <View style={[commonStyles.viewCenter, {flex: 1}]}>
+                                        <Text style={[commonStyles.textBold, {margin: 0, fontSize: 40}]}>
+                                            {DateUtil.convertFromFormatToFormat(
+                                                dateCurrent,
+                                                DateUtil.FORMAT_DATE_TIME_ZONE_T,
+                                                DateUtil.FORMAT_DAY,
+                                            )}
                                         </Text>
                                     </View>
-                                    <View style={{ flex: 1.25 }} />
+                                    <View style={{flex: 1.25}} />
                                 </TouchableOpacity>
                             </ImageBackground>
                             {/* Sum staff */}
                             <View style={[commonStyles.viewCenter]}>
-                                <Text style={[commonStyles.textBold, { color: Colors.COLOR_BLACK, margin: 0, fontSize: Fonts.FONT_SIZE_X_LARGE }]}>
+                                <Text
+                                    style={[
+                                        commonStyles.textBold,
+                                        {color: Colors.COLOR_BLACK, margin: 0, fontSize: Fonts.FONT_SIZE_X_LARGE},
+                                    ]}>
                                     Tổng nhân sự
                                 </Text>
-                                <Text style={[commonStyles.textBold, { margin: 0, color: Colors.COLOR_PRIMARY, fontSize: Fonts.FONT_SIZE_X_LARGE }]}>
+                                <Text
+                                    style={[
+                                        commonStyles.textBold,
+                                        {margin: 0, color: Colors.COLOR_PRIMARY, fontSize: Fonts.FONT_SIZE_X_LARGE},
+                                    ]}>
                                     {totalPersonnel}
                                 </Text>
                             </View>
                             {/* Statistical */}
                             <ImageBackground
                                 source={img_bg_statistical}
-                                style={[commonStyles.viewCenter, {
-                                    marginTop: Constants.MARGIN_X_LARGE,
-                                    marginBottom: Constants.MARGIN_LARGE,
-                                    width: screen.width - Constants.MARGIN_X_LARGE
-                                }]}
-                            >
-                                <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                                style={[
+                                    commonStyles.viewCenter,
+                                    {
+                                        marginTop: Constants.MARGIN_X_LARGE,
+                                        marginBottom: Constants.MARGIN_LARGE,
+                                        width: screen.width - Constants.MARGIN_X_LARGE,
+                                    },
+                                ]}>
+                                <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
                                     {this.attributes.map((item, index) => {
-                                        return (
-                                            this.renderItem(item, index)
-                                        )
+                                        return this.renderItem(item, index);
                                     })}
                                 </View>
                             </ImageBackground>
                         </View>
                     </Content>
                     <CalendarScreen
-                        maximumDate={
-                            new Date(new Date().setDate(DateUtil.now().getDate()))
-                        }
+                        maximumDate={new Date(new Date().setDate(DateUtil.now().getDate()))}
                         dateCurrent={DateUtil.now()}
                         chooseDate={this.chooseDate}
                         ref={ref => (this.showCalendar = ref)}
@@ -335,7 +370,7 @@ class HomeView extends BaseView {
                     {this.renderAlertExitApp()}
                     {this.renderAlertVersion()}
                     {this.state.refreshing ? null : this.showLoadingBar(this.props.isLoading)}
-                </Root>
+                </View>
             </Container>
         );
     }
@@ -343,25 +378,29 @@ class HomeView extends BaseView {
     /**
      * Date press
      */
-    chooseDate = (day) => {
+    chooseDate = day => {
         this.state.dateCurrent = day;
-        this.filter.day = DateUtil.convertFromFormatToFormat(day, DateUtil.FORMAT_DATE_TIME_ZONE_T, DateUtil.FORMAT_DATE_SQL);
+        this.filter.day = DateUtil.convertFromFormatToFormat(
+            day,
+            DateUtil.FORMAT_DATE_TIME_ZONE_T,
+            DateUtil.FORMAT_DATE_SQL,
+        );
         this.props.getDashboardStatistical(this.filter);
-    }
+    };
 
     /**
      * Show calendar date
      */
     showCalendarDate = () => {
         this.showCalendar.showDateTimePicker();
-    }
+    };
 
     //onRefreshing
     handleRefresh = () => {
-        this.setState({ refreshing: true });
+        this.setState({refreshing: true});
         this.getProfile();
         this.handleRequest();
-    }
+    };
 
     /**
      * @param {*} item
@@ -373,21 +412,22 @@ class HomeView extends BaseView {
                 <TouchableOpacity
                     activeOpacity={Constants.ACTIVE_OPACITY}
                     style={styles.boxStatistical}
-                    onPress={() => this.props.navigation.navigate(item.screen, {
-                        screenType: item.screen,
-                        dashboardType: item.dashboardType,
-                        daySelect: this.state.dateCurrent
-                    })}>
+                    onPress={() =>
+                        this.props.navigation.navigate(item.screen, {
+                            screenType: item.screen,
+                            dashboardType: item.dashboardType,
+                            daySelect: this.state.dateCurrent,
+                        })
+                    }>
                     <Image source={item.icon} />
-                    <Text style={[commonStyles.text, { margin: 0, opacity: 0.6 }]}>{item.name}</Text>
-                    <Text style={[commonStyles.textBold, { margin: 0, color: item.color }]}>{item.quantity}</Text>
-                    <Text style={[commonStyles.textSmall, { margin: 0 }]}>{item.ratio}%</Text>
+                    <Text style={[commonStyles.text, {margin: 0, opacity: 0.6}]}>{item.name}</Text>
+                    <Text style={[commonStyles.textBold, {margin: 0, color: item.color}]}>{item.quantity}</Text>
+                    <Text style={[commonStyles.textSmall, {margin: 0}]}>{item.ratio}%</Text>
                     <Image source={ic_next_grey} />
                 </TouchableOpacity>
             </View>
-
         );
-    }
+    };
 
     /**
      * Render alert Exit App
@@ -404,10 +444,10 @@ class HomeView extends BaseView {
                 textBtnTwo={localizes('exit')}
                 contentText={localizes('contentDialogExitApp')}
                 onTouchOutside={() => {
-                    this.setState({ isAlertExitApp: false });
+                    this.setState({isAlertExitApp: false});
                 }}
                 onPressX={() => {
-                    this.setState({ isAlertExitApp: false });
+                    this.setState({isAlertExitApp: false});
                 }}
                 onPressBtnPositive={() => {
                     BackHandler.exitApp();
@@ -427,24 +467,24 @@ class HomeView extends BaseView {
                     isVisibleTitle={true}
                     isVisibleContentText={true}
                     isVisibleTwoButton={true}
-                    contentTitle={localizes("homeView.updateNewVersion")}
-                    textBtnOne={this.dataVersion.force === 0 ? localizes("no") : ""}
-                    textBtnTwo={localizes("yes")}
+                    contentTitle={localizes('homeView.updateNewVersion')}
+                    textBtnOne={this.dataVersion.force === 0 ? localizes('no') : ''}
+                    textBtnTwo={localizes('yes')}
                     contentText={this.dataVersion.description}
                     onTouchOutside={() => {
-                        this.setState({ isAlertVersion: false });
+                        this.setState({isAlertVersion: false});
                     }}
                     onPressX={
                         this.dataVersion.force === 0
                             ? () => {
-                                this.setState({ isAlertVersion: false });
-                                saveStorage(this.dataVersion);
-                            }
+                                  this.setState({isAlertVersion: false});
+                                  saveStorage(this.dataVersion);
+                              }
                             : null
                     }
                     onPressBtnPositive={() => {
                         renderWebView(this.dataVersion.link);
-                        this.setState({ isAlertVersion: false });
+                        this.setState({isAlertVersion: false});
                         saveStorage(this.dataVersion);
                     }}
                 />
@@ -462,13 +502,13 @@ class HomeView extends BaseView {
                 if (data.force === 0) {
                     if (appVersion != null || appVersion != undefined) {
                         if (appVersion.version !== data.version) {
-                            this.setState({ isAlertVersion: true });
+                            this.setState({isAlertVersion: true});
                         }
                     } else {
-                        this.setState({ isAlertVersion: true });
+                        this.setState({isAlertVersion: true});
                     }
                 } else {
-                    this.setState({ isAlertVersion: true });
+                    this.setState({isAlertVersion: true});
                 }
             }
         } else {
@@ -490,17 +530,14 @@ const mapStateToProps = state => ({
     isLoading: state.home.isLoading,
     error: state.home.error,
     errorCode: state.home.errorCode,
-    action: state.home.action
+    action: state.home.action,
 });
 
 const mapDispatchToProps = {
     ...actions,
     ...timekeepingActions,
     ...companyActions,
-    ...commonActions
+    ...commonActions,
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(HomeView);
+export default connect(mapStateToProps, mapDispatchToProps)(HomeView);

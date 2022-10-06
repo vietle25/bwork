@@ -1,33 +1,28 @@
-import React, { Component } from 'react'
-import moment from 'moment';
-import { Text, View, RefreshControl, BackHandler } from 'react-native'
-import BaseView from 'containers/base/baseView';
-import styles from './styles';
-import commonStyles from 'styles/commonStyles';
-import { localizes } from 'locales/i18n';
-import { Colors } from 'values/colors';
-import { Container, Root, Header, Content } from 'native-base';
-import DateUtil from 'utils/dateUtil';
-import { Constants } from 'values/constants';
-import * as actions from "actions/userActions";
-import * as commonActions from "actions/commonActions";
-import * as taskActions from "actions/taskActions";
-import { connect } from "react-redux";
-import { ActionEvent, getActionSuccess } from "actions/actionEvent";
-import { ErrorCode } from "config/errorCode";
-import Hr from 'components/hr';
-import FlatListCustom from 'components/flatListCustom';
+import {ActionEvent, getActionSuccess} from 'actions/actionEvent';
+import * as commonActions from 'actions/commonActions';
+import * as taskActions from 'actions/taskActions';
+import * as actions from 'actions/userActions';
 import DialogCustom from 'components/dialogCustom';
-import Utils from 'utils/utils';
-import screenType from 'enum/screenType';
-import taskStatusType from 'enum/taskStatusType';
+import Hr from 'components/hr';
+import {ErrorCode} from 'config/errorCode';
+import BaseView from 'containers/base/baseView';
 import repeatWindowType from 'enum/repeatWindowType';
-import { Fonts } from 'values/fonts';
+import taskStatusType from 'enum/taskStatusType';
+import moment from 'moment';
+import {Container, Content} from 'native-base';
+import {BackHandler, RefreshControl, Text, View} from 'react-native';
+import {CheckBox} from 'react-native-elements';
 import HTML from 'react-native-render-html';
-import { CheckBox } from 'react-native-elements';
+import {connect} from 'react-redux';
+import commonStyles from 'styles/commonStyles';
+import DateUtil from 'utils/dateUtil';
+import Utils from 'utils/utils';
+import {Colors} from 'values/colors';
+import {Constants} from 'values/constants';
+import {Fonts} from 'values/fonts';
+import styles from './styles';
 
 class TaskDetailView extends BaseView {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -35,20 +30,23 @@ class TaskDetailView extends BaseView {
             refreshing: false,
             disableButton: false,
             showDialog: false,
-            isSelectedCompleted: true
+            isSelectedCompleted: true,
         };
-        const { data, taskId, callback } = this.props.navigation.state.params;
-        this.createdAt = !Utils.isNull(data) ? data.scheduledDate : DateUtil.convertFromFormatToFormat(DateUtil.now(), DateUtil.FORMAT_DATE_TIME_ZONE_T, DateUtil.FORMAT_DATE_SQL);
+        const {data, taskId, callback} = this.props.navigation.state.params;
+        this.createdAt = !Utils.isNull(data)
+            ? data.scheduledDate
+            : DateUtil.convertFromFormatToFormat(
+                  DateUtil.now(),
+                  DateUtil.FORMAT_DATE_TIME_ZONE_T,
+                  DateUtil.FORMAT_DATE_SQL,
+              );
         this.callback = callback;
         this.taskId = taskId;
         this.task = !Utils.isNull(data) ? data : null;
     }
 
-    componentWillMount() {
-        BackHandler.addEventListener('hardwareBackPress', this.handlerBackButton);
-    }
-
     componentDidMount() {
+        BackHandler.addEventListener('hardwareBackPress', this.handlerBackButton);
         !Utils.isNull(this.taskId) && this.handleRequest();
     }
 
@@ -69,7 +67,7 @@ class TaskDetailView extends BaseView {
                 this.state.refreshing = false;
                 if (this.props.action == getActionSuccess(ActionEvent.UPDATE_TASK_DETAIL)) {
                     if (!Utils.isNull(data)) {
-                        this.showMessage("Cập nhật trạng thái thành công");
+                        this.showMessage('Cập nhật trạng thái thành công');
                         this.props.getTaskDetail(this.task.id);
                         if (this.callback != null) {
                             this.callback();
@@ -94,14 +92,14 @@ class TaskDetailView extends BaseView {
     render() {
         return (
             <Container style={styles.container}>
-                <Root>
-                    <Header style={[commonStyles.header]}>
+                <View style={{flex: 1}}>
+                    <HStack style={[commonStyles.header]}>
                         {this.renderHeaderView({
-                            title: "Chi tiết công việc",
-                            titleStyle: { color: Colors.COLOR_WHITE },
-                            renderRightMenu: this.renderRightHeader
+                            title: 'Chi tiết công việc',
+                            titleStyle: {color: Colors.COLOR_WHITE},
+                            renderRightMenu: this.renderRightHeader,
                         })}
-                    </Header>
+                    </HStack>
                     <Content
                         showsVerticalScrollIndicator={false}
                         enableRefresh={this.state.enableRefresh}
@@ -112,25 +110,30 @@ class TaskDetailView extends BaseView {
                                 onRefresh={this.handleRefresh}
                             />
                         }
-                        contentContainerStyle={{ flexGrow: 1 }} style={{ flex: 1 }}>
+                        contentContainerStyle={{flexGrow: 1}}
+                        style={{flex: 1}}>
                         {this.renderContent()}
                     </Content>
-                    {!this.state.disableButton ?
-                        <View style={{ position: 'absolute', bottom: 16, width: '100%' }}>
+                    {!this.state.disableButton ? (
+                        <View style={{position: 'absolute', bottom: 16, width: '100%'}}>
                             {this.renderCommonButton(
-                                "Cập nhật trạng thái", {
-                                color: Colors.COLOR_WHITE
-                            },
-                                { marginHorizontal: Constants.MARGIN_X_LARGE },
-                                () => { this.setState({ showDialog: true }) },
-                                this.state.disableButton
+                                'Cập nhật trạng thái',
+                                {
+                                    color: Colors.COLOR_WHITE,
+                                },
+                                {marginHorizontal: Constants.MARGIN_X_LARGE},
+                                () => {
+                                    this.setState({showDialog: true});
+                                },
+                                this.state.disableButton,
                             )}
-                        </View> : null}
+                        </View>
+                    ) : null}
                     {this.state.refreshing ? null : this.showLoadingBar(this.props.isLoading)}
                     {this.renderDialogUpdateTask()}
-                </Root>
+                </View>
             </Container>
-        )
+        );
     }
 
     /**
@@ -139,115 +142,151 @@ class TaskDetailView extends BaseView {
     renderContent() {
         const htmlContent = !Utils.isNull(this.task) ? this.task.description : null;
         return (
-            <View style={[styles.boxProcess, { justifyContent: 'flex-start' }]}>
-                <View style={{ flexDirection: 'row' }}>
-                    <View style={{ height: "100%" }}>
+            <View style={[styles.boxProcess, {justifyContent: 'flex-start'}]}>
+                <View style={{flexDirection: 'row'}}>
+                    <View style={{height: '100%'}}>
                         <Text style={styles.textDay}>
-                            {DateUtil.convertFromFormatToFormat(this.createdAt, DateUtil.FORMAT_DATE_SQL, DateUtil.FORMAT_DAY)}
+                            {DateUtil.convertFromFormatToFormat(
+                                this.createdAt,
+                                DateUtil.FORMAT_DATE_SQL,
+                                DateUtil.FORMAT_DAY,
+                            )}
                         </Text>
                     </View>
-                    <View style={{ marginHorizontal: Constants.MARGIN_X_LARGE, height: "100%" }}>
-                        <Text style={[commonStyles.text, { margin: 0 }]}>
-                            {DateUtil.getDateOfWeek(this.createdAt)}
-                        </Text>
-                        <Text style={[commonStyles.text, { opacity: Constants.OPACITY_50, margin: 0 }]}>
-                            Tháng {moment(this.createdAt).format("MM YYYY")}
+                    <View style={{marginHorizontal: Constants.MARGIN_X_LARGE, height: '100%'}}>
+                        <Text style={[commonStyles.text, {margin: 0}]}>{DateUtil.getDateOfWeek(this.createdAt)}</Text>
+                        <Text style={[commonStyles.text, {opacity: Constants.OPACITY_50, margin: 0}]}>
+                            Tháng {moment(this.createdAt).format('MM YYYY')}
                         </Text>
                     </View>
                 </View>
-                <Hr width={2} style={{ marginVertical: Constants.MARGIN }} color={Colors.COLOR_BACKGROUND} />
-                <View style={[commonStyles.viewHorizontal, { flex: 0 }]}>
-                    <Text style={[commonStyles.textBold, { flex: 1, marginHorizontal: 0, fontSize: Fonts.FONT_SIZE_LARGE }]}>
+                <Hr width={2} style={{marginVertical: Constants.MARGIN}} color={Colors.COLOR_BACKGROUND} />
+                <View style={[commonStyles.viewHorizontal, {flex: 0}]}>
+                    <Text
+                        style={[
+                            commonStyles.textBold,
+                            {flex: 1, marginHorizontal: 0, fontSize: Fonts.FONT_SIZE_LARGE},
+                        ]}>
                         {!Utils.isNull(this.task) ? this.task.name : '-'}
                     </Text>
                     {!Utils.isNull(this.task) && this.renderTaskStatus(this.task.taskStatus)}
                 </View>
-                <View style={[commonStyles.viewHorizontal, { flex: 0 }, styles.borderLeft]}>
-                    <Text style={[commonStyles.text, { flex: 1, marginHorizontal: 0 }]}>Bắt đầu</Text>
-                    <Text style={[commonStyles.text, { marginHorizontal: 0 }]}>
-                        {!Utils.isNull(this.task) ? DateUtil.plusHourToString(this.task.scheduledTime, '00:00:00') : '-'}
+                <View style={[commonStyles.viewHorizontal, {flex: 0}, styles.borderLeft]}>
+                    <Text style={[commonStyles.text, {flex: 1, marginHorizontal: 0}]}>Bắt đầu</Text>
+                    <Text style={[commonStyles.text, {marginHorizontal: 0}]}>
+                        {!Utils.isNull(this.task)
+                            ? DateUtil.plusHourToString(this.task.scheduledTime, '00:00:00')
+                            : '-'}
                     </Text>
                 </View>
-                <View style={[commonStyles.viewHorizontal, { flex: 0 }, styles.borderLeft]}>
-                    <Text style={[commonStyles.text, { flex: 1, marginHorizontal: 0 }]}>Thời hạn:</Text>
-                    <Text style={[commonStyles.text, { marginHorizontal: 0 }]}>
-                        {!Utils.isNull(this.task) ? DateUtil.plusHourToString(DateUtil.parseMillisecondToHour(this.task.taskDurationMinute * 60 * 1000), '00:00:00') : '-'}
+                <View style={[commonStyles.viewHorizontal, {flex: 0}, styles.borderLeft]}>
+                    <Text style={[commonStyles.text, {flex: 1, marginHorizontal: 0}]}>Thời hạn:</Text>
+                    <Text style={[commonStyles.text, {marginHorizontal: 0}]}>
+                        {!Utils.isNull(this.task)
+                            ? DateUtil.plusHourToString(
+                                  DateUtil.parseMillisecondToHour(this.task.taskDurationMinute * 60 * 1000),
+                                  '00:00:00',
+                              )
+                            : '-'}
                     </Text>
                 </View>
-                <Hr width={2} style={{ marginTop: Constants.MARGIN_X_LARGE }} color={Colors.COLOR_BACKGROUND} />
-                <View style={[commonStyles.viewHorizontal, { flex: 0 }]}>
-                    <Text style={[commonStyles.text, { flex: 1, marginHorizontal: 0 }]}>Loại công việc:</Text>
-                    <Text style={[commonStyles.text, { marginHorizontal: 0 }]}>
-                        {!Utils.isNull(this.task) ? this.convertRepeatWindowType(this.task.repeatType, this.task.windowType) : '-'}
+                <Hr width={2} style={{marginTop: Constants.MARGIN_X_LARGE}} color={Colors.COLOR_BACKGROUND} />
+                <View style={[commonStyles.viewHorizontal, {flex: 0}]}>
+                    <Text style={[commonStyles.text, {flex: 1, marginHorizontal: 0}]}>Loại công việc:</Text>
+                    <Text style={[commonStyles.text, {marginHorizontal: 0}]}>
+                        {!Utils.isNull(this.task)
+                            ? this.convertRepeatWindowType(this.task.repeatType, this.task.windowType)
+                            : '-'}
                     </Text>
                 </View>
-                {!Utils.isNull(this.task) && !Utils.isNull(this.task.nextScheduledDate) ? <View style={[commonStyles.viewHorizontal, { flex: 0 }]}>
-                    <Text style={[commonStyles.text, { flex: 1, marginHorizontal: 0 }]}>Ngày làm tiếp theo:</Text>
-                    <Text style={[commonStyles.text, { marginHorizontal: 0 }]}>
-                        {DateUtil.convertFromFormatToFormat(this.task.nextScheduledDate, DateUtil.FORMAT_DATE_SQL, DateUtil.FORMAT_DATE)}
-                    </Text>
-                </View> : null}
+                {!Utils.isNull(this.task) && !Utils.isNull(this.task.nextScheduledDate) ? (
+                    <View style={[commonStyles.viewHorizontal, {flex: 0}]}>
+                        <Text style={[commonStyles.text, {flex: 1, marginHorizontal: 0}]}>Ngày làm tiếp theo:</Text>
+                        <Text style={[commonStyles.text, {marginHorizontal: 0}]}>
+                            {DateUtil.convertFromFormatToFormat(
+                                this.task.nextScheduledDate,
+                                DateUtil.FORMAT_DATE_SQL,
+                                DateUtil.FORMAT_DATE,
+                            )}
+                        </Text>
+                    </View>
+                ) : null}
                 <View>
-                    <Text style={[commonStyles.text, { flex: 1, marginHorizontal: 0, marginBottom: Constants.MARGIN_LARGE }]}>Mô tả công việc:</Text>
-                    <View style={{
-                        borderWidth: 1, borderColor: Colors.COLOR_DRK_GREY,
-                        borderRadius: Constants.CORNER_RADIUS, padding: Constants.PADDING_LARGE,
-                        paddingHorizontal: Constants.PADDING_LARGE + Constants.MARGIN
-                    }}>
-                        {htmlContent ? (
-                            <HTML
-                                html={htmlContent}
-                            />
-                        ) : null}
+                    <Text
+                        style={[
+                            commonStyles.text,
+                            {flex: 1, marginHorizontal: 0, marginBottom: Constants.MARGIN_LARGE},
+                        ]}>
+                        Mô tả công việc:
+                    </Text>
+                    <View
+                        style={{
+                            borderWidth: 1,
+                            borderColor: Colors.COLOR_DRK_GREY,
+                            borderRadius: Constants.CORNER_RADIUS,
+                            padding: Constants.PADDING_LARGE,
+                            paddingHorizontal: Constants.PADDING_LARGE + Constants.MARGIN,
+                        }}>
+                        {htmlContent ? <HTML html={htmlContent} /> : null}
                     </View>
                 </View>
             </View>
-        )
+        );
     }
 
     /**
      * Render task status
      */
-    renderTaskStatus = (taskStatus) => {
+    renderTaskStatus = taskStatus => {
         let textTaskStatus = null;
         switch (taskStatus) {
             case taskStatusType.NEW:
-                textTaskStatus = <Text style={[commonStyles.text, { marginHorizontal: 0, color: Colors.COLOR_LEVEL_GOLD }]}>{"Mới giao"}</Text>
+                textTaskStatus = (
+                    <Text style={[commonStyles.text, {marginHorizontal: 0, color: Colors.COLOR_LEVEL_GOLD}]}>
+                        {'Mới giao'}
+                    </Text>
+                );
                 break;
             case taskStatusType.COMPLETE:
                 this.state.disableButton = true;
-                textTaskStatus = <Text style={[commonStyles.text, { marginHorizontal: 0, color: Colors.COLOR_PRIMARY }]}>{"Đã hoàn thành"}</Text>
+                textTaskStatus = (
+                    <Text style={[commonStyles.text, {marginHorizontal: 0, color: Colors.COLOR_PRIMARY}]}>
+                        {'Đã hoàn thành'}
+                    </Text>
+                );
                 break;
             case taskStatusType.CANCEL:
                 this.state.disableButton = true;
-                textTaskStatus = <Text style={[commonStyles.text, { marginHorizontal: 0, color: Colors.COLOR_RED }]}>{"Đã hủy"}</Text>
+                textTaskStatus = (
+                    <Text style={[commonStyles.text, {marginHorizontal: 0, color: Colors.COLOR_RED}]}>{'Đã hủy'}</Text>
+                );
                 break;
             default:
                 break;
         }
         return textTaskStatus;
-    }
+    };
 
     /**
      * Render task status
      */
-    convertRepeatWindowType = (repeat) => {
-        let textRepeat = "Không";
+    convertRepeatWindowType = repeat => {
+        let textRepeat = 'Không';
         switch (repeat) {
             case repeatWindowType.DAILY:
-                textRepeat = "Hằng ngày";
+                textRepeat = 'Hằng ngày';
                 break;
             case repeatWindowType.WEEKLY:
-                textRepeat = "Hằng tuần";
+                textRepeat = 'Hằng tuần';
                 break;
             case repeatWindowType.MONTHLY:
-                textRepeat = "Hằng tháng";
+                textRepeat = 'Hằng tháng';
                 break;
             default:
                 break;
         }
         return textRepeat;
-    }
+    };
 
     /**
      * Handle request
@@ -255,15 +294,15 @@ class TaskDetailView extends BaseView {
     handleRequest = () => {
         this.filter = {
             taskId: !Utils.isNull(this.taskId) ? this.taskId : !Utils.isNull(this.task) ? this.task.id : null,
-        }
+        };
         this.props.getTaskDetail(this.filter.taskId);
-    }
+    };
 
     //onRefreshing
     handleRefresh = () => {
         this.state.refreshing = true;
         this.handleRequest();
-    }
+    };
 
     /**
      * render content checkbox
@@ -271,31 +310,31 @@ class TaskDetailView extends BaseView {
     renderContentCheckBox() {
         return (
             <View>
-                <Text style={[commonStyles.text, { margin: 0, marginBottom: Constants.MARGIN_X_LARGE }]} >
+                <Text style={[commonStyles.text, {margin: 0, marginBottom: Constants.MARGIN_X_LARGE}]}>
                     Cập nhật trạng thái công việc:
                 </Text>
-                <View style={[{ flexDirection: 'row' }]}>
+                <View style={[{flexDirection: 'row'}]}>
                     <CheckBox
-                        title={"Từ chối"}
+                        title={'Từ chối'}
                         checked={!this.state.isSelectedCompleted}
                         checkedColor={Colors.COLOR_PRIMARY}
-                        checkedIcon='dot-circle-o'
-                        uncheckedIcon='circle-o'
+                        checkedIcon="dot-circle-o"
+                        uncheckedIcon="circle-o"
                         containerStyle={[styles.checkBox]}
                         onPress={this.onPressChecked}
                     />
                     <CheckBox
-                        title={"Đã hoàn thành"}
+                        title={'Đã hoàn thành'}
                         checked={this.state.isSelectedCompleted}
                         checkedColor={Colors.COLOR_PRIMARY}
-                        checkedIcon='dot-circle-o'
-                        uncheckedIcon='circle-o'
+                        checkedIcon="dot-circle-o"
+                        uncheckedIcon="circle-o"
                         containerStyle={[styles.checkBox]}
                         onPress={this.onPressChecked}
                     />
                 </View>
             </View>
-        )
+        );
     }
 
     /**
@@ -303,31 +342,33 @@ class TaskDetailView extends BaseView {
      */
     onPressChecked = () => {
         this.setState({
-            isSelectedCompleted: !this.state.isSelectedCompleted
-        })
-    }
+            isSelectedCompleted: !this.state.isSelectedCompleted,
+        });
+    };
 
     /**
      * Render dialog delete conversation
      */
     renderDialogUpdateTask() {
-        const { showDialog, isSelectedCompleted } = this.state;
+        const {showDialog, isSelectedCompleted} = this.state;
         return (
             <DialogCustom
                 visible={showDialog}
                 isVisibleTwoButton={true}
                 showContentCustom={true}
                 contentCustom={this.renderContentCheckBox()}
-                textBtnOne={"Đóng"}
-                textBtnTwo={"Lưu"}
-                onPressX={() => { this.setState({ showDialog: false }) }}
+                textBtnOne={'Đóng'}
+                textBtnTwo={'Lưu'}
+                onPressX={() => {
+                    this.setState({showDialog: false});
+                }}
                 onPressBtnPositive={() => {
                     let type = isSelectedCompleted ? taskStatusType.COMPLETE : taskStatusType.CANCEL;
-                    this.props.updateTaskDetail({ taskId: this.task.id, taskType: type });
-                    this.setState({ showDialog: false })
+                    this.props.updateTaskDetail({taskId: this.task.id, taskType: type});
+                    this.setState({showDialog: false});
                 }}
             />
-        )
+        );
     }
 }
 
@@ -336,16 +377,13 @@ const mapStateToProps = state => ({
     isLoading: state.taskDetail.isLoading,
     error: state.taskDetail.error,
     errorCode: state.taskDetail.errorCode,
-    action: state.taskDetail.action
+    action: state.taskDetail.action,
 });
 
 const mapDispatchToProps = {
     ...actions,
     ...commonActions,
-    ...taskActions
+    ...taskActions,
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(TaskDetailView);
+export default connect(mapStateToProps, mapDispatchToProps)(TaskDetailView);

@@ -61,6 +61,6 @@ unclear-type
 unsafe-getters-setters
 untyped-import
 untyped-type-import
-
+react.runtime=automatic
 [version]
 ^0.182.0

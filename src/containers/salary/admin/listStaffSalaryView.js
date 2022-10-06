@@ -1,34 +1,26 @@
-import React, { Component } from 'react';
-import {
-    View,
-    Text,
-    TouchableOpacity,
-    Image,
-    RefreshControl
-} from 'react-native';
-import BaseView from 'containers/base/baseView';
-import * as actions from "actions/userActions";
-import * as commonActions from "actions/commonActions";
-import * as salaryActions from "actions/salaryAction";
-import { connect } from "react-redux";
-import { ErrorCode } from "config/errorCode";
-import { ActionEvent, getActionSuccess } from "actions/actionEvent";
-import { Constants } from 'values/constants';
-import Utils from 'utils/utils';
-import { Content, Container, Root, Header } from 'native-base';
-import styles from './styles';
-import commonStyles from "styles/commonStyles";
-import { Colors } from 'values/colors';
+import {ActionEvent, getActionSuccess} from 'actions/actionEvent';
+import * as commonActions from 'actions/commonActions';
+import * as salaryActions from 'actions/salaryAction';
+import * as actions from 'actions/userActions';
 import FlatListCustom from 'components/flatListCustom';
-import ItemStaff from './itemStaff';
-import { localizes } from 'locales/i18n';
-import DialogCustom from 'components/dialogCustom';
+import {ErrorCode} from 'config/errorCode';
+import BaseView from 'containers/base/baseView';
+import screenType from 'enum/screenType';
+import ic_cancel from 'images/ic_cancel.png';
+import ic_search_black from 'images/ic_search_black.png';
+import ic_search_white from 'images/ic_search_white.png';
+import {localizes} from 'locales/i18n';
+import {Container} from 'native-base';
+import {Image, RefreshControl, TouchableOpacity, View} from 'react-native';
+import {connect} from 'react-redux';
+import commonStyles from 'styles/commonStyles';
 import DateUtil from 'utils/dateUtil';
 import StorageUtil from 'utils/storageUtil';
-import screenType from 'enum/screenType';
-import ic_search_black from 'images/ic_search_black.png';
-import ic_cancel from 'images/ic_cancel.png';
-import ic_search_white from "images/ic_search_white.png";
+import Utils from 'utils/utils';
+import {Colors} from 'values/colors';
+import {Constants} from 'values/constants';
+import ItemStaff from './itemStaff';
+import styles from './styles';
 
 class ListStaffSalaryView extends BaseView {
     constructor(props) {
@@ -43,17 +35,21 @@ class ListStaffSalaryView extends BaseView {
             typing: false,
             typingTimeout: 0,
             isSearch: false,
-            txtSearch: null
+            txtSearch: null,
         };
         this.filter = {
             companyId: null,
             branchId: null,
-            month: DateUtil.convertFromFormatToFormat(DateUtil.now(), DateUtil.FORMAT_DATE_TIME_ZONE_T, DateUtil.FORMAT_DATE_MONTH_OF_YEAR),
+            month: DateUtil.convertFromFormatToFormat(
+                DateUtil.now(),
+                DateUtil.FORMAT_DATE_TIME_ZONE_T,
+                DateUtil.FORMAT_DATE_MONTH_OF_YEAR,
+            ),
             paging: {
                 pageSize: Constants.PAGE_SIZE,
-                page: 0
+                page: 0,
             },
-            stringSearch: null
+            stringSearch: null,
         };
         this.user = null;
         this.showNoData = false;
@@ -67,8 +63,8 @@ class ListStaffSalaryView extends BaseView {
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (this.props !== nextProps) {
-            this.props = nextProps
-            this.handleData()
+            this.props = nextProps;
+            this.handleData();
         }
     }
 
@@ -76,23 +72,27 @@ class ListStaffSalaryView extends BaseView {
      * Get information user profile
      */
     getUserProfile = () => {
-        StorageUtil.retrieveItem(StorageUtil.USER_PROFILE).then((user) => {
-            //this callback is executed when your Promise is resolved
-            if (!Utils.isNull(user)) {
-                this.user = user;
-                this.props.getProfileAdmin(user.id);
-                StorageUtil.retrieveItem(StorageUtil.COMPANY_INFO).then((companyInfo) => {
-                    this.filter.companyId = companyInfo.company.id;
-                    this.filter.branchId = !Utils.isNull(companyInfo.branch) ? companyInfo.branch.id : null;
-                    this.handleRequest();
-                }).catch((error) => {
-                    this.saveException(error, 'componentDidMount')
-                });
-            }
-        }).catch((error) => {
-            this.saveException(error, "getUserProfile");
-        });
-    }
+        StorageUtil.retrieveItem(StorageUtil.USER_PROFILE)
+            .then(user => {
+                //this callback is executed when your Promise is resolved
+                if (!Utils.isNull(user)) {
+                    this.user = user;
+                    this.props.getProfileAdmin(user.id);
+                    StorageUtil.retrieveItem(StorageUtil.COMPANY_INFO)
+                        .then(companyInfo => {
+                            this.filter.companyId = companyInfo.company.id;
+                            this.filter.branchId = !Utils.isNull(companyInfo.branch) ? companyInfo.branch.id : null;
+                            this.handleRequest();
+                        })
+                        .catch(error => {
+                            this.saveException(error, 'componentDidMount');
+                        });
+                }
+            })
+            .catch(error => {
+                this.saveException(error, 'getUserProfile');
+            });
+    };
 
     /**
      * Handle data when request
@@ -111,10 +111,10 @@ class ListStaffSalaryView extends BaseView {
                         this.state.enableLoadMore = !(data.data.length < Constants.PAGE_SIZE);
                         if (data.data.length > 0) {
                             data.data.forEach(item => {
-                                this.state.staffSalary.push({ ...item });
+                                this.state.staffSalary.push({...item});
                             });
                         }
-                        console.log("GET_STAFF_SALARY", this.state.staffSalary)
+                        console.log('GET_STAFF_SALARY', this.state.staffSalary);
                     }
                     this.showNoData = true;
                 }
@@ -128,14 +128,14 @@ class ListStaffSalaryView extends BaseView {
     //onHandleRequest
     handleRequest = () => {
         this.props.getStaffSalary(this.filter);
-    }
+    };
 
     //onRefreshing
     handleRefresh = () => {
         this.state.refreshing = true;
         this.filter.paging.page = 0;
         this.handleRequest();
-    }
+    };
 
     //onLoadMore
     onLoadMore = () => {
@@ -144,43 +144,41 @@ class ListStaffSalaryView extends BaseView {
             this.filter.paging.page += 1;
             this.handleRequest();
         }
-    }
+    };
 
     /**
      * Render mid menu
      */
     renderMidMenu = () => {
-        return !this.state.isSearch && <View style={{ flex: 1 }} />
-    }
+        return !this.state.isSearch && <View style={{flex: 1}} />;
+    };
 
     /**
      * On submit editing
      */
-    onSubmitEditing = () => {
-
-    }
+    onSubmitEditing = () => {};
 
     /**
-     * Manager text input search 
-     * @param {*} stringSearch 
+     * Manager text input search
+     * @param {*} stringSearch
      */
-    onChangeTextInput = (stringSearch) => {
+    onChangeTextInput = stringSearch => {
         const self = this;
         if (self.state.typingTimeout) {
-            clearTimeout(self.state.typingTimeout)
+            clearTimeout(self.state.typingTimeout);
         }
         this.setState({
-            txtSearch: stringSearch == "" ? null : stringSearch,
+            txtSearch: stringSearch == '' ? null : stringSearch,
             typing: false,
             typingTimeout: setTimeout(() => {
                 if (!Utils.isNull(stringSearch)) {
-                    this.onSearch(stringSearch)
+                    this.onSearch(stringSearch);
                 } else {
-                    this.handleRefresh()
+                    this.handleRefresh();
                 }
-            }, 1000)
+            }, 1000),
         });
-    }
+    };
 
     onSearch(text) {
         this.filter.stringSearch = text;
@@ -190,14 +188,16 @@ class ListStaffSalaryView extends BaseView {
     }
 
     render() {
-        const { staffSalary, isSearch } = this.state;
+        const {staffSalary, isSearch} = this.state;
         return (
             <Container style={styles.container}>
-                <Root>
-                    <Header hasTabs style={commonStyles.header}>
+                <View style={{flex: 1}}>
+                    <HStack>
+                        {' '}
+                        hasTabs style={commonStyles.header}>
                         {this.renderHeaderView({
                             visibleBack: false,
-                            title: localizes("salaryStaff.salaryStaffTitle"),
+                            title: localizes('salaryStaff.salaryStaffTitle'),
                             visibleSearchBar: isSearch,
                             onPressRightSearch: () => {
                                 this.filter.stringSearch = null;
@@ -205,28 +205,30 @@ class ListStaffSalaryView extends BaseView {
                                 this.handleRefresh();
                             },
                             iconRightSearch: ic_cancel,
-                            placeholder: localizes("search"),
+                            placeholder: localizes('search'),
                             onRef: ref => {
-                                this.txtSearch = ref
+                                this.txtSearch = ref;
                             },
                             iconLeftSearch: ic_search_black,
-                            styleIconLeftSearch: { width: 20, height: 20 },
+                            styleIconLeftSearch: {width: 20, height: 20},
                             autoFocus: true,
                             onSubmitEditing: this.onSubmitEditing,
-                            onPressLeftSearch: () => { },
+                            onPressLeftSearch: () => {},
                             renderMidMenu: this.renderMidMenu,
                             onChangeTextInput: this.onChangeTextInput,
-                            titleStyle: { textAlign: 'center', color: Colors.COLOR_WHITE },
-                            renderRightMenu: this.renderRightMenu
+                            titleStyle: {textAlign: 'center', color: Colors.COLOR_WHITE},
+                            renderRightMenu: this.renderRightMenu,
                         })}
-                    </Header>
+                    </HStack>
                     <FlatListCustom
-                        ref={(r) => { this.listRef = r }}
+                        ref={r => {
+                            this.listRef = r;
+                        }}
                         ListHeaderComponent={this.renderListHeaderComponent}
                         contentContainerStyle={{
-                            flexGrow: 1
+                            flexGrow: 1,
                         }}
-                        style={{ flex: 1 }}
+                        style={{flex: 1}}
                         data={staffSalary}
                         renderItem={this.renderItem}
                         enableRefresh={this.state.enableRefresh}
@@ -242,11 +244,13 @@ class ListStaffSalaryView extends BaseView {
                         showsVerticalScrollIndicator={false}
                         isShowEmpty={this.showNoData}
                         isShowImageEmpty={true}
-                        textForEmpty={localizes("noData")}
-                        styleEmpty={{ marginTop: Constants.MARGIN_X_LARGE }}
+                        textForEmpty={localizes('noData')}
+                        styleEmpty={{marginTop: Constants.MARGIN_X_LARGE}}
                     />
-                    {this.state.isLoadingMore || this.state.refreshing ? null : this.showLoadingBar(this.props.isLoading)}
-                </Root>
+                    {this.state.isLoadingMore || this.state.refreshing
+                        ? null
+                        : this.showLoadingBar(this.props.isLoading)}
+                </View>
             </Container>
         );
     }
@@ -255,35 +259,40 @@ class ListStaffSalaryView extends BaseView {
      * Render right menu
      */
     renderRightMenu = () => {
-        const { isSearch } = this.state;
+        const {isSearch} = this.state;
         return (
-            !isSearch
-            && <TouchableOpacity
-                activeOpacity={Constants.ACTIVE_OPACITY}
-                style={{
-                    justifyContent: "center",
-                    padding: Constants.PADDING_LARGE
-                }}
-                onPress={() => this.onToggleSearch()}
-            >
-                <Image source={ic_search_white} />
-            </TouchableOpacity>
-        )
-    }
+            !isSearch && (
+                <TouchableOpacity
+                    activeOpacity={Constants.ACTIVE_OPACITY}
+                    style={{
+                        justifyContent: 'center',
+                        padding: Constants.PADDING_LARGE,
+                    }}
+                    onPress={() => this.onToggleSearch()}>
+                    <Image source={ic_search_white} />
+                </TouchableOpacity>
+            )
+        );
+    };
 
     /**
      * on toggle search
      */
     onToggleSearch() {
         if (!this.state.isSearch) {
-            this.setState({
-                isSearch: !this.state.isSearch
-            }, () => { this.txtSearch.focus() });
+            this.setState(
+                {
+                    isSearch: !this.state.isSearch,
+                },
+                () => {
+                    this.txtSearch.focus();
+                },
+            );
         } else {
             this.setState({
                 txtSearch: null,
-                isSearch: !this.state.isSearch
-            })
+                isSearch: !this.state.isSearch,
+            });
         }
     }
 
@@ -291,14 +300,16 @@ class ListStaffSalaryView extends BaseView {
      * Render list header component
      */
     renderListHeaderComponent = () => {
-        return null
-    }
+        return null;
+    };
 
     /**
      * Render item
      */
     renderItem = (item, index, parentIndex, indexInParent) => {
-        const resourceUrlPathResize = !Utils.isNull(this.resourceUrlPathResize) ? this.resourceUrlPathResize.textValue : null;
+        const resourceUrlPathResize = !Utils.isNull(this.resourceUrlPathResize)
+            ? this.resourceUrlPathResize.textValue
+            : null;
         return (
             <ItemStaff
                 key={index.toString()}
@@ -308,16 +319,18 @@ class ListStaffSalaryView extends BaseView {
                 onPress={this.onPressItem}
                 lengthData={this.state.staffSalary.length}
             />
-        )
-    }
+        );
+    };
 
     /**
      * On press item
      */
-    onPressItem = (data) => {
-        this.props.navigation.navigate("SalaryHistory", { user: !Utils.isNull(data.userModel) ? data.userModel : null, screen: screenType.FROM_STAFF_SALARY })
-    }
-
+    onPressItem = data => {
+        this.props.navigation.navigate('SalaryHistory', {
+            user: !Utils.isNull(data.userModel) ? data.userModel : null,
+            screen: screenType.FROM_STAFF_SALARY,
+        });
+    };
 }
 
 const mapStateToProps = state => ({
@@ -325,14 +338,13 @@ const mapStateToProps = state => ({
     action: state.salaryStaff.action,
     isLoading: state.salaryStaff.isLoading,
     error: state.salaryStaff.error,
-    errorCode: state.salaryStaff.errorCode
-
+    errorCode: state.salaryStaff.errorCode,
 });
 
 const mapDispatchToProps = {
     ...actions,
     ...commonActions,
-    ...salaryActions
+    ...salaryActions,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListStaffSalaryView);

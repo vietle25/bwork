@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "818526497560",
+    "project_id": "evo-work-test",
+    "storage_bucket": "evo-work-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:818526497560:android:71a635744816e3cc5d8c6d",
+        "android_client_info": {
+          "package_name": "vn.evotek.evowork.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "818526497560-2d5ruutom95o5sn62299dht5q8st8g89.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "vn.evotek.evowork.dev",
+            "certificate_hash": "7ef9fc176337e0791638d846a4c581e88c28e7c7"
+          }
+        },
+        {
+          "client_id": "818526497560-4qqvpp252gsurdgv17t836m02lo3vdul.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCs0TGTzpAKEcMhzIIjwKnH1kA64uerK3U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "818526497560-4qqvpp252gsurdgv17t836m02lo3vdul.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "818526497560-v4c8rqvla84biodbi22tkh8heku4u4tr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "vn.evotek.evowork.dev"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

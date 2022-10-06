@@ -1,40 +1,31 @@
-import React, { Component } from 'react';
-import {
-    View,
-    Text,
-    TouchableOpacity,
-    Image,
-    RefreshControl,
-    BackHandler,
-    Animated
-} from 'react-native';
-import BaseView from 'containers/base/baseView';
-import * as actions from "actions/userActions";
-import * as commonActions from "actions/commonActions";
-import * as timekeepingActions from "actions/timekeepingActions";
-import { connect } from "react-redux";
-import { ErrorCode } from "config/errorCode";
-import { ActionEvent, getActionSuccess } from "actions/actionEvent";
-import { Constants } from 'values/constants';
-import Utils from 'utils/utils';
-import { Content, Container, Root, Header } from 'native-base';
-import styles from './styles';
-import commonStyles from "styles/commonStyles";
-import { Colors } from 'values/colors';
-import ic_search_white from "images/ic_search_white.png";
-import FlatListCustom from 'components/flatListCustom';
-import { localizes } from 'locales/i18n';
-import DateUtil from 'utils/dateUtil';
-import ModalMonth from 'containers/common/modalMonth';
-import ic_down_grey from "images/ic_down_grey.png";
-import ItemUserTimekeeping from './itemUserTimekeeping';
-import StorageUtil from 'utils/storageUtil';
-import ModalTimekeepingAdmin from './modalTimekeepingAdmin';
-import ModalAddTimekeeping from './modalAddTimekeeping';
-import ic_cancel from 'images/ic_cancel.png';
-import ic_search_black from 'images/ic_search_black.png';
-import dashboardType from "enum/dashboardType";
+import {ActionEvent, getActionSuccess} from 'actions/actionEvent';
+import * as commonActions from 'actions/commonActions';
+import * as timekeepingActions from 'actions/timekeepingActions';
+import * as actions from 'actions/userActions';
 import DialogCustom from 'components/dialogCustom';
+import FlatListCustom from 'components/flatListCustom';
+import {ErrorCode} from 'config/errorCode';
+import BaseView from 'containers/base/baseView';
+import ModalMonth from 'containers/common/modalMonth';
+import dashboardType from 'enum/dashboardType';
+import ic_cancel from 'images/ic_cancel.png';
+import ic_down_grey from 'images/ic_down_grey.png';
+import ic_search_black from 'images/ic_search_black.png';
+import ic_search_white from 'images/ic_search_white.png';
+import {localizes} from 'locales/i18n';
+import {Container} from 'native-base';
+import {Animated, BackHandler, Image, RefreshControl, Text, TouchableOpacity, View} from 'react-native';
+import {connect} from 'react-redux';
+import commonStyles from 'styles/commonStyles';
+import DateUtil from 'utils/dateUtil';
+import StorageUtil from 'utils/storageUtil';
+import Utils from 'utils/utils';
+import {Colors} from 'values/colors';
+import {Constants} from 'values/constants';
+import ItemUserTimekeeping from './itemUserTimekeeping';
+import ModalAddTimekeeping from './modalAddTimekeeping';
+import ModalTimekeepingAdmin from './modalTimekeepingAdmin';
+import styles from './styles';
 
 const NAVBAR_HEIGHT = 56;
 
@@ -44,7 +35,7 @@ class TimekeepingAdminView extends BaseView {
 
     constructor(props) {
         super(props);
-        const { navigation } = this.props;
+        const {navigation, route} = this.props;
         this.state = {
             enableLoadMore: false,
             enableRefresh: true,
@@ -54,64 +45,78 @@ class TimekeepingAdminView extends BaseView {
             visibleMonth: false,
             showMonth: true,
             timekeepingList: [],
-            daySelect: new Date(DateUtil.convertFromFormatToFormat(
-                navigation.getParam("daySelect") || DateUtil.now(), DateUtil.FORMAT_DATE_TIME_ZONE_T, DateUtil.FORMAT_DATE_SQL)
+            daySelect: new Date(
+                DateUtil.convertFromFormatToFormat(
+                    route.params.daySelect || DateUtil.now(),
+                    DateUtil.FORMAT_DATE_TIME_ZONE_T,
+                    DateUtil.FORMAT_DATE_SQL,
+                ),
             ),
-            monthCurrentSQL: DateUtil.convertFromFormatToFormat(DateUtil.now(), DateUtil.FORMAT_DATE_TIME_ZONE_T, DateUtil.FORMAT_MONTH_OF_YEAR),
+            monthCurrentSQL: DateUtil.convertFromFormatToFormat(
+                DateUtil.now(),
+                DateUtil.FORMAT_DATE_TIME_ZONE_T,
+                DateUtil.FORMAT_MONTH_OF_YEAR,
+            ),
             typing: false,
             typingTimeout: 0,
             isSearch: false,
             txtSearch: null,
-            timekkeepingIdDelete: null
+            timekkeepingIdDelete: null,
         };
         this.showNoData = false;
-        this.fromScreen = navigation.getParam("screenType");
-        this.daySelect = navigation.getParam("daySelect");
-        this.dashboardType = navigation.getParam("dashboardType") || dashboardType.CHECK_IN;
+        this.fromScreen = route.params.screenType;
+        this.daySelect = route.params.daySelect;
+        this.dashboardType = route.params.dashboardType || dashboardType.CHECK_IN;
         this.filter = {
             companyId: null,
             branchId: null,
-            day: DateUtil.convertFromFormatToFormat(navigation.getParam("daySelect") || DateUtil.now(), DateUtil.FORMAT_DATE_TIME_ZONE_T, DateUtil.FORMAT_DATE_SQL),
+            day: DateUtil.convertFromFormatToFormat(
+                route.params.daySelect || DateUtil.now(),
+                DateUtil.FORMAT_DATE_TIME_ZONE_T,
+                DateUtil.FORMAT_DATE_SQL,
+            ),
             paging: {
                 pageSize: Constants.PAGE_SIZE,
-                page: 0
+                page: 0,
             },
             stringSearch: null,
             dashboardType: this.dashboardType,
             minuteAfterCheckIn1: 0,
-            minuteAfterCheckIn2: 0
+            minuteAfterCheckIn2: 0,
         };
         this.filterWifi = {
             companyId: null,
-            branchId: null
+            branchId: null,
         };
         this.headerY = Animated.multiply(Animated.diffClamp(this.scroll, 0, NAVBAR_HEIGHT), -1);
         this.wiFiListAllows = [];
     }
 
     componentDidMount() {
-        !Utils.isNull(this.fromScreen) && BackHandler.addEventListener('hardwareBackPress', this.handlerBackButton)
+        !Utils.isNull(this.fromScreen) && BackHandler.addEventListener('hardwareBackPress', this.handlerBackButton);
         this.getSourceUrlPath();
         this.getMinutesAbleTimekeeping();
         this.getAllDayInMonth(this.state.monthCurrentSQL);
-        StorageUtil.retrieveItem(StorageUtil.COMPANY_INFO).then((companyInfo) => {
-            this.filter.companyId = companyInfo.company.id;
-            this.filter.branchId = !Utils.isNull(companyInfo.branch) ? companyInfo.branch.id : null;
-            this.filter.minuteAfterCheckIn1 = this.minuteAfterCheckIn1.numericValue || 0;
-            this.filter.minuteAfterCheckIn2 = this.minuteAfterCheckIn2.numericValue || 0;
-            this.filterWifi.companyId = companyInfo.company.id;
-            this.filterWifi.branchId = !Utils.isNull(companyInfo.branch) ? companyInfo.branch.id : null;
-            this.props.getWiFiConfigAdmin(this.filterWifi);
-            this.handleRequest();
-        }).catch((error) => {
-            this.saveException(error, 'componentDidMount')
-        });
+        StorageUtil.retrieveItem(StorageUtil.COMPANY_INFO)
+            .then(companyInfo => {
+                this.filter.companyId = companyInfo.company.id;
+                this.filter.branchId = !Utils.isNull(companyInfo.branch) ? companyInfo.branch.id : null;
+                this.filter.minuteAfterCheckIn1 = this.minuteAfterCheckIn1.numericValue || 0;
+                this.filter.minuteAfterCheckIn2 = this.minuteAfterCheckIn2.numericValue || 0;
+                this.filterWifi.companyId = companyInfo.company.id;
+                this.filterWifi.branchId = !Utils.isNull(companyInfo.branch) ? companyInfo.branch.id : null;
+                this.props.getWiFiConfigAdmin(this.filterWifi);
+                this.handleRequest();
+            })
+            .catch(error => {
+                this.saveException(error, 'componentDidMount');
+            });
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (this.props !== nextProps) {
-            this.props = nextProps
-            this.handleData()
+            this.props = nextProps;
+            this.handleData();
         }
     }
 
@@ -132,10 +137,10 @@ class TimekeepingAdminView extends BaseView {
                         this.state.enableLoadMore = !(data.data.length < Constants.PAGE_SIZE);
                         if (data.data.length > 0) {
                             data.data.forEach(item => {
-                                this.state.timekeepingList.push({ ...item });
+                                this.state.timekeepingList.push({...item});
                             });
                         }
-                        console.log("GET_TIMEKEEPING_LIST", this.state.timekeepingList)
+                        console.log('GET_TIMEKEEPING_LIST', this.state.timekeepingList);
                     }
                     this.showNoData = true;
                 } else if (this.props.action == getActionSuccess(ActionEvent.APPROVAL_TIMEKEEPING)) {
@@ -153,7 +158,7 @@ class TimekeepingAdminView extends BaseView {
                     }
                     this.handleRequest();
                 } else if (this.props.action == getActionSuccess(ActionEvent.GET_WI_FI_CONFIG_ADMIN)) {
-                    this.wiFiListAllows = [{ id: -1, wiFiName: "Chọn wifi" }];
+                    this.wiFiListAllows = [{id: -1, wiFiName: 'Chọn wifi'}];
                     if (!Utils.isNull(data)) {
                         data.forEach(item => {
                             this.wiFiListAllows.push(item);
@@ -212,14 +217,14 @@ class TimekeepingAdminView extends BaseView {
     //onHandleRequest
     handleRequest = () => {
         this.props.getTimekeepingList(this.filter, this.fromScreen);
-    }
+    };
 
     //onRefreshing
     handleRefresh = () => {
         this.state.refreshing = true;
         this.filter.paging.page = 0;
         this.handleRequest();
-    }
+    };
 
     //onLoadMore
     onLoadMore = () => {
@@ -228,29 +233,29 @@ class TimekeepingAdminView extends BaseView {
             this.filter.paging.page += 1;
             this.handleRequest();
         }
-    }
+    };
 
     /**
-     * Manager text input search 
-     * @param {*} stringSearch 
+     * Manager text input search
+     * @param {*} stringSearch
      */
-    onChangeTextInput = (stringSearch) => {
+    onChangeTextInput = stringSearch => {
         const self = this;
         if (self.state.typingTimeout) {
-            clearTimeout(self.state.typingTimeout)
+            clearTimeout(self.state.typingTimeout);
         }
         this.setState({
-            txtSearch: stringSearch == "" ? null : stringSearch,
+            txtSearch: stringSearch == '' ? null : stringSearch,
             typing: false,
             typingTimeout: setTimeout(() => {
                 if (!Utils.isNull(stringSearch)) {
-                    this.onSearch(stringSearch)
+                    this.onSearch(stringSearch);
                 } else {
-                    this.handleRefresh()
+                    this.handleRefresh();
                 }
-            }, 1000)
+            }, 1000),
         });
-    }
+    };
 
     onSearch(text) {
         this.filter.stringSearch = text;
@@ -264,44 +269,47 @@ class TimekeepingAdminView extends BaseView {
      */
     onToggleSearch() {
         if (!this.state.isSearch) {
-            this.setState({
-                isSearch: !this.state.isSearch
-            }, () => { this.txtSearch.focus() });
+            this.setState(
+                {
+                    isSearch: !this.state.isSearch,
+                },
+                () => {
+                    this.txtSearch.focus();
+                },
+            );
         } else {
             this.setState({
                 txtSearch: null,
-                isSearch: !this.state.isSearch
-            })
+                isSearch: !this.state.isSearch,
+            });
         }
     }
 
     /**
      * On submit editing
      */
-    onSubmitEditing = () => {
-
-    }
+    onSubmitEditing = () => {};
 
     /**
      * Render mid menu
      */
     renderMidMenu = () => {
-        return !this.state.isSearch && <View style={{ flex: 1 }} />
-    }
+        return !this.state.isSearch && <View style={{flex: 1}} />;
+    };
 
     componentWillUnmount() {
         !Utils.isNull(this.fromScreen) && BackHandler.removeEventListener('hardwareBackPress', this.handlerBackButton);
     }
 
     render() {
-        const { visibleMonth, showMonth, isSearch, daySelect, timekeepingList } = this.state;
+        const {visibleMonth, showMonth, isSearch, daySelect, timekeepingList} = this.state;
         return (
             <Container style={styles.container}>
-                <Root>
-                    <Header style={[commonStyles.header]}>
+                <View style={{flex: 1}}>
+                    <HStack style={[commonStyles.header]}>
                         {this.renderHeaderView({
                             visibleBack: !Utils.isNull(this.fromScreen),
-                            title: "CHẤM CÔNG",
+                            title: 'CHẤM CÔNG',
                             visibleSearchBar: isSearch,
                             onPressRightSearch: () => {
                                 this.filter.stringSearch = null;
@@ -309,33 +317,34 @@ class TimekeepingAdminView extends BaseView {
                                 this.handleRefresh();
                             },
                             iconRightSearch: ic_cancel,
-                            placeholder: localizes("search"),
+                            placeholder: localizes('search'),
                             onRef: ref => {
-                                this.txtSearch = ref
+                                this.txtSearch = ref;
                             },
                             iconLeftSearch: ic_search_black,
-                            styleIconLeftSearch: { width: 20, height: 20 },
+                            styleIconLeftSearch: {width: 20, height: 20},
                             autoFocus: true,
                             onSubmitEditing: this.onSubmitEditing,
-                            onPressLeftSearch: () => { },
+                            onPressLeftSearch: () => {},
                             renderMidMenu: this.renderMidMenu,
                             onChangeTextInput: this.onChangeTextInput,
-                            titleStyle: { textAlign: 'center', color: Colors.COLOR_WHITE },
-                            renderRightMenu: this.renderRightMenu
+                            titleStyle: {textAlign: 'center', color: Colors.COLOR_WHITE},
+                            renderRightMenu: this.renderRightMenu,
                         })}
-                    </Header>
+                    </HStack>
                     <FlatListCustom
-                        onScroll={Animated.event(
-                            [{ nativeEvent: { contentOffset: { y: this.scroll } } }],
-                            { useNativeDriver: true },
-                        )}
-                        ref={(r) => { this.listRef = r }}
+                        onScroll={Animated.event([{nativeEvent: {contentOffset: {y: this.scroll}}}], {
+                            useNativeDriver: true,
+                        })}
+                        ref={r => {
+                            this.listRef = r;
+                        }}
                         ListHeaderComponent={this.renderHeaderFlatList}
                         // stickyHeaderIndices={[0]}
                         contentContainerStyle={{
-                            flexGrow: 1
+                            flexGrow: 1,
                         }}
-                        style={{ flex: 1 }}
+                        style={{flex: 1}}
                         data={this.state.timekeepingList}
                         renderItem={this.renderItem}
                         enableRefresh={this.state.enableRefresh}
@@ -351,8 +360,8 @@ class TimekeepingAdminView extends BaseView {
                         showsVerticalScrollIndicator={false}
                         isShowEmpty={this.showNoData}
                         isShowImageEmpty={true}
-                        textForEmpty={localizes("noData")}
-                        styleEmpty={{ marginTop: Constants.MARGIN_X_LARGE }}
+                        textForEmpty={localizes('noData')}
+                        styleEmpty={{marginTop: Constants.MARGIN_X_LARGE}}
                     />
                     <ModalMonth
                         isVisible={visibleMonth}
@@ -369,14 +378,16 @@ class TimekeepingAdminView extends BaseView {
                         approvalTimekeeping={this.approvalTimekeeping}
                     />
                     <ModalAddTimekeeping
-                        ref={"modalAddTimekeeping"}
+                        ref={'modalAddTimekeeping'}
                         addTimekeeping={this.addTimekeeping}
                         updateTimekeeping={this.updateTimekeeping}
                         wiFiListAllows={this.wiFiListAllows}
                     />
                     {this.renderAlertDelete()}
-                    {this.state.isLoadingMore || this.state.refreshing ? null : this.showLoadingBar(this.props.isLoading)}
-                </Root>
+                    {this.state.isLoadingMore || this.state.refreshing
+                        ? null
+                        : this.showLoadingBar(this.props.isLoading)}
+                </View>
             </Container>
         );
     }
@@ -384,49 +395,53 @@ class TimekeepingAdminView extends BaseView {
     /**
      * Approval timekeeping
      */
-    approvalTimekeeping = (filter) => {
+    approvalTimekeeping = filter => {
         this.props.approvalTimekeeping(filter);
         this.refs.modalTimekeepingAdmin.hideModal();
-    }
+    };
 
     /**
      * Add timekeeping
      */
-    addTimekeeping = (filter) => {
+    addTimekeeping = filter => {
         this.props.timekeepingAdmin({
             ...filter,
-            day: DateUtil.convertFromFormatToFormat(this.filter.day + " " + filter.checkinTime, DateUtil.FORMAT_DATE_TIME_SQL, DateUtil.FORMAT_DATE_TIME_ZONE)
+            day: DateUtil.convertFromFormatToFormat(
+                this.filter.day + ' ' + filter.checkinTime,
+                DateUtil.FORMAT_DATE_TIME_SQL,
+                DateUtil.FORMAT_DATE_TIME_ZONE,
+            ),
         });
         this.refs.modalAddTimekeeping.hideModal();
-    }
+    };
 
     /**
      * Update timekeeping
      */
-    updateTimekeeping = (filter) => {
+    updateTimekeeping = filter => {
         this.props.timekeepingUpdate(filter);
         this.refs.modalAddTimekeeping.hideModal();
-    }
+    };
 
     /**
      * Render right menu
      */
     renderRightMenu = () => {
-        const { isSearch } = this.state;
+        const {isSearch} = this.state;
         return (
-            !isSearch
-            && <TouchableOpacity
-                activeOpacity={Constants.ACTIVE_OPACITY}
-                style={{
-                    justifyContent: "center",
-                    padding: Constants.PADDING_LARGE
-                }}
-                onPress={() => this.onToggleSearch()}
-            >
-                <Image source={ic_search_white} />
-            </TouchableOpacity>
-        )
-    }
+            !isSearch && (
+                <TouchableOpacity
+                    activeOpacity={Constants.ACTIVE_OPACITY}
+                    style={{
+                        justifyContent: 'center',
+                        padding: Constants.PADDING_LARGE,
+                    }}
+                    onPress={() => this.onToggleSearch()}>
+                    <Image source={ic_search_white} />
+                </TouchableOpacity>
+            )
+        );
+    };
 
     /**
      * Toggle month
@@ -434,7 +449,7 @@ class TimekeepingAdminView extends BaseView {
     toggleMonth = () => {
         this.setState({
             visibleMonth: !this.state.visibleMonth,
-            showMonth: true
+            showMonth: true,
         });
     };
 
@@ -444,7 +459,7 @@ class TimekeepingAdminView extends BaseView {
     toggleDay = () => {
         this.setState({
             visibleMonth: !this.state.visibleMonth,
-            showMonth: false
+            showMonth: false,
         });
     };
 
@@ -454,8 +469,10 @@ class TimekeepingAdminView extends BaseView {
     getAllDayInMonth(month) {
         this.days = [];
         var date = new Date(month);
-        var monthSelect = parseInt(DateUtil.convertFromFormatToFormat(month, DateUtil.FORMAT_MONTH_OF_YEAR, DateUtil.FORMAT_MONTH));
-        while (date.getMonth() === (monthSelect - 1)) {
+        var monthSelect = parseInt(
+            DateUtil.convertFromFormatToFormat(month, DateUtil.FORMAT_MONTH_OF_YEAR, DateUtil.FORMAT_MONTH),
+        );
+        while (date.getMonth() === monthSelect - 1) {
             this.days.push(new Date(date));
             date.setDate(date.getDate() + 1);
         }
@@ -465,20 +482,33 @@ class TimekeepingAdminView extends BaseView {
      * Render header flatList
      */
     renderHeaderFlatList = () => {
-        const { monthCurrentSQL, daySelect } = this.state;
+        const {monthCurrentSQL, daySelect} = this.state;
         return (
-            <Animated.View style={[styles.date, {
-                // transform: [{ translateY: this.headerY }]
-            }]}>
+            <Animated.View
+                style={[
+                    styles.date,
+                    {
+                        // transform: [{ translateY: this.headerY }]
+                    },
+                ]}>
                 <TouchableOpacity
                     activeOpacity={Constants.ACTIVE_OPACITY}
                     onPress={() => this.toggleMonth()}
-                    style={[commonStyles.viewHorizontal, { padding: Constants.PADDING_LARGE, alignItems: 'center' }]}
-                >
+                    style={[commonStyles.viewHorizontal, {padding: Constants.PADDING_LARGE, alignItems: 'center'}]}>
                     <View>
-                        <Text style={[commonStyles.text, { margin: 0 }]}>
-                            {localizes("timekeepingHistory.month") + DateUtil.convertFromFormatToFormat(monthCurrentSQL, DateUtil.FORMAT_MONTH_OF_YEAR, DateUtil.FORMAT_MONTH)}
-                            {", " + DateUtil.convertFromFormatToFormat(monthCurrentSQL, DateUtil.FORMAT_MONTH_OF_YEAR, DateUtil.FORMAT_YEAR)}
+                        <Text style={[commonStyles.text, {margin: 0}]}>
+                            {localizes('timekeepingHistory.month') +
+                                DateUtil.convertFromFormatToFormat(
+                                    monthCurrentSQL,
+                                    DateUtil.FORMAT_MONTH_OF_YEAR,
+                                    DateUtil.FORMAT_MONTH,
+                                )}
+                            {', ' +
+                                DateUtil.convertFromFormatToFormat(
+                                    monthCurrentSQL,
+                                    DateUtil.FORMAT_MONTH_OF_YEAR,
+                                    DateUtil.FORMAT_YEAR,
+                                )}
                         </Text>
                     </View>
                     <Image source={ic_down_grey} />
@@ -486,44 +516,54 @@ class TimekeepingAdminView extends BaseView {
                 <TouchableOpacity
                     activeOpacity={Constants.ACTIVE_OPACITY}
                     onPress={() => this.toggleDay()}
-                    style={[commonStyles.viewHorizontal, { padding: Constants.PADDING_LARGE, justifyContent: 'flex-end', }]}
-                >
-                    <Text style={[commonStyles.text, { margin: 0 }]}>
-                        {DateUtil.convertFromFormatToFormat(daySelect, DateUtil.FORMAT_DATE_TIME_ZONE_T, DateUtil.FORMAT_DAY)}
+                    style={[
+                        commonStyles.viewHorizontal,
+                        {padding: Constants.PADDING_LARGE, justifyContent: 'flex-end'},
+                    ]}>
+                    <Text style={[commonStyles.text, {margin: 0}]}>
+                        {DateUtil.convertFromFormatToFormat(
+                            daySelect,
+                            DateUtil.FORMAT_DATE_TIME_ZONE_T,
+                            DateUtil.FORMAT_DAY,
+                        )}
                     </Text>
                 </TouchableOpacity>
             </Animated.View>
-        )
-    }
+        );
+    };
 
     /**
      * On select month
      */
-    onSelectMonth = (month) => {
+    onSelectMonth = month => {
         let monthOfYear = DateUtil.convertFromFormatToFormat(month._i, month._f, DateUtil.FORMAT_MONTH_OF_YEAR);
         this.setState({
             monthCurrentSQL: monthOfYear,
-            daySelect: new Date(month)
+            daySelect: new Date(month),
         });
         this.showNoData = false;
         this.filter.month = monthOfYear;
-        this.filter.day = DateUtil.convertFromFormatToFormat(new Date(month), DateUtil.FORMAT_DATE_TIME_ZONE_T, DateUtil.FORMAT_DATE_SQL);
+        this.filter.day = DateUtil.convertFromFormatToFormat(
+            new Date(month),
+            DateUtil.FORMAT_DATE_TIME_ZONE_T,
+            DateUtil.FORMAT_DATE_SQL,
+        );
         this.getAllDayInMonth(monthOfYear);
-        this.handleRequest()
-    }
+        this.handleRequest();
+    };
 
     /**
      * On select day
      */
-    onSelectDay = (day) => {
+    onSelectDay = day => {
         let dayOfMonth = DateUtil.convertFromFormatToFormat(day, DateUtil.FORMAT_DATE_TIME_ZONE_T, DateUtil.FORMAT_DAY);
         this.setState({
-            daySelect: new Date(day)
+            daySelect: new Date(day),
         });
         this.showNoData = false;
-        this.filter.day = this.state.monthCurrentSQL + "-" + dayOfMonth;
+        this.filter.day = this.state.monthCurrentSQL + '-' + dayOfMonth;
         this.handleRequest();
-    }
+    };
 
     /**
      * Render item
@@ -541,25 +581,24 @@ class TimekeepingAdminView extends BaseView {
                 onPressDeleteAction={this.onPressDeleteAction}
                 dashboardType={this.dashboardType}
             />
-        )
-    }
+        );
+    };
 
     /**
      * On press item
      */
-    onPressItem = (data) => {
-        this.props.navigation.navigate("TimekeepingHistory", {
-            userId: data.user.id
-        })
-    }
+    onPressItem = data => {
+        this.props.navigation.navigate('TimekeepingHistory', {
+            userId: data.user.id,
+        });
+    };
 
     /**
      * On press aproval action
      */
     onPressAprovalAction = (approvalStatus, timekeeping, user, typeCheck) => {
         this.refs.modalTimekeepingAdmin.showModal(approvalStatus, timekeeping, user, typeCheck);
-    }
-
+    };
 
     /**
      * On press add action
@@ -573,46 +612,47 @@ class TimekeepingAdminView extends BaseView {
                     if (Utils.isNull(data)) {
                         timekeepingRecord = item.timekeepingRecord;
                     } else {
-                        timekeepingRecord = item.timekeepingRecord.filter(item => { return item.id !== data.id });
+                        timekeepingRecord = item.timekeepingRecord.filter(item => {
+                            return item.id !== data.id;
+                        });
                     }
                 }
             });
         }
         this.refs.modalAddTimekeeping.showModal(data, user, workingTimeConfig, timekeepingRecord);
-    }
-
+    };
 
     /**
      * On press delete action
      */
-    onPressDeleteAction = (timekkeepingIdDelete) => {
-        this.setState({ timekkeepingIdDelete })
-    }
+    onPressDeleteAction = timekkeepingIdDelete => {
+        this.setState({timekkeepingIdDelete});
+    };
 
     /**
      * Render alert delete
      */
     renderAlertDelete() {
-        const { timekkeepingIdDelete } = this.state;
+        const {timekkeepingIdDelete} = this.state;
         return (
             <DialogCustom
                 visible={!Utils.isNull(timekkeepingIdDelete)}
                 isVisibleTitle={true}
                 isVisibleContentText={true}
                 isVisibleTwoButton={true}
-                contentTitle={localizes("notification")}
-                textBtnOne={localizes("cancel")}
-                textBtnTwo={localizes("delete")}
-                contentText={"Bạn có muốn xóa chấm công này?"}
+                contentTitle={localizes('notification')}
+                textBtnOne={localizes('cancel')}
+                textBtnTwo={localizes('delete')}
+                contentText={'Bạn có muốn xóa chấm công này?'}
                 onPressX={() => {
-                    this.setState({ timekkeepingIdDelete: null });
+                    this.setState({timekkeepingIdDelete: null});
                 }}
                 onPressBtnOne={() => {
-                    this.setState({ timekkeepingIdDelete: null });
+                    this.setState({timekkeepingIdDelete: null});
                 }}
                 onPressBtnPositive={() => {
                     this.props.timekeepingDelete(timekkeepingIdDelete);
-                    this.setState({ timekkeepingIdDelete: null });
+                    this.setState({timekkeepingIdDelete: null});
                 }}
             />
         );
@@ -625,13 +665,13 @@ const mapStateToProps = state => ({
     isLoading: state.timekeeping.isLoading,
     error: state.timekeeping.error,
     errorCode: state.timekeeping.errorCode,
-    screen: state.timekeeping.screen
+    screen: state.timekeeping.screen,
 });
 
 const mapDispatchToProps = {
     ...actions,
     ...commonActions,
-    ...timekeepingActions
+    ...timekeepingActions,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TimekeepingAdminView);

@@ -1,57 +1,49 @@
-import React, { Component } from 'react'
-import {
-    Text,
-    View,
-    RefreshControl,
-    TouchableOpacity,
-    Image,
-    BackHandler
-} from 'react-native'
-import BaseView from 'containers/base/baseView';
-import styles from './styles';
-import { Container, Root, Header, Content } from 'native-base';
-import commonStyles from 'styles/commonStyles';
-import { localizes } from 'locales/i18n';
-import { Constants } from 'values/constants';
-import { Colors } from 'values/colors';
+import {ActionEvent, getActionSuccess} from 'actions/actionEvent';
+import * as commonActions from 'actions/commonActions';
+import * as timekeepingActions from 'actions/timekeepingActions';
+import * as actions from 'actions/userActions';
 import FlatListCustom from 'components/flatListCustom';
-import DateUtil from 'utils/dateUtil';
-import * as actions from "actions/userActions";
-import * as timekeepingActions from "actions/timekeepingActions";
-import * as commonActions from "actions/commonActions";
-import { connect } from "react-redux";
-import { ActionEvent, getActionSuccess } from "actions/actionEvent";
-import { ErrorCode } from "config/errorCode";
-import ic_down_grey from "images/ic_down_grey.png";
-import moment from 'moment';
-import Hr from 'components/hr';
-import Utils from 'utils/utils';
-import ItemTimekeepingHistory from './itemTimekeepingHistory';
-import approvalStatusType from 'enum/approvalStatusType';
+import {ErrorCode} from 'config/errorCode';
+import BaseView from 'containers/base/baseView';
 import ModalMonth from 'containers/common/modalMonth';
+import ic_down_grey from 'images/ic_down_grey.png';
+import {localizes} from 'locales/i18n';
+import {HStack} from 'native-base';
+import {BackHandler, Image, RefreshControl, Text, TouchableOpacity, View} from 'react-native';
+import {connect} from 'react-redux';
+import commonStyles from 'styles/commonStyles';
+import DateUtil from 'utils/dateUtil';
 import StorageUtil from 'utils/storageUtil';
+import Utils from 'utils/utils';
+import {Colors} from 'values/colors';
+import {Constants} from 'values/constants';
+import ItemTimekeepingHistory from './itemTimekeepingHistory';
+import styles from './styles';
 
 class TimekeepingHistoryView extends BaseView {
-
     constructor(props) {
         super(props);
-        const { navigation } = this.props;
+        const {navigation, route} = this.props;
         this.state = {
             enableRefresh: true,
             refreshing: true,
             month: null,
             visibleMonth: false,
             showMonth: true,
-            daySelect: "All",
-            monthCurrentSQL: DateUtil.convertFromFormatToFormat(DateUtil.now(), DateUtil.FORMAT_DATE_TIME_ZONE_T, DateUtil.FORMAT_MONTH_OF_YEAR)
+            daySelect: 'All',
+            monthCurrentSQL: DateUtil.convertFromFormatToFormat(
+                DateUtil.now(),
+                DateUtil.FORMAT_DATE_TIME_ZONE_T,
+                DateUtil.FORMAT_MONTH_OF_YEAR,
+            ),
         };
         this.userInfo = null;
-        this.userId = navigation.getParam('userId') || null;
+        this.userId = global.userId || null;
         this.filter = {
             userId: this.userId,
             month: this.state.monthCurrentSQL,
-            day: this.state.daySelect
-        }
+            day: this.state.daySelect,
+        };
         this.histories = [];
         this.dataHistories = [];
         this.showNoData = false;
@@ -59,22 +51,22 @@ class TimekeepingHistoryView extends BaseView {
         this.handleRefresh = this.handleRefresh.bind(this);
     }
 
-    componentWillMount() { }
-
     /**
      * Get information user profile
      */
     getUserProfile = () => {
-        StorageUtil.retrieveItem(StorageUtil.USER_PROFILE).then((user) => {
-            //this callback is executed when your Promise is resolved
-            if (!Utils.isNull(user)) {
-                this.userInfo = user;
-                this.props.getUserProfile(user.id);
-            }
-        }).catch((error) => {
-            this.saveException(error, "getUserProfile");
-        });
-    }
+        StorageUtil.retrieveItem(StorageUtil.USER_PROFILE)
+            .then(user => {
+                //this callback is executed when your Promise is resolved
+                if (!Utils.isNull(user)) {
+                    this.userInfo = user;
+                    this.props.getUserProfile(user.id);
+                }
+            })
+            .catch(error => {
+                this.saveException(error, 'getUserProfile');
+            });
+    };
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (this.props !== nextProps) {
@@ -84,8 +76,8 @@ class TimekeepingHistoryView extends BaseView {
     }
 
     /**
-	 * Handle data when request
-	 */
+     * Handle data when request
+     */
     handleData() {
         let data = this.props.data;
         if (this.props.errorCode != ErrorCode.ERROR_INIT) {
@@ -124,7 +116,7 @@ class TimekeepingHistoryView extends BaseView {
     toggleMonth = () => {
         this.setState({
             visibleMonth: !this.state.visibleMonth,
-            showMonth: true
+            showMonth: true,
         });
     };
 
@@ -134,25 +126,25 @@ class TimekeepingHistoryView extends BaseView {
     toggleDay = () => {
         this.setState({
             visibleMonth: !this.state.visibleMonth,
-            showMonth: false
+            showMonth: false,
         });
     };
 
     render() {
-        const { visibleMonth, showMonth, daySelect } = this.state;
+        const {visibleMonth, showMonth, daySelect} = this.state;
         return (
-            <Container style={styles.container}>
-                <Root>
-                    <Header style={[commonStyles.header]}>
+            <View style={styles.container}>
+                <View style={{flex: 1}}>
+                    <HStack style={[commonStyles.header]}>
                         {this.renderHeaderView({
                             visibleBack: !Utils.isNull(this.userId),
-                            title: localizes("timekeeping.titleHistory"),
-                            titleStyle: { color: Colors.COLOR_WHITE }
+                            title: localizes('timekeeping.titleHistory'),
+                            titleStyle: {color: Colors.COLOR_WHITE},
                         })}
-                    </Header>
+                    </HStack>
                     <FlatListCustom
                         ListHeaderComponent={this.renderHeaderFlatList}
-                        contentContainerStyle={{ paddingBottom: Constants.PADDING_LARGE }}
+                        contentContainerStyle={{paddingBottom: Constants.PADDING_LARGE}}
                         horizontal={false}
                         data={this.dataHistories}
                         itemPerCol={1}
@@ -168,11 +160,13 @@ class TimekeepingHistoryView extends BaseView {
                         }
                         isShowEmpty={this.showNoData}
                         isShowImageEmpty={true}
-                        textForEmpty={daySelect == "All"
-                            ? localizes("timekeepingHistory.emptyTimekeepingHistory")
-                            : localizes("timekeepingHistory.emptyTimekeepingHistoryDay")}
+                        textForEmpty={
+                            daySelect == 'All'
+                                ? localizes('timekeepingHistory.emptyTimekeepingHistory')
+                                : localizes('timekeepingHistory.emptyTimekeepingHistoryDay')
+                        }
                         styleEmpty={{
-                            marginTop: Constants.MARGIN_LARGE
+                            marginTop: Constants.MARGIN_LARGE,
                         }}
                     />
                     <ModalMonth
@@ -184,27 +178,36 @@ class TimekeepingHistoryView extends BaseView {
                         days={this.days}
                     />
                     {this.state.refreshing ? null : this.showLoadingBar(this.props.isLoading)}
-                </Root>
-            </Container>
-        )
+                </View>
+            </View>
+        );
     }
 
     /**
      * Render header flatList
      */
     renderHeaderFlatList = () => {
-        const { monthCurrentSQL, daySelect } = this.state;
+        const {monthCurrentSQL, daySelect} = this.state;
         return (
-            <View style={styles.date} >
+            <View style={styles.date}>
                 <TouchableOpacity
                     activeOpacity={Constants.ACTIVE_OPACITY}
                     onPress={() => this.toggleMonth()}
-                    style={[commonStyles.viewHorizontal, { padding: Constants.PADDING_LARGE, alignItems: 'center' }]}
-                >
+                    style={[commonStyles.viewHorizontal, {padding: Constants.PADDING_LARGE, alignItems: 'center'}]}>
                     <View>
-                        <Text style={[commonStyles.text, { margin: 0 }]}>
-                            {localizes("timekeepingHistory.month") + DateUtil.convertFromFormatToFormat(monthCurrentSQL, DateUtil.FORMAT_MONTH_OF_YEAR, DateUtil.FORMAT_MONTH)}
-                            {", " + DateUtil.convertFromFormatToFormat(monthCurrentSQL, DateUtil.FORMAT_MONTH_OF_YEAR, DateUtil.FORMAT_YEAR)}
+                        <Text style={[commonStyles.text, {margin: 0}]}>
+                            {localizes('timekeepingHistory.month') +
+                                DateUtil.convertFromFormatToFormat(
+                                    monthCurrentSQL,
+                                    DateUtil.FORMAT_MONTH_OF_YEAR,
+                                    DateUtil.FORMAT_MONTH,
+                                )}
+                            {', ' +
+                                DateUtil.convertFromFormatToFormat(
+                                    monthCurrentSQL,
+                                    DateUtil.FORMAT_MONTH_OF_YEAR,
+                                    DateUtil.FORMAT_YEAR,
+                                )}
                         </Text>
                     </View>
                     <Image source={ic_down_grey} />
@@ -212,13 +215,15 @@ class TimekeepingHistoryView extends BaseView {
                 <TouchableOpacity
                     activeOpacity={Constants.ACTIVE_OPACITY}
                     onPress={() => this.toggleDay()}
-                    style={[commonStyles.viewHorizontal, { padding: Constants.PADDING_LARGE, justifyContent: 'flex-end', }]}
-                >
-                    <Text style={[commonStyles.text, { margin: 0 }]}>{daySelect}</Text>
+                    style={[
+                        commonStyles.viewHorizontal,
+                        {padding: Constants.PADDING_LARGE, justifyContent: 'flex-end'},
+                    ]}>
+                    <Text style={[commonStyles.text, {margin: 0}]}>{daySelect}</Text>
                 </TouchableOpacity>
             </View>
-        )
-    }
+        );
+    };
 
     /**
      * @param {*} item
@@ -240,42 +245,44 @@ class TimekeepingHistoryView extends BaseView {
     /**
      * On press item
      */
-    onPressItem = (item) => {
-        this.props.navigation.navigate("TimekeepingHistoryDetail", {
+    onPressItem = item => {
+        this.props.navigation.navigate('TimekeepingHistoryDetail', {
             userId: this.userId,
-            createdAt: item.createdAt
-        })
-    }
+            createdAt: item.createdAt,
+        });
+    };
 
     /**
      * On select month
      */
-    onSelectMonth = (month) => {
+    onSelectMonth = month => {
         let monthOfYear = DateUtil.convertFromFormatToFormat(month._i, month._f, DateUtil.FORMAT_MONTH_OF_YEAR);
         this.setState({
             monthCurrentSQL: monthOfYear,
-            daySelect: "All"
+            daySelect: 'All',
         });
         this.showNoData = false;
         this.filter.month = monthOfYear;
-        this.filter.day = "All";
+        this.filter.day = 'All';
         this.getAllDayInMonth(monthOfYear);
-        this.handleRequest()
-    }
+        this.handleRequest();
+    };
 
     /**
      * On select day
      */
-    onSelectDay = (day) => {
-        let dayOfMonth = day === "All"
-            ? day : DateUtil.convertFromFormatToFormat(day, DateUtil.FORMAT_DATE_TIME_ZONE_T, DateUtil.FORMAT_DAY);
+    onSelectDay = day => {
+        let dayOfMonth =
+            day === 'All'
+                ? day
+                : DateUtil.convertFromFormatToFormat(day, DateUtil.FORMAT_DATE_TIME_ZONE_T, DateUtil.FORMAT_DAY);
         this.setState({
-            daySelect: dayOfMonth
+            daySelect: dayOfMonth,
         });
         this.showNoData = false;
         this.filter.day = dayOfMonth;
         this.handleRequest();
-    }
+    };
 
     /**
      * Get all day in month
@@ -283,8 +290,10 @@ class TimekeepingHistoryView extends BaseView {
     getAllDayInMonth(month) {
         this.days = [];
         var date = new Date(month);
-        var monthSelect = parseInt(DateUtil.convertFromFormatToFormat(month, DateUtil.FORMAT_MONTH_OF_YEAR, DateUtil.FORMAT_MONTH));
-        while (date.getMonth() === (monthSelect - 1)) {
+        var monthSelect = parseInt(
+            DateUtil.convertFromFormatToFormat(month, DateUtil.FORMAT_MONTH_OF_YEAR, DateUtil.FORMAT_MONTH),
+        );
+        while (date.getMonth() === monthSelect - 1) {
             this.days.push(new Date(date));
             date.setDate(date.getDate() + 1);
         }
@@ -312,16 +321,13 @@ const mapStateToProps = state => ({
     isLoading: state.timekeepingHistory.isLoading,
     error: state.timekeepingHistory.error,
     errorCode: state.timekeepingHistory.errorCode,
-    action: state.timekeepingHistory.action
+    action: state.timekeepingHistory.action,
 });
 
 const mapDispatchToProps = {
     ...actions,
     ...timekeepingActions,
-    ...commonActions
+    ...commonActions,
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(TimekeepingHistoryView);
+export default connect(mapStateToProps, mapDispatchToProps)(TimekeepingHistoryView);

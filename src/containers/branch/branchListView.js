@@ -1,40 +1,31 @@
-import React, { Component } from 'react';
-import {
-    View,
-    Text,
-    TouchableOpacity,
-    Image,
-    RefreshControl,
-    BackHandler
-} from 'react-native';
-import BaseView from 'containers/base/baseView';
-import * as actions from "actions/userActions";
-import * as commonActions from "actions/commonActions";
-import * as sabbaticalActions from "actions/sabbaticalActions";
-import { connect } from "react-redux";
-import { ErrorCode } from "config/errorCode";
-import { ActionEvent, getActionSuccess } from "actions/actionEvent";
-import { Constants } from 'values/constants';
-import Utils from 'utils/utils';
-import { Content, Container, Root, Header } from 'native-base';
-import styles from './styles';
-import commonStyles from "styles/commonStyles";
-import { Colors } from 'values/colors';
-import ic_logout_white from "images/ic_logout_white.png";
-import FlatListCustom from 'components/flatListCustom';
-import { localizes } from 'locales/i18n';
-import ItemBranch from './itemBranch';
-import StorageUtil from 'utils/storageUtil';
-import screenType from 'enum/screenType';
-import ic_search_white from "images/ic_search_white.png";
-import ic_search_black from 'images/ic_search_black.png';
-import ic_cancel from 'images/ic_cancel.png';
+import {ActionEvent, getActionSuccess} from 'actions/actionEvent';
+import * as commonActions from 'actions/commonActions';
+import * as actions from 'actions/userActions';
 import DialogCustom from 'components/dialogCustom';
+import FlatListCustom from 'components/flatListCustom';
+import {ErrorCode} from 'config/errorCode';
+import BaseView from 'containers/base/baseView';
+import screenType from 'enum/screenType';
+import ic_cancel from 'images/ic_cancel.png';
+import ic_logout_white from 'images/ic_logout_white.png';
+import ic_search_black from 'images/ic_search_black.png';
+import ic_search_white from 'images/ic_search_white.png';
+import {localizes} from 'locales/i18n';
+import {Container} from 'native-base';
+import {BackHandler, Image, RefreshControl, Text, TouchableOpacity, View} from 'react-native';
+import {connect} from 'react-redux';
+import commonStyles from 'styles/commonStyles';
+import StorageUtil from 'utils/storageUtil';
+import Utils from 'utils/utils';
+import {Colors} from 'values/colors';
+import {Constants} from 'values/constants';
+import ItemBranch from './itemBranch';
+import styles from './styles';
 
 class BranchListView extends BaseView {
     constructor(props) {
         super(props);
-        const { navigation } = this.props;
+        const {navigation, route} = this.props;
         this.state = {
             enableLoadMore: false,
             enableRefresh: true,
@@ -45,17 +36,17 @@ class BranchListView extends BaseView {
             typingTimeout: 0,
             isSearch: false,
             txtSearch: null,
-            isAlert: false
+            isAlert: false,
         };
-        this.company = navigation.getParam("company");
-        this.fromScreen = navigation.getParam("fromScreen");
+        this.company = route.params.company;
+        this.fromScreen = route.params.fromScreen;
         this.filter = {
             companyId: this.company.id,
             paging: {
                 pageSize: Constants.PAGE_SIZE,
-                page: 0
+                page: 0,
             },
-            stringSearch: null
+            stringSearch: null,
         };
         this.showNoData = false;
     }
@@ -70,8 +61,8 @@ class BranchListView extends BaseView {
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (this.props !== nextProps) {
-            this.props = nextProps
-            this.handleData()
+            this.props = nextProps;
+            this.handleData();
         }
     }
 
@@ -92,10 +83,10 @@ class BranchListView extends BaseView {
                         this.state.enableLoadMore = !(data.data.length < Constants.PAGE_SIZE);
                         if (data.data.length > 0) {
                             data.data.forEach(item => {
-                                this.state.branches.push({ ...item });
+                                this.state.branches.push({...item});
                             });
                         }
-                        console.log("GET_BRANCHES", this.state.branches)
+                        console.log('GET_BRANCHES', this.state.branches);
                     }
                     this.showNoData = true;
                 }
@@ -109,14 +100,14 @@ class BranchListView extends BaseView {
     //onHandleRequest
     handleRequest = () => {
         this.props.getBranches(this.filter);
-    }
+    };
 
     //onRefreshing
     handleRefresh = () => {
         this.state.refreshing = true;
         this.filter.paging.page = 0;
         this.handleRequest();
-    }
+    };
 
     //onLoadMore
     onLoadMore = () => {
@@ -125,7 +116,7 @@ class BranchListView extends BaseView {
             this.filter.paging.page += 1;
             this.handleRequest();
         }
-    }
+    };
 
     componentWillUnmount() {
         if (this.fromScreen != screenType.FROM_LOGIN) {
@@ -137,26 +128,24 @@ class BranchListView extends BaseView {
      * Render mid menu
      */
     renderMidMenu = () => {
-        return !this.state.isSearch && <View style={{ flex: 1 }} />
-    }
+        return !this.state.isSearch && <View style={{flex: 1}} />;
+    };
 
     /**
      * On submit editing
      */
-    onSubmitEditing = () => {
-
-    }
+    onSubmitEditing = () => {};
 
     render() {
-        const { branches, isSearch } = this.state;
+        const {branches, isSearch} = this.state;
         return (
             <Container style={styles.container}>
-                <Root>
-                    <Header hasTabs style={commonStyles.header}>
+                <View style={{flex: 1}}>
+                    <HStack hasTabs style={commonStyles.header}>
                         {this.renderHeaderView({
                             visibleBack: this.fromScreen != screenType.FROM_LOGIN,
-                            title: "DANH SÁCH CHI NHÁNH",
-                            titleStyle: { textAlign: 'center', color: Colors.COLOR_WHITE },
+                            title: 'DANH SÁCH CHI NHÁNH',
+                            titleStyle: {textAlign: 'center', color: Colors.COLOR_WHITE},
                             visibleSearchBar: isSearch,
                             onPressRightSearch: () => {
                                 this.filter.stringSearch = null;
@@ -164,30 +153,32 @@ class BranchListView extends BaseView {
                                 this.handleRefresh();
                             },
                             iconRightSearch: ic_cancel,
-                            placeholder: localizes("search"),
+                            placeholder: localizes('search'),
                             onRef: ref => {
-                                this.txtSearch = ref
+                                this.txtSearch = ref;
                             },
                             iconLeftSearch: ic_search_black,
-                            styleIconLeftSearch: { width: 20, height: 20 },
+                            styleIconLeftSearch: {width: 20, height: 20},
                             autoFocus: true,
                             onSubmitEditing: this.onSubmitEditing,
-                            onPressLeftSearch: () => { },
+                            onPressLeftSearch: () => {},
                             renderMidMenu: this.renderMidMenu,
                             onChangeTextInput: this.onChangeTextInput,
                             renderLeftMenu: this.fromScreen == screenType.FROM_LOGIN && this.renderLeftMenu,
-                            renderRightMenu: this.renderRightMenu
+                            renderRightMenu: this.renderRightMenu,
                         })}
-                    </Header>
+                    </HStack>
                     <FlatListCustom
-                        ref={(r) => { this.listRef = r }}
+                        ref={r => {
+                            this.listRef = r;
+                        }}
                         // ListHeaderComponent={branches.length > 0 && this.renderListHeaderComponent}
                         contentContainerStyle={{
                             flexGrow: 1,
                             // paddingTop: Constants.PADDING_LARGE,
-                            backgroundColor: branches.length > 0 ? Colors.COLOR_WHITE : Colors.COLOR_BACKGROUND
+                            backgroundColor: branches.length > 0 ? Colors.COLOR_WHITE : Colors.COLOR_BACKGROUND,
                         }}
-                        style={{ flex: 1 }}
+                        style={{flex: 1}}
                         data={branches}
                         renderItem={this.renderItem}
                         enableRefresh={this.state.enableRefresh}
@@ -203,12 +194,14 @@ class BranchListView extends BaseView {
                         showsVerticalScrollIndicator={false}
                         isShowEmpty={this.showNoData}
                         isShowImageEmpty={true}
-                        textForEmpty={localizes("noData")}
-                        styleEmpty={{ marginTop: Constants.MARGIN_LARGE }}
+                        textForEmpty={localizes('noData')}
+                        styleEmpty={{marginTop: Constants.MARGIN_LARGE}}
                     />
-                    {this.state.isLoadingMore || this.state.refreshing ? null : this.showLoadingBar(this.props.isLoading)}
+                    {this.state.isLoadingMore || this.state.refreshing
+                        ? null
+                        : this.showLoadingBar(this.props.isLoading)}
                     {this.logoutDialog()}
-                </Root>
+                </View>
             </Container>
         );
     }
@@ -221,57 +214,56 @@ class BranchListView extends BaseView {
             <TouchableOpacity
                 activeOpacity={Constants.ACTIVE_OPACITY}
                 style={{
-                    justifyContent: "center",
-                    padding: Constants.PADDING_LARGE
+                    justifyContent: 'center',
+                    padding: Constants.PADDING_LARGE,
                 }}
-                onPress={() => this.setState({ isAlert: true })}
-            >
+                onPress={() => this.setState({isAlert: true})}>
                 <Image source={ic_logout_white} />
             </TouchableOpacity>
-        )
-    }
+        );
+    };
 
     /**
      * Render right menu
      */
     renderRightMenu = () => {
-        const { isSearch } = this.state;
+        const {isSearch} = this.state;
         return (
-            !isSearch
-            && <TouchableOpacity
-                activeOpacity={Constants.ACTIVE_OPACITY}
-                style={{
-                    justifyContent: "center",
-                    padding: Constants.PADDING_LARGE
-                }}
-                onPress={() => this.onToggleSearch()}
-            >
-                <Image source={ic_search_white} />
-            </TouchableOpacity>
-        )
-    }
+            !isSearch && (
+                <TouchableOpacity
+                    activeOpacity={Constants.ACTIVE_OPACITY}
+                    style={{
+                        justifyContent: 'center',
+                        padding: Constants.PADDING_LARGE,
+                    }}
+                    onPress={() => this.onToggleSearch()}>
+                    <Image source={ic_search_white} />
+                </TouchableOpacity>
+            )
+        );
+    };
 
     /**
-     * Manager text input search 
-     * @param {*} stringSearch 
+     * Manager text input search
+     * @param {*} stringSearch
      */
-    onChangeTextInput = (stringSearch) => {
+    onChangeTextInput = stringSearch => {
         const self = this;
         if (self.state.typingTimeout) {
-            clearTimeout(self.state.typingTimeout)
+            clearTimeout(self.state.typingTimeout);
         }
         this.setState({
-            txtSearch: stringSearch == "" ? null : stringSearch,
+            txtSearch: stringSearch == '' ? null : stringSearch,
             typing: false,
             typingTimeout: setTimeout(() => {
                 if (!Utils.isNull(stringSearch)) {
-                    this.onSearch(stringSearch)
+                    this.onSearch(stringSearch);
                 } else {
-                    this.handleRefresh()
+                    this.handleRefresh();
                 }
-            }, 1000)
+            }, 1000),
         });
-    }
+    };
 
     onSearch(text) {
         this.filter.stringSearch = text;
@@ -285,14 +277,19 @@ class BranchListView extends BaseView {
      */
     onToggleSearch() {
         if (!this.state.isSearch) {
-            this.setState({
-                isSearch: !this.state.isSearch
-            }, () => { this.txtSearch.focus() });
+            this.setState(
+                {
+                    isSearch: !this.state.isSearch,
+                },
+                () => {
+                    this.txtSearch.focus();
+                },
+            );
         } else {
             this.setState({
                 txtSearch: null,
-                isSearch: !this.state.isSearch
-            })
+                isSearch: !this.state.isSearch,
+            });
         }
     }
 
@@ -300,10 +297,12 @@ class BranchListView extends BaseView {
      * Render list header component
      */
     renderListHeaderComponent = () => {
-        return <Text style={[commonStyles.textBold, { marginHorizontal: Constants.MARGIN_X_LARGE }]}>
-            Danh sách chi nhánh
-        </Text>
-    }
+        return (
+            <Text style={[commonStyles.textBold, {marginHorizontal: Constants.MARGIN_X_LARGE}]}>
+                Danh sách chi nhánh
+            </Text>
+        );
+    };
 
     /**
      * Render item
@@ -319,20 +318,20 @@ class BranchListView extends BaseView {
                 urlPath={this.resourceUrlPath.textValue}
                 onPress={this.onPressItem}
             />
-        )
-    }
+        );
+    };
 
     /**
      * On press item
      */
-    onPressItem = (data) => {
+    onPressItem = data => {
         let companyInfo = {
             company: this.company,
-            branch: data
-        }
+            branch: data,
+        };
         StorageUtil.storeItem(StorageUtil.COMPANY_INFO, companyInfo);
         this.goHomeScreen();
-    }
+    };
 
     /**
      * show dialog logout
@@ -343,48 +342,54 @@ class BranchListView extends BaseView {
             isVisibleTitle={true}
             isVisibleContentText={true}
             isVisibleTwoButton={true}
-            contentTitle={localizes("confirm")}
-            textBtnOne={localizes("cancel")}
-            textBtnTwo={localizes("setting.log_out")}
+            contentTitle={localizes('confirm')}
+            textBtnOne={localizes('cancel')}
+            textBtnTwo={localizes('setting.log_out')}
             contentText={localizes('slidingMenu.want_out')}
-            onTouchOutside={() => { this.setState({ isAlert: false }) }}
-            onPressX={() => { this.setState({ isAlert: false }) }}
+            onTouchOutside={() => {
+                this.setState({isAlert: false});
+            }}
+            onPressX={() => {
+                this.setState({isAlert: false});
+            }}
             onPressBtnPositive={() => {
-                StorageUtil.retrieveItem(StorageUtil.FCM_TOKEN).then((token) => {
-                    if (token != undefined) {
-                        // const deviceId = DeviceInfo.getDeviceId();
-                        let filter = {
-                            deviceId: "",
-                            deviceToken: token
-                        }
-                        this.props.deleteUserDeviceInfo(filter) // delete device info
-                    } else {
-                        console.log('token null')
-                    }
-                }).catch((error) => {
-                    //this callback is executed when your Promise is rejected
-                    this.saveException(error, 'logoutDialog')
-                });
-                StorageUtil.deleteItem(StorageUtil.USER_PROFILE)
-                    .then(user => {
-                        console.log("user setting", user);
-                        if (Utils.isNull(user)) {
-                            this.showMessage(localizes('setting.logoutSuccess'))
-                            this.setState({ isAlert: false })
-                            this.logout()
-                            this.goLoginScreen()
+                StorageUtil.retrieveItem(StorageUtil.FCM_TOKEN)
+                    .then(token => {
+                        if (token != undefined) {
+                            // const deviceId = DeviceInfo.getDeviceId();
+                            let filter = {
+                                deviceId: '',
+                                deviceToken: token,
+                            };
+                            this.props.deleteUserDeviceInfo(filter); // delete device info
                         } else {
-                            this.showMessage(localizes('setting.logoutFail'))
+                            console.log('token null');
                         }
                     })
                     .catch(error => {
-                        this.saveException(error, 'logoutDialog')
+                        //this callback is executed when your Promise is rejected
+                        this.saveException(error, 'logoutDialog');
+                    });
+                StorageUtil.deleteItem(StorageUtil.USER_PROFILE)
+                    .then(user => {
+                        console.log('user setting', user);
+                        if (Utils.isNull(user)) {
+                            this.showMessage(localizes('setting.logoutSuccess'));
+                            this.setState({isAlert: false});
+                            this.logout();
+                            this.goLoginScreen();
+                        } else {
+                            this.showMessage(localizes('setting.logoutFail'));
+                        }
+                    })
+                    .catch(error => {
+                        this.saveException(error, 'logoutDialog');
                     });
                 // this.signOutFB(this.state.userFB)
                 // this.signOutGG(this.state.userGG)
             }}
         />
-    )
+    );
 }
 
 const mapStateToProps = state => ({
@@ -392,12 +397,12 @@ const mapStateToProps = state => ({
     action: state.branch.action,
     isLoading: state.branch.isLoading,
     error: state.branch.error,
-    errorCode: state.branch.errorCode
+    errorCode: state.branch.errorCode,
 });
 
 const mapDispatchToProps = {
     ...actions,
-    ...commonActions
+    ...commonActions,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(BranchListView);

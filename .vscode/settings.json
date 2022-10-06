@@ -1,0 +1,17 @@
+{
+    "workbench.iconTheme": "eq-material-theme-icons-darker",
+    "workbench.colorTheme": "Atom One Dark",
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": true
+    },
+    "editor.rulers": [100, 140],
+    "workbench.colorCustomizations": {
+        "editorRuler.foreground": "#5d73d5"
+    },
+    "editor.formatOnSave": true,
+    "emmet.optimizeStylesheetParsing": false,
+    "editor.fontWeight": "normal",
+    "files.autoSave": "onFocusChange",
+    "editor.mouseWheelScrollSensitivity": 0.2,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+}

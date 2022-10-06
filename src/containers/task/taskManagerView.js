@@ -1,34 +1,25 @@
-import React, { Component } from 'react';
-import {
-    View,
-    Text,
-    TouchableOpacity,
-    Image,
-    RefreshControl
-} from 'react-native';
-import BaseView from 'containers/base/baseView';
-import * as actions from "actions/userActions";
-import * as commonActions from "actions/commonActions";
-import * as taskActions from "actions/taskActions";
-import { connect } from "react-redux";
-import { ErrorCode } from "config/errorCode";
-import { ActionEvent, getActionSuccess } from "actions/actionEvent";
-import { Constants } from 'values/constants';
-import Utils from 'utils/utils';
-import { Content, Container, Root, Header } from 'native-base';
-import styles from './styles';
-import commonStyles from "styles/commonStyles";
-import { Colors } from 'values/colors';
-import ic_down_grey from "images/ic_down_grey.png";
+import {ActionEvent, getActionSuccess} from 'actions/actionEvent';
+import * as commonActions from 'actions/commonActions';
+import * as taskActions from 'actions/taskActions';
+import * as actions from 'actions/userActions';
 import FlatListCustom from 'components/flatListCustom';
-import ItemTask from './itemTask';
-import { localizes } from 'locales/i18n';
+import {ErrorCode} from 'config/errorCode';
+import BaseView from 'containers/base/baseView';
 import ModalMonth from 'containers/common/modalMonth';
-import DialogCustom from 'components/dialogCustom';
-import DateUtil from 'utils/dateUtil';
-import Hr from 'components/hr';
-import StorageUtil from 'utils/storageUtil';
 import CompanyType from 'enum/companyType';
+import ic_down_grey from 'images/ic_down_grey.png';
+import {localizes} from 'locales/i18n';
+import {HStack} from 'native-base';
+import {Image, RefreshControl, Text, TouchableOpacity, View} from 'react-native';
+import {connect} from 'react-redux';
+import commonStyles from 'styles/commonStyles';
+import DateUtil from 'utils/dateUtil';
+import StorageUtil from 'utils/storageUtil';
+import Utils from 'utils/utils';
+import {Colors} from 'values/colors';
+import {Constants} from 'values/constants';
+import ItemTask from './itemTask';
+import styles from './styles';
 
 class TaskManagerView extends BaseView {
     constructor(props) {
@@ -43,16 +34,24 @@ class TaskManagerView extends BaseView {
             month: null,
             visibleMonth: false,
             showMonth: true,
-            daySelect: DateUtil.convertFromFormatToFormat(DateUtil.now(), DateUtil.FORMAT_DATE_TIME_ZONE_T, DateUtil.FORMAT_DAY),
-            monthCurrentSQL: DateUtil.convertFromFormatToFormat(DateUtil.now(), DateUtil.FORMAT_DATE_TIME_ZONE_T, DateUtil.FORMAT_MONTH_OF_YEAR)
+            daySelect: DateUtil.convertFromFormatToFormat(
+                DateUtil.now(),
+                DateUtil.FORMAT_DATE_TIME_ZONE_T,
+                DateUtil.FORMAT_DAY,
+            ),
+            monthCurrentSQL: DateUtil.convertFromFormatToFormat(
+                DateUtil.now(),
+                DateUtil.FORMAT_DATE_TIME_ZONE_T,
+                DateUtil.FORMAT_MONTH_OF_YEAR,
+            ),
         };
         this.filter = {
             paging: {
                 pageSize: Constants.PAGE_SIZE,
-                page: 0
+                page: 0,
             },
             month: this.state.monthCurrentSQL,
-            day: this.state.daySelect
+            day: this.state.daySelect,
         };
         this.showNoData = false;
         this.dataDelete = null;
@@ -69,22 +68,24 @@ class TaskManagerView extends BaseView {
      * Get information user profile
      */
     getUserProfile = () => {
-        StorageUtil.retrieveItem(StorageUtil.USER_PROFILE).then((user) => {
-            //this callback is executed when your Promise is resolved
-            if (!Utils.isNull(user)) {
-                this.company = user.company;
-                this.props.getUserProfile(user.id);
-                this.handleRequest();
-            }
-        }).catch((error) => {
-            this.saveException(error, "getUserProfile");
-        });
-    }
+        StorageUtil.retrieveItem(StorageUtil.USER_PROFILE)
+            .then(user => {
+                //this callback is executed when your Promise is resolved
+                if (!Utils.isNull(user)) {
+                    this.company = user.company;
+                    this.props.getUserProfile(user.id);
+                    this.handleRequest();
+                }
+            })
+            .catch(error => {
+                this.saveException(error, 'getUserProfile');
+            });
+    };
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (this.props !== nextProps) {
-            this.props = nextProps
-            this.handleData()
+            this.props = nextProps;
+            this.handleData();
         }
     }
 
@@ -105,20 +106,20 @@ class TaskManagerView extends BaseView {
                         this.state.enableLoadMore = !(data.data.length < Constants.PAGE_SIZE);
                         if (data.data.length > 0) {
                             data.data.forEach(item => {
-                                this.state.tasks.push({ ...item });
+                                this.state.tasks.push({...item});
                             });
                         }
-                        console.log("GET_TASK", this.state.tasks)
+                        console.log('GET_TASK', this.state.tasks);
                         this.showNoData = true;
                     }
                 } else if (this.props.action == getActionSuccess(ActionEvent.UPDATE_TASK)) {
                     if (!Utils.isNull(data)) {
-                        this.showMessage("Cập nhật trạng thái công việc thành công");
+                        this.showMessage('Cập nhật trạng thái công việc thành công');
                         this.props.getTask(this.filter);
                     }
                 }
             } else {
-                this.handleError(this.props.errorCode, this.props.error)
+                this.handleError(this.props.errorCode, this.props.error);
             }
         }
     }
@@ -129,16 +130,16 @@ class TaskManagerView extends BaseView {
             this.props.getTask(this.filter);
         } else {
             this.showNoData = true;
-            this.setState({ refreshing: false });
+            this.setState({refreshing: false});
         }
-    }
+    };
 
     //onRefreshing
     handleRefresh = () => {
         this.state.refreshing = true;
         this.filter.paging.page = 0;
         this.handleRequest();
-    }
+    };
 
     //onLoadMore
     onLoadMore = () => {
@@ -147,27 +148,29 @@ class TaskManagerView extends BaseView {
             this.filter.paging.page += 1;
             this.handleRequest();
         }
-    }
+    };
 
     render() {
-        const { visibleMonth, showMonth, daySelect } = this.state;
+        const {visibleMonth, showMonth, daySelect} = this.state;
         return (
-            <Container style={styles.container}>
-                <Root>
-                    <Header hasTabs style={commonStyles.header}>
+            <View style={styles.container}>
+                <View style={{flex: 1}}>
+                    <HStack hasTabs style={commonStyles.header}>
                         {this.renderHeaderView({
                             visibleBack: false,
-                            title: "Danh sách công việc",
-                            titleStyle: { textAlign: 'center', color: Colors.COLOR_WHITE },
+                            title: 'Danh sách công việc',
+                            titleStyle: {textAlign: 'center', color: Colors.COLOR_WHITE},
                         })}
-                    </Header>
+                    </HStack>
                     <FlatListCustom
-                        ref={(r) => { this.listRef = r }}
+                        ref={r => {
+                            this.listRef = r;
+                        }}
                         ListHeaderComponent={this.renderListHeaderComponent}
                         contentContainerStyle={{
-                            flexGrow: 1
+                            flexGrow: 1,
                         }}
-                        style={{ flex: 1 }}
+                        style={{flex: 1}}
                         data={this.state.tasks}
                         renderItem={this.renderItem}
                         enableRefresh={this.state.enableRefresh}
@@ -183,8 +186,8 @@ class TaskManagerView extends BaseView {
                         showsVerticalScrollIndicator={false}
                         isShowEmpty={this.showNoData}
                         isShowImageEmpty={true}
-                        textForEmpty={localizes("task.noData")}
-                        styleEmpty={{ marginTop: Constants.MARGIN_X_LARGE }}
+                        textForEmpty={localizes('task.noData')}
+                        styleEmpty={{marginTop: Constants.MARGIN_X_LARGE}}
                     />
                     <ModalMonth
                         isVisible={visibleMonth}
@@ -195,9 +198,11 @@ class TaskManagerView extends BaseView {
                         days={this.days}
                         currentDay={DateUtil.now()}
                     />
-                    {this.state.isLoadingMore || this.state.refreshing ? null : this.showLoadingBar(this.props.isLoading)}
-                </Root>
-            </Container>
+                    {this.state.isLoadingMore || this.state.refreshing
+                        ? null
+                        : this.showLoadingBar(this.props.isLoading)}
+                </View>
+            </View>
         );
     }
 
@@ -207,7 +212,7 @@ class TaskManagerView extends BaseView {
     toggleMonth = () => {
         this.setState({
             visibleMonth: !this.state.visibleMonth,
-            showMonth: true
+            showMonth: true,
         });
     };
 
@@ -217,39 +222,41 @@ class TaskManagerView extends BaseView {
     toggleDay = () => {
         this.setState({
             visibleMonth: !this.state.visibleMonth,
-            showMonth: false
+            showMonth: false,
         });
     };
 
     /**
      * On select month
      */
-    onSelectMonth = (month) => {
+    onSelectMonth = month => {
         let monthOfYear = DateUtil.convertFromFormatToFormat(month._i, month._f, DateUtil.FORMAT_MONTH_OF_YEAR);
         this.setState({
             monthCurrentSQL: monthOfYear,
-            daySelect: "All"
+            daySelect: 'All',
         });
         this.showNoData = false;
         this.filter.month = monthOfYear;
-        this.filter.day = "All";
+        this.filter.day = 'All';
         this.getAllDayInMonth(monthOfYear);
-        this.handleRequest()
-    }
+        this.handleRequest();
+    };
 
     /**
      * On select day
      */
-    onSelectDay = (day) => {
-        let dayOfMonth = day === "All"
-            ? day : DateUtil.convertFromFormatToFormat(day, DateUtil.FORMAT_DATE_TIME_ZONE_T, DateUtil.FORMAT_DAY);
+    onSelectDay = day => {
+        let dayOfMonth =
+            day === 'All'
+                ? day
+                : DateUtil.convertFromFormatToFormat(day, DateUtil.FORMAT_DATE_TIME_ZONE_T, DateUtil.FORMAT_DAY);
         this.setState({
-            daySelect: dayOfMonth
+            daySelect: dayOfMonth,
         });
         this.showNoData = false;
         this.filter.day = dayOfMonth;
         this.handleRequest();
-    }
+    };
 
     /**
      * Get all day in month
@@ -257,8 +264,10 @@ class TaskManagerView extends BaseView {
     getAllDayInMonth(month) {
         this.days = [];
         var date = new Date(month);
-        var monthSelect = parseInt(DateUtil.convertFromFormatToFormat(month, DateUtil.FORMAT_MONTH_OF_YEAR, DateUtil.FORMAT_MONTH));
-        while (date.getMonth() === (monthSelect - 1)) {
+        var monthSelect = parseInt(
+            DateUtil.convertFromFormatToFormat(month, DateUtil.FORMAT_MONTH_OF_YEAR, DateUtil.FORMAT_MONTH),
+        );
+        while (date.getMonth() === monthSelect - 1) {
             this.days.push(new Date(date));
             date.setDate(date.getDate() + 1);
         }
@@ -268,18 +277,27 @@ class TaskManagerView extends BaseView {
      * Render header flatList
      */
     renderListHeaderComponent = () => {
-        const { monthCurrentSQL, daySelect } = this.state;
+        const {monthCurrentSQL, daySelect} = this.state;
         return (
-            <View style={styles.date} >
+            <View style={styles.date}>
                 <TouchableOpacity
                     activeOpacity={Constants.ACTIVE_OPACITY}
                     onPress={() => this.toggleMonth()}
-                    style={[commonStyles.viewHorizontal, { padding: Constants.PADDING_LARGE, alignItems: 'center' }]}
-                >
+                    style={[commonStyles.viewHorizontal, {padding: Constants.PADDING_LARGE, alignItems: 'center'}]}>
                     <View>
-                        <Text style={[commonStyles.text, { margin: 0 }]}>
-                            {localizes("timekeepingHistory.month") + DateUtil.convertFromFormatToFormat(monthCurrentSQL, DateUtil.FORMAT_MONTH_OF_YEAR, DateUtil.FORMAT_MONTH)}
-                            {", " + DateUtil.convertFromFormatToFormat(monthCurrentSQL, DateUtil.FORMAT_MONTH_OF_YEAR, DateUtil.FORMAT_YEAR)}
+                        <Text style={[commonStyles.text, {margin: 0}]}>
+                            {localizes('timekeepingHistory.month') +
+                                DateUtil.convertFromFormatToFormat(
+                                    monthCurrentSQL,
+                                    DateUtil.FORMAT_MONTH_OF_YEAR,
+                                    DateUtil.FORMAT_MONTH,
+                                )}
+                            {', ' +
+                                DateUtil.convertFromFormatToFormat(
+                                    monthCurrentSQL,
+                                    DateUtil.FORMAT_MONTH_OF_YEAR,
+                                    DateUtil.FORMAT_YEAR,
+                                )}
                         </Text>
                     </View>
                     <Image source={ic_down_grey} />
@@ -287,12 +305,15 @@ class TaskManagerView extends BaseView {
                 <TouchableOpacity
                     activeOpacity={Constants.ACTIVE_OPACITY}
                     onPress={() => this.toggleDay()}
-                    style={[commonStyles.viewHorizontal, { padding: Constants.PADDING_LARGE, justifyContent: 'flex-end', }]}>
-                    <Text style={[commonStyles.text, { margin: 0 }]}>{daySelect}</Text>
+                    style={[
+                        commonStyles.viewHorizontal,
+                        {padding: Constants.PADDING_LARGE, justifyContent: 'flex-end'},
+                    ]}>
+                    <Text style={[commonStyles.text, {margin: 0}]}>{daySelect}</Text>
                 </TouchableOpacity>
             </View>
-        )
-    }
+        );
+    };
 
     /**
      * Render item
@@ -309,23 +330,22 @@ class TaskManagerView extends BaseView {
                 onPress={this.onPressItem}
                 onEdit={this.onEdit}
             />
-        )
-    }
+        );
+    };
 
     /**
      * On press item
      */
-    onPressItem = (item) => {
-        this.props.navigation.navigate("TaskDetail", { data: item, callback: this.handleRefresh });
-    }
+    onPressItem = item => {
+        this.props.navigation.navigate('TaskDetail', {data: item, callback: this.handleRefresh});
+    };
 
     /**
      * On edit
      */
     onEdit = (data, type) => {
-        this.props.updateTask({ taskId: data.id, taskType: type });
-    }
-
+        this.props.updateTask({taskId: data.id, taskType: type});
+    };
 }
 
 const mapStateToProps = state => ({
@@ -333,13 +353,13 @@ const mapStateToProps = state => ({
     action: state.task.action,
     isLoading: state.task.isLoading,
     error: state.task.error,
-    errorCode: state.task.errorCode
+    errorCode: state.task.errorCode,
 });
 
 const mapDispatchToProps = {
     ...actions,
     ...commonActions,
-    ...taskActions
+    ...taskActions,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TaskManagerView);

@@ -1,33 +1,21 @@
-import React, { Component } from 'react';
-import {
-    View,
-    Text,
-    TouchableOpacity,
-    Image,
-    RefreshControl,
-    BackHandler
-} from 'react-native';
-import BaseView from 'containers/base/baseView';
-import * as actions from "actions/userActions";
-import * as commonActions from "actions/commonActions";
-import * as userActions from "actions/userActions";
-import { connect } from "react-redux";
-import { ErrorCode } from "config/errorCode";
-import { ActionEvent, getActionSuccess } from "actions/actionEvent";
-import { Constants } from 'values/constants';
-import Utils from 'utils/utils';
-import { Content, Container, Root, Header } from 'native-base';
-import styles from './styles';
-import commonStyles from "styles/commonStyles";
-import { Colors } from 'values/colors';
+import {ActionEvent, getActionSuccess} from 'actions/actionEvent';
+import * as commonActions from 'actions/commonActions';
+import * as actions from 'actions/userActions';
+import * as userActions from 'actions/userActions';
 import FlatListCustom from 'components/flatListCustom';
-import itemDepartment from './itemDepartment';
-import { localizes } from 'locales/i18n';
-import DialogCustom from 'components/dialogCustom';
-import DateUtil from 'utils/dateUtil';
+import {ErrorCode} from 'config/errorCode';
+import BaseView from 'containers/base/baseView';
+import {localizes} from 'locales/i18n';
+import {Container} from 'native-base';
+import {BackHandler, RefreshControl, View} from 'react-native';
+import {connect} from 'react-redux';
+import commonStyles from 'styles/commonStyles';
 import StorageUtil from 'utils/storageUtil';
-import screenType from 'enum/screenType';
+import Utils from 'utils/utils';
+import {Colors} from 'values/colors';
+import {Constants} from 'values/constants';
 import ItemDepartment from './itemDepartment';
+import styles from './styles';
 
 class ListDepartmentView extends BaseView {
     constructor(props) {
@@ -38,38 +26,40 @@ class ListDepartmentView extends BaseView {
             isLoadingMore: false,
             refreshing: true,
             listDepartment: [],
-            isAlertDelete: false
+            isAlertDelete: false,
         };
         this.filter = {
             companyId: null,
             branchId: null,
             paging: {
                 pageSize: Constants.PAGE_SIZE,
-                page: 0
-            }
+                page: 0,
+            },
         };
         this.showNoData = false;
         this.dataDelete = null;
     }
 
     componentDidMount() {
-        BackHandler.addEventListener("hardwareBackPress", this.handlerBackButton);
+        BackHandler.addEventListener('hardwareBackPress', this.handlerBackButton);
         this.getSourceUrlPath();
-        StorageUtil.retrieveItem(StorageUtil.COMPANY_INFO).then((companyInfo) => {
-            this.company = companyInfo.company;
-            this.branch = companyInfo.branch;
-            this.filter.companyId = companyInfo.company.id;
-            this.filter.branch = !Utils.isNull(companyInfo.branch) ? companyInfo.branch.id : null;
-            this.handleRequest();
-        }).catch((error) => {
-            this.saveException(error, 'componentDidMount')
-        });
+        StorageUtil.retrieveItem(StorageUtil.COMPANY_INFO)
+            .then(companyInfo => {
+                this.company = companyInfo.company;
+                this.branch = companyInfo.branch;
+                this.filter.companyId = companyInfo.company.id;
+                this.filter.branch = !Utils.isNull(companyInfo.branch) ? companyInfo.branch.id : null;
+                this.handleRequest();
+            })
+            .catch(error => {
+                this.saveException(error, 'componentDidMount');
+            });
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (this.props !== nextProps) {
-            this.props = nextProps
-            this.handleData()
+            this.props = nextProps;
+            this.handleData();
         }
     }
 
@@ -90,10 +80,10 @@ class ListDepartmentView extends BaseView {
                         this.state.enableLoadMore = !(data.length < Constants.PAGE_SIZE);
                         if (data.length > 0) {
                             data.forEach(item => {
-                                this.state.listDepartment.push({ ...item });
+                                this.state.listDepartment.push({...item});
                             });
                         }
-                        console.log("GET_LIST_DEPARTMENT", this.state.listDepartment)
+                        console.log('GET_LIST_DEPARTMENT', this.state.listDepartment);
                     }
                     this.showNoData = true;
                 }
@@ -107,14 +97,14 @@ class ListDepartmentView extends BaseView {
     //onHandleRequest
     handleRequest = () => {
         this.props.getListDepartment(this.filter);
-    }
+    };
 
     //onRefreshing
     handleRefresh = () => {
         this.state.refreshing = true;
         this.filter.paging.page = 0;
         this.handleRequest();
-    }
+    };
 
     //onLoadMore
     onLoadMore = () => {
@@ -123,33 +113,35 @@ class ListDepartmentView extends BaseView {
             this.filter.paging.page += 1;
             this.handleRequest();
         }
-    }
+    };
 
     componentWillUnmount() {
         BackHandler.removeEventListener('hardwareBackPress', this.handlerBackButton);
     }
 
     render() {
-        const { listDepartment } = this.state;
+        const {listDepartment} = this.state;
         return (
             <Container style={styles.container}>
-                <Root>
-                    <Header hasTabs style={commonStyles.header}>
+                <View style={{flex: 1}}>
+                    <HStack hasTabs style={commonStyles.header}>
                         {this.renderHeaderView({
                             visibleBack: true,
-                            title: localizes("department.departmentTitle"),
-                            titleStyle: { textAlign: 'center', color: Colors.COLOR_WHITE },
-                            renderRightMenu: this.renderRightMenu
+                            title: localizes('department.departmentTitle'),
+                            titleStyle: {textAlign: 'center', color: Colors.COLOR_WHITE},
+                            renderRightMenu: this.renderRightMenu,
                         })}
-                    </Header>
+                    </HStack>
                     <FlatListCustom
-                        ref={(r) => { this.listRef = r }}
+                        ref={r => {
+                            this.listRef = r;
+                        }}
                         ListHeaderComponent={this.renderListHeaderComponent}
                         contentContainerStyle={{
                             flexGrow: 1,
-                            backgroundColor: listDepartment.length > 0 ? Colors.COLOR_WHITE : Colors.COLOR_BACKGROUND
+                            backgroundColor: listDepartment.length > 0 ? Colors.COLOR_WHITE : Colors.COLOR_BACKGROUND,
                         }}
-                        style={{ flex: 1 }}
+                        style={{flex: 1}}
                         data={listDepartment}
                         renderItem={this.renderItem}
                         enableRefresh={this.state.enableRefresh}
@@ -165,11 +157,13 @@ class ListDepartmentView extends BaseView {
                         showsVerticalScrollIndicator={false}
                         isShowEmpty={this.showNoData}
                         isShowImageEmpty={true}
-                        textForEmpty={localizes("noData")}
-                        styleEmpty={{ marginTop: Constants.MARGIN_X_LARGE }}
+                        textForEmpty={localizes('noData')}
+                        styleEmpty={{marginTop: Constants.MARGIN_X_LARGE}}
                     />
-                    {this.state.isLoadingMore || this.state.refreshing ? null : this.showLoadingBar(this.props.isLoading)}
-                </Root>
+                    {this.state.isLoadingMore || this.state.refreshing
+                        ? null
+                        : this.showLoadingBar(this.props.isLoading)}
+                </View>
             </Container>
         );
     }
@@ -178,23 +172,23 @@ class ListDepartmentView extends BaseView {
      * Render right menu
      */
     renderRightMenu = () => {
-        return (
-            <View></View>
-        )
-    }
+        return <View></View>;
+    };
 
     /**
      * Render list header component
      */
     renderListHeaderComponent = () => {
-        return null
-    }
+        return null;
+    };
 
     /**
      * Render item
      */
     renderItem = (item, index, parentIndex, indexInParent) => {
-        const resourceUrlPathResize = !Utils.isNull(this.resourceUrlPathResize) ? this.resourceUrlPathResize.textValue : null;
+        const resourceUrlPathResize = !Utils.isNull(this.resourceUrlPathResize)
+            ? this.resourceUrlPathResize.textValue
+            : null;
         return (
             <ItemDepartment
                 key={index.toString()}
@@ -204,16 +198,15 @@ class ListDepartmentView extends BaseView {
                 onPress={this.onPressItem}
                 lengthData={this.state.listDepartment.length}
             />
-        )
-    }
+        );
+    };
 
     /**
      * On press item
      */
-    onPressItem = (data) => {
-        this.props.navigation.navigate("StaffDepartmentList", { departmentId: data.id, nameDepartment: data.name })
-    }
-
+    onPressItem = data => {
+        this.props.navigation.navigate('StaffDepartmentList', {departmentId: data.id, nameDepartment: data.name});
+    };
 }
 
 const mapStateToProps = state => ({
@@ -221,13 +214,13 @@ const mapStateToProps = state => ({
     isLoading: state.department.isLoading,
     error: state.department.error,
     errorCode: state.department.errorCode,
-    action: state.department.action
+    action: state.department.action,
 });
 
 const mapDispatchToProps = {
     ...actions,
     ...commonActions,
-    ...userActions
+    ...userActions,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListDepartmentView);

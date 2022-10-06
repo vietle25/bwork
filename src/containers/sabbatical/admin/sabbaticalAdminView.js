@@ -1,44 +1,34 @@
-import React, { Component } from 'react';
-import {
-    View,
-    Text,
-    TouchableOpacity,
-    Image,
-    RefreshControl,
-    BackHandler
-} from 'react-native';
-import BaseView from 'containers/base/baseView';
-import * as actions from "actions/userActions";
-import * as commonActions from "actions/commonActions";
-import * as sabbaticalActions from "actions/sabbaticalActions";
-import { connect } from "react-redux";
-import { ErrorCode } from "config/errorCode";
-import { ActionEvent, getActionSuccess } from "actions/actionEvent";
-import { Constants } from 'values/constants';
-import Utils from 'utils/utils';
-import { Content, Container, Root, Header } from 'native-base';
-import styles from '../styles';
-import commonStyles from "styles/commonStyles";
-import { Colors } from 'values/colors';
-import ic_search_white from "images/ic_search_white.png";
-import ic_down_grey from "images/ic_down_grey.png";
-import ic_cancel from 'images/ic_cancel.png';
-import ic_search_black from 'images/ic_search_black.png';
+import {ActionEvent, getActionSuccess} from 'actions/actionEvent';
+import * as commonActions from 'actions/commonActions';
+import * as sabbaticalActions from 'actions/sabbaticalActions';
+import * as actions from 'actions/userActions';
 import FlatListCustom from 'components/flatListCustom';
-import ItemSabbaticalAdmin from './itemSabbaticalAdmin';
-import { localizes } from 'locales/i18n';
-import ModalSabbaticalAdmin from './modalSabbaticalAdmin';
-import DialogCustom from 'components/dialogCustom';
+import {ErrorCode} from 'config/errorCode';
+import BaseView from 'containers/base/baseView';
 import ModalMonth from 'containers/common/modalMonth';
+import slidingMenuType from 'enum/slidingMenuType';
+import ic_cancel from 'images/ic_cancel.png';
+import ic_down_grey from 'images/ic_down_grey.png';
+import ic_search_black from 'images/ic_search_black.png';
+import ic_search_white from 'images/ic_search_white.png';
+import {localizes} from 'locales/i18n';
+import {Container} from 'native-base';
+import {BackHandler, Image, RefreshControl, Text, TouchableOpacity, View} from 'react-native';
+import {connect} from 'react-redux';
+import commonStyles from 'styles/commonStyles';
 import DateUtil from 'utils/dateUtil';
 import StorageUtil from 'utils/storageUtil';
-import slidingMenuType from 'enum/slidingMenuType';
-import Hr from 'components/hr';
+import Utils from 'utils/utils';
+import {Colors} from 'values/colors';
+import {Constants} from 'values/constants';
+import styles from '../styles';
+import ItemSabbaticalAdmin from './itemSabbaticalAdmin';
+import ModalSabbaticalAdmin from './modalSabbaticalAdmin';
 
 class SabbaticalAdminView extends BaseView {
     constructor(props) {
         super(props);
-        const { navigation } = this.props;
+        const {navigation, route} = this.props;
         this.state = {
             enableLoadMore: false,
             enableRefresh: true,
@@ -54,8 +44,14 @@ class SabbaticalAdminView extends BaseView {
             isApproved: false,
             isDenied: false,
             showMonth: true,
-            daySelect: navigation.getParam("daySelect") ? new Date(DateUtil.convertFromFormatToFormat(navigation.getParam("daySelect"))) : "All",
-            monthCurrentSQL: DateUtil.convertFromFormatToFormat(navigation.getParam("daySelect") || DateUtil.now(), DateUtil.FORMAT_DATE_TIME_ZONE_T, DateUtil.FORMAT_MONTH_OF_YEAR)
+            daySelect: route.params.daySelect
+                ? new Date(DateUtil.convertFromFormatToFormat(route.params.daySelect))
+                : 'All',
+            monthCurrentSQL: DateUtil.convertFromFormatToFormat(
+                route.params.daySelect || DateUtil.now(),
+                DateUtil.FORMAT_DATE_TIME_ZONE_T,
+                DateUtil.FORMAT_MONTH_OF_YEAR,
+            ),
         };
         this.filter = {
             companyId: null,
@@ -63,21 +59,27 @@ class SabbaticalAdminView extends BaseView {
             deniedNote: null,
             stringSearch: null,
             month: this.state.monthCurrentSQL,
-            day: navigation.getParam("daySelect") ? DateUtil.convertFromFormatToFormat(DateUtil.now(), DateUtil.FORMAT_DATE_TIME_ZONE_T, DateUtil.FORMAT_DAY) : "All",
+            day: route.params.daySelect
+                ? DateUtil.convertFromFormatToFormat(
+                      DateUtil.now(),
+                      DateUtil.FORMAT_DATE_TIME_ZONE_T,
+                      DateUtil.FORMAT_DAY,
+                  )
+                : 'All',
             paging: {
                 pageSize: Constants.PAGE_SIZE,
-                page: 0
-            }
+                page: 0,
+            },
         };
         this.user = null;
         this.showNoData = false;
         this.dataDelete = null;
-        this.fromScreen = navigation.getParam("screenType");
+        this.fromScreen = route.params.screenType;
         this.visible = !Utils.isNull(this.fromScreen) && this.fromScreen == slidingMenuType.SABBATICAL_ADMIN;
     }
 
     componentDidMount() {
-        this.visible && BackHandler.addEventListener('hardwareBackPress', this.handlerBackButton)
+        this.visible && BackHandler.addEventListener('hardwareBackPress', this.handlerBackButton);
         this.getSourceUrlPath();
         this.getUserProfile();
         this.getAllDayInMonth(this.state.monthCurrentSQL);
@@ -85,8 +87,8 @@ class SabbaticalAdminView extends BaseView {
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (this.props !== nextProps) {
-            this.props = nextProps
-            this.handleData()
+            this.props = nextProps;
+            this.handleData();
         }
     }
 
@@ -107,10 +109,10 @@ class SabbaticalAdminView extends BaseView {
                         this.state.enableLoadMore = !(data.data.length < Constants.PAGE_SIZE);
                         if (data.data.length > 0) {
                             data.data.forEach(item => {
-                                this.state.sabbaticals.push({ ...item });
+                                this.state.sabbaticals.push({...item});
                             });
                         }
-                        console.log("GET_SABBATICALS_ADMIN", this.state.sabbaticals)
+                        console.log('GET_SABBATICALS_ADMIN', this.state.sabbaticals);
                     }
                     this.showNoData = true;
                 } else if (this.props.action == getActionSuccess(ActionEvent.APPROVED_SABBATICAL)) {
@@ -118,7 +120,7 @@ class SabbaticalAdminView extends BaseView {
                         if (data) {
                             this.hideModal();
                             this.props.getSabbaticalsAdmin(this.filter);
-                            this.showMessage(localizes("sabbatical.approvalSabbaticalSuccess"));
+                            this.showMessage(localizes('sabbatical.approvalSabbaticalSuccess'));
                         }
                     }
                 } else if (this.props.action == getActionSuccess(ActionEvent.DENIED_SABBATICAL)) {
@@ -126,7 +128,7 @@ class SabbaticalAdminView extends BaseView {
                         if (data) {
                             this.hideModal();
                             this.props.getSabbaticalsAdmin(this.filter);
-                            this.showMessage(localizes("sabbatical.deniedSabbaticalSuccess"));
+                            this.showMessage(localizes('sabbatical.deniedSabbaticalSuccess'));
                         }
                     }
                 }
@@ -141,28 +143,32 @@ class SabbaticalAdminView extends BaseView {
      * Get information user profile
      */
     getUserProfile = () => {
-        StorageUtil.retrieveItem(StorageUtil.USER_PROFILE).then((user) => {
-            //this callback is executed when your Promise is resolved
-            if (!Utils.isNull(user)) {
-                this.user = user;
-                this.props.getProfileAdmin(user.id);
-                StorageUtil.retrieveItem(StorageUtil.COMPANY_INFO).then((companyInfo) => {
-                    this.filter.companyId = companyInfo.company.id;
-                    this.filter.branchId = !Utils.isNull(companyInfo.branch) ? companyInfo.branch.id : null;
-                    this.handleRequest();
-                }).catch((error) => {
-                    this.saveException(error, 'componentDidMount')
-                });
-            }
-        }).catch((error) => {
-            this.saveException(error, "getUserProfile");
-        });
-    }
+        StorageUtil.retrieveItem(StorageUtil.USER_PROFILE)
+            .then(user => {
+                //this callback is executed when your Promise is resolved
+                if (!Utils.isNull(user)) {
+                    this.user = user;
+                    this.props.getProfileAdmin(user.id);
+                    StorageUtil.retrieveItem(StorageUtil.COMPANY_INFO)
+                        .then(companyInfo => {
+                            this.filter.companyId = companyInfo.company.id;
+                            this.filter.branchId = !Utils.isNull(companyInfo.branch) ? companyInfo.branch.id : null;
+                            this.handleRequest();
+                        })
+                        .catch(error => {
+                            this.saveException(error, 'componentDidMount');
+                        });
+                }
+            })
+            .catch(error => {
+                this.saveException(error, 'getUserProfile');
+            });
+    };
 
     //onHandleRequest
     handleRequest = () => {
         this.props.getSabbaticalsAdmin(this.filter);
-    }
+    };
 
     //onRefreshing
     handleRefresh = () => {
@@ -170,7 +176,7 @@ class SabbaticalAdminView extends BaseView {
         this.filter.stringSearch = null;
         this.filter.paging.page = 0;
         this.handleRequest();
-    }
+    };
 
     //onLoadMore
     onLoadMore = () => {
@@ -179,21 +185,21 @@ class SabbaticalAdminView extends BaseView {
             this.filter.paging.page += 1;
             this.handleRequest();
         }
-    }
+    };
 
     componentWillUnmount() {
         this.visible && BackHandler.removeEventListener('hardwareBackPress', this.handlerBackButton);
     }
 
     render() {
-        const { visibleMonth, showMonth, daySelect, isSearch } = this.state;
+        const {visibleMonth, showMonth, daySelect, isSearch} = this.state;
         return (
             <Container style={styles.container}>
-                <Root>
-                    <Header hasTabs style={commonStyles.header}>
+                <View style={{flex: 1}}>
+                    <HStack hasTabs style={commonStyles.header}>
                         {this.renderHeaderView({
                             visibleBack: this.visible,
-                            title: isSearch ? "" : localizes("sabbatical.sabbaticalTitle"),
+                            title: isSearch ? '' : localizes('sabbatical.sabbaticalTitle'),
                             visibleSearchBar: isSearch,
                             onPressRightSearch: () => {
                                 this.filter.stringSearch = null;
@@ -201,28 +207,30 @@ class SabbaticalAdminView extends BaseView {
                                 this.handleRefresh();
                             },
                             iconRightSearch: ic_cancel,
-                            placeholder: localizes("search"),
+                            placeholder: localizes('search'),
                             onRef: ref => {
-                                this.txtSearch = ref
+                                this.txtSearch = ref;
                             },
                             iconLeftSearch: ic_search_black,
-                            styleIconLeftSearch: { width: 20, height: 20 },
+                            styleIconLeftSearch: {width: 20, height: 20},
                             autoFocus: true,
                             onSubmitEditing: this.onSubmitEditing,
-                            onPressLeftSearch: () => { },
+                            onPressLeftSearch: () => {},
                             renderMidMenu: this.renderMidMenu,
-                            titleStyle: { textAlign: 'center', color: Colors.COLOR_WHITE },
+                            titleStyle: {textAlign: 'center', color: Colors.COLOR_WHITE},
                             onChangeTextInput: this.onChangeTextInput,
                             renderRightMenu: this.renderRightMenu,
                         })}
-                    </Header>
+                    </HStack>
                     <FlatListCustom
-                        ref={(r) => { this.listRef = r }}
+                        ref={r => {
+                            this.listRef = r;
+                        }}
                         ListHeaderComponent={this.renderHeaderFlatList}
                         contentContainerStyle={{
                             flexGrow: 1,
                         }}
-                        style={{ flex: 1 }}
+                        style={{flex: 1}}
                         data={this.state.sabbaticals}
                         renderItem={this.renderItem}
                         enableRefresh={this.state.enableRefresh}
@@ -238,10 +246,12 @@ class SabbaticalAdminView extends BaseView {
                         showsVerticalScrollIndicator={false}
                         isShowEmpty={this.showNoData}
                         isShowImageEmpty={true}
-                        textForEmpty={localizes("noData")}
-                        styleEmpty={{ marginTop: Constants.MARGIN_X_LARGE }}
+                        textForEmpty={localizes('noData')}
+                        styleEmpty={{marginTop: Constants.MARGIN_X_LARGE}}
                     />
-                    {this.state.isLoadingMore || this.state.refreshing ? null : this.showLoadingBar(this.props.isLoading)}
+                    {this.state.isLoadingMore || this.state.refreshing
+                        ? null
+                        : this.showLoadingBar(this.props.isLoading)}
                     <ModalSabbaticalAdmin
                         ref={'modalSabbaticalAdmin'}
                         isApproved={this.state.isApproved}
@@ -257,7 +267,7 @@ class SabbaticalAdminView extends BaseView {
                         days={this.days}
                         currentDay={daySelect}
                     />
-                </Root>
+                </View>
             </Container>
         );
     }
@@ -274,45 +284,48 @@ class SabbaticalAdminView extends BaseView {
      */
     onToggleSearch() {
         if (!this.state.isSearch) {
-            this.setState({
-                isSearch: !this.state.isSearch
-            }, () => { this.txtSearch.focus() });
+            this.setState(
+                {
+                    isSearch: !this.state.isSearch,
+                },
+                () => {
+                    this.txtSearch.focus();
+                },
+            );
         } else {
             this.setState({
                 txtSearch: null,
-                isSearch: !this.state.isSearch
-            })
+                isSearch: !this.state.isSearch,
+            });
         }
     }
 
     /**
-     * Manager text input search 
-     * @param {*} stringSearch 
+     * Manager text input search
+     * @param {*} stringSearch
      */
-    onChangeTextInput = (stringSearch) => {
+    onChangeTextInput = stringSearch => {
         const self = this;
         if (self.state.typingTimeout) {
-            clearTimeout(self.state.typingTimeout)
+            clearTimeout(self.state.typingTimeout);
         }
         this.setState({
-            txtSearch: stringSearch == "" ? null : stringSearch,
+            txtSearch: stringSearch == '' ? null : stringSearch,
             typing: false,
             typingTimeout: setTimeout(() => {
                 if (!Utils.isNull(stringSearch)) {
-                    this.onSearch(stringSearch)
+                    this.onSearch(stringSearch);
                 } else {
-                    this.handleRefresh()
+                    this.handleRefresh();
                 }
-            }, 1000)
+            }, 1000),
         });
-    }
+    };
 
     /**
      * On submit editing
      */
-    onSubmitEditing = () => {
-
-    }
+    onSubmitEditing = () => {};
 
     /**
      * Open modal Week
@@ -334,7 +347,7 @@ class SabbaticalAdminView extends BaseView {
     toggleMonth = () => {
         this.setState({
             visibleMonth: !this.state.visibleMonth,
-            showMonth: true
+            showMonth: true,
         });
     };
 
@@ -344,7 +357,7 @@ class SabbaticalAdminView extends BaseView {
     toggleDay = () => {
         this.setState({
             visibleMonth: !this.state.visibleMonth,
-            showMonth: false
+            showMonth: false,
         });
     };
 
@@ -352,8 +365,8 @@ class SabbaticalAdminView extends BaseView {
      * Render mid menu
      */
     renderMidMenu = () => {
-        return !this.state.isSearch && <View style={{ flex: 1 }} />
-    }
+        return !this.state.isSearch && <View style={{flex: 1}} />;
+    };
 
     /**
      * Render right menu
@@ -361,37 +374,45 @@ class SabbaticalAdminView extends BaseView {
     renderRightMenu = () => {
         return (
             <View style={{}}>
-                {this.state.isSearch ?
-                    <View></View> :
+                {this.state.isSearch ? (
+                    <View></View>
+                ) : (
                     <TouchableOpacity
                         activeOpacity={Constants.ACTIVE_OPACITY}
-                        style={{ padding: Constants.PADDING_LARGE }}
+                        style={{padding: Constants.PADDING_LARGE}}
                         onPress={() => this.onToggleSearch()}>
-                        <Image
-                            style={{ resizeMode: 'contain' }}
-                            source={ic_search_white} />
+                        <Image style={{resizeMode: 'contain'}} source={ic_search_white} />
                     </TouchableOpacity>
-                }
+                )}
             </View>
-        )
-    }
+        );
+    };
 
     /**
      * Render header flatList
      */
     renderHeaderFlatList = () => {
-        const { monthCurrentSQL, daySelect } = this.state;
+        const {monthCurrentSQL, daySelect} = this.state;
         return (
-            <View style={styles.date} >
+            <View style={styles.date}>
                 <TouchableOpacity
                     activeOpacity={Constants.ACTIVE_OPACITY}
                     onPress={() => this.toggleMonth()}
-                    style={[commonStyles.viewHorizontal, { padding: Constants.PADDING_LARGE, alignItems: 'center' }]}
-                >
+                    style={[commonStyles.viewHorizontal, {padding: Constants.PADDING_LARGE, alignItems: 'center'}]}>
                     <View>
-                        <Text style={[commonStyles.text, { margin: 0 }]}>
-                            {localizes("timekeepingHistory.month") + DateUtil.convertFromFormatToFormat(monthCurrentSQL, DateUtil.FORMAT_MONTH_OF_YEAR, DateUtil.FORMAT_MONTH)}
-                            {", " + DateUtil.convertFromFormatToFormat(monthCurrentSQL, DateUtil.FORMAT_MONTH_OF_YEAR, DateUtil.FORMAT_YEAR)}
+                        <Text style={[commonStyles.text, {margin: 0}]}>
+                            {localizes('timekeepingHistory.month') +
+                                DateUtil.convertFromFormatToFormat(
+                                    monthCurrentSQL,
+                                    DateUtil.FORMAT_MONTH_OF_YEAR,
+                                    DateUtil.FORMAT_MONTH,
+                                )}
+                            {', ' +
+                                DateUtil.convertFromFormatToFormat(
+                                    monthCurrentSQL,
+                                    DateUtil.FORMAT_MONTH_OF_YEAR,
+                                    DateUtil.FORMAT_YEAR,
+                                )}
                         </Text>
                     </View>
                     <Image source={ic_down_grey} />
@@ -399,18 +420,23 @@ class SabbaticalAdminView extends BaseView {
                 <TouchableOpacity
                     activeOpacity={Constants.ACTIVE_OPACITY}
                     onPress={() => this.toggleDay()}
-                    style={[commonStyles.viewHorizontal, { padding: Constants.PADDING_LARGE, justifyContent: 'flex-end', }]}
-                >
-                    <Text style={[commonStyles.text, { margin: 0 }]}>
-                        {daySelect === "All"
+                    style={[
+                        commonStyles.viewHorizontal,
+                        {padding: Constants.PADDING_LARGE, justifyContent: 'flex-end'},
+                    ]}>
+                    <Text style={[commonStyles.text, {margin: 0}]}>
+                        {daySelect === 'All'
                             ? daySelect
-                            : DateUtil.convertFromFormatToFormat(daySelect, DateUtil.FORMAT_DATE_TIME_ZONE_T, DateUtil.FORMAT_DAY)
-                        }
+                            : DateUtil.convertFromFormatToFormat(
+                                  daySelect,
+                                  DateUtil.FORMAT_DATE_TIME_ZONE_T,
+                                  DateUtil.FORMAT_DAY,
+                              )}
                     </Text>
                 </TouchableOpacity>
             </View>
-        )
-    }
+        );
+    };
 
     /**
      * Render item
@@ -426,38 +452,40 @@ class SabbaticalAdminView extends BaseView {
                 onPressDenied={this.onPressDeniedItem}
                 lengthData={this.state.sabbaticals.length}
             />
-        )
-    }
+        );
+    };
 
     /**
      * On select month
      */
-    onSelectMonth = (month) => {
+    onSelectMonth = month => {
         let monthOfYear = DateUtil.convertFromFormatToFormat(month._i, month._f, DateUtil.FORMAT_MONTH_OF_YEAR);
         this.setState({
             monthCurrentSQL: monthOfYear,
-            daySelect: "All"
+            daySelect: 'All',
         });
         this.showNoData = false;
         this.filter.month = monthOfYear;
-        this.filter.day = "All";
+        this.filter.day = 'All';
         this.getAllDayInMonth(monthOfYear);
-        this.handleRequest()
-    }
+        this.handleRequest();
+    };
 
     /**
      * On select day
      */
-    onSelectDay = (day) => {
-        let dayOfMonth = day === "All"
-            ? day : DateUtil.convertFromFormatToFormat(day, DateUtil.FORMAT_DATE_TIME_ZONE_T, DateUtil.FORMAT_DAY);
+    onSelectDay = day => {
+        let dayOfMonth =
+            day === 'All'
+                ? day
+                : DateUtil.convertFromFormatToFormat(day, DateUtil.FORMAT_DATE_TIME_ZONE_T, DateUtil.FORMAT_DAY);
         this.setState({
-            daySelect: day === "All" ? day : new Date(day)
+            daySelect: day === 'All' ? day : new Date(day),
         });
         this.showNoData = false;
         this.filter.day = dayOfMonth;
         this.handleRequest();
-    }
+    };
 
     /**
      * Get all day in month
@@ -465,8 +493,10 @@ class SabbaticalAdminView extends BaseView {
     getAllDayInMonth(month) {
         this.days = [];
         var date = new Date(month);
-        var monthSelect = parseInt(DateUtil.convertFromFormatToFormat(month, DateUtil.FORMAT_MONTH_OF_YEAR, DateUtil.FORMAT_MONTH));
-        while (date.getMonth() === (monthSelect - 1)) {
+        var monthSelect = parseInt(
+            DateUtil.convertFromFormatToFormat(month, DateUtil.FORMAT_MONTH_OF_YEAR, DateUtil.FORMAT_MONTH),
+        );
+        while (date.getMonth() === monthSelect - 1) {
             this.days.push(new Date(date));
             date.setDate(date.getDate() + 1);
         }
@@ -475,32 +505,32 @@ class SabbaticalAdminView extends BaseView {
     /**
      * On press item
      */
-    onPressItem = (data) => {
+    onPressItem = data => {
         this.openModal(data);
-    }
+    };
 
     /**
      * On press approved item
      */
-    onPressApprovedItem = (data) => {
-        this.setState({ isApproved: true, isDenied: false });
+    onPressApprovedItem = data => {
+        this.setState({isApproved: true, isDenied: false});
         this.openModal(data);
-    }
+    };
 
     /**
      * On press denied item
      */
-    onPressDeniedItem = (data) => {
-        this.setState({ isApproved: false, isDenied: true });
+    onPressDeniedItem = data => {
+        this.setState({isApproved: false, isDenied: true});
         this.openModal(data);
-    }
+    };
 
     /**
      * Request approved sabbatical
      */
-    approvedSabbatical = (data) => {
+    approvedSabbatical = data => {
         this.props.approvedSabbatical(data.id, this.user.id);
-    }
+    };
 
     /**
      * Request denied sabbatical
@@ -508,9 +538,8 @@ class SabbaticalAdminView extends BaseView {
     deniedSabbatical = (data, deniedNote) => {
         this.filter.deniedNote = deniedNote;
         let filter = this.filter;
-        this.props.deniedSabbatical({ filter, sabbaticalId: data.id });
-    }
-
+        this.props.deniedSabbatical({filter, sabbaticalId: data.id});
+    };
 }
 
 const mapStateToProps = state => ({
@@ -518,14 +547,13 @@ const mapStateToProps = state => ({
     action: state.sabbatical.action,
     isLoading: state.sabbatical.isLoading,
     error: state.sabbatical.error,
-    errorCode: state.sabbatical.errorCode
-
+    errorCode: state.sabbatical.errorCode,
 });
 
 const mapDispatchToProps = {
     ...actions,
     ...commonActions,
-    ...sabbaticalActions
+    ...sabbaticalActions,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SabbaticalAdminView);

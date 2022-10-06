@@ -1,17 +1,7 @@
-import React, { Component } from "react";
-import {
-    Text,
-    StyleSheet,
-    ScrollView,
-    View,
-    TouchableOpacity
-} from "react-native";
+import {Component} from 'react';
+import {StyleSheet, View} from 'react-native';
 import DateTimePicker from 'react-native-modal-datetime-picker';
-import Dialog from "components/dialog";
-import { Constants } from "values/constants";
-import commonStyles from "styles/commonStyles";
-import { Colors } from "values/colors";
-import { localizes } from "locales/i18n";
+import {Colors} from 'values/colors';
 
 export class DateTimePickerCustom extends Component {
     constructor(props) {
@@ -24,15 +14,18 @@ export class DateTimePickerCustom extends Component {
         this.show = false;
     }
 
-    showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
+    showDateTimePicker = () => this.setState({isDateTimePickerVisible: true});
 
-    hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
+    hideDateTimePicker = () => this.setState({isDateTimePickerVisible: false});
 
-    handleDatePicked = (datetime) => {
+    handleDatePicked = datetime => {
         console.log('A date has been picked: ', datetime);
-        this.setState({
-            selected: datetime
-        }, () => this.onSaveChange());
+        this.setState(
+            {
+                selected: datetime,
+            },
+            () => this.onSaveChange(),
+        );
         this.hideDateTimePicker();
     };
 
@@ -56,7 +49,7 @@ export class DateTimePickerCustom extends Component {
      */
     onDaySelect(date) {
         this.setState({
-            selected: date
+            selected: date,
         });
     }
 
@@ -64,9 +57,7 @@ export class DateTimePickerCustom extends Component {
      * Save date choose dialog
      */
     onSaveChange() {
-        this.chooseDate(
-            this.state.selected ? this.state.selected : this.props.dateCurrent
-        );
+        this.chooseDate(this.state.selected ? this.state.selected : this.props.dateCurrent);
     }
 }
 
@@ -74,24 +65,24 @@ const styles = StyleSheet.create({
     calendar: {
         borderTopWidth: 1,
         borderBottomWidth: 1,
-        borderColor: "#eee",
-        height: 350
+        borderColor: '#eee',
+        height: 350,
     },
     text: {
-        textAlign: "center",
+        textAlign: 'center',
         padding: 10,
-        fontWeight: "bold",
-        color: Colors.COLOR_WHITE
+        fontWeight: 'bold',
+        color: Colors.COLOR_WHITE,
     },
     barView: {
-        backgroundColor: Colors.COLOR_ORANGE
+        backgroundColor: Colors.COLOR_ORANGE,
     },
     daySelectedText: {
-        fontWeight: "bold",
+        fontWeight: 'bold',
         backgroundColor: Colors.COLOR_ORANGE,
         color: Colors.COLOR_WHITE,
         borderRadius: 15,
-        borderColor: "transparent",
-        overflow: "hidden"
-    }
+        borderColor: 'transparent',
+        overflow: 'hidden',
+    },
 });

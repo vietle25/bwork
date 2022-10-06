@@ -1,19 +1,8 @@
-import React, { Component } from "react";
-import {
-    Text,
-    StyleSheet,
-    ScrollView,
-    View,
-    TouchableOpacity
-} from "react-native";
+import {Component} from 'react';
+import {StyleSheet, View} from 'react-native';
 import DateTimePicker from 'react-native-modal-datetime-picker';
-import Dialog from "components/dialog";
-import { Constants } from "values/constants";
-import commonStyles from "styles/commonStyles";
-import { Colors } from "values/colors";
-import { localizes } from "locales/i18n";
-import DateUtil from "utils/dateUtil";
-import Utils from "utils/utils";
+import Utils from 'utils/utils';
+import {Colors} from 'values/colors';
 
 export class CalendarScreen extends Component {
     constructor(props) {
@@ -22,36 +11,39 @@ export class CalendarScreen extends Component {
             selected: null,
             isDateTimePickerVisible: false,
         };
-        this.chooseDate = this.props.chooseDate
-        this.show = false
+        this.chooseDate = this.props.chooseDate;
+        this.show = false;
     }
 
-    showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
+    showDateTimePicker = () => this.setState({isDateTimePickerVisible: true});
 
-    hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
+    hideDateTimePicker = () => this.setState({isDateTimePickerVisible: false});
 
-    handleDatePicked = (datetime) => {
+    handleDatePicked = datetime => {
         console.log('A date has been picked: ', datetime);
-        this.setState({
-            isDateTimePickerVisible: false,
-            selected: datetime
-        }, () => this.onSaveChange());
+        this.setState(
+            {
+                isDateTimePickerVisible: false,
+                selected: datetime,
+            },
+            () => this.onSaveChange(),
+        );
     };
 
     render() {
-        const { selected, isDateTimePickerVisible } = this.state
-        const { dateCurrent, minimumDate, maximumDate, mode } = this.props
+        const {selected, isDateTimePickerVisible} = this.state;
+        const {dateCurrent, minimumDate, maximumDate, mode} = this.props;
         return (
             <View>
                 <DateTimePicker
-                    ref={ref => this.showCalendar = ref}
+                    ref={ref => (this.showCalendar = ref)}
                     maximumDate={maximumDate}
                     minimumDate={minimumDate}
                     isVisible={isDateTimePickerVisible}
                     onConfirm={this.handleDatePicked}
                     onCancel={this.hideDateTimePicker}
                     date={new Date(!Utils.isNull(selected) ? selected : dateCurrent)}
-                    mode={mode ? mode: "date"}
+                    mode={mode ? mode : 'date'}
                 />
             </View>
         );
@@ -62,7 +54,7 @@ export class CalendarScreen extends Component {
      */
     onDaySelect(date) {
         this.setState({
-            selected: date
+            selected: date,
         });
     }
 
@@ -70,9 +62,7 @@ export class CalendarScreen extends Component {
      * Save date choose dialog
      */
     onSaveChange() {
-        this.chooseDate(
-            this.state.selected ? this.state.selected : this.props.dateCurrent
-        );
+        this.chooseDate(this.state.selected ? this.state.selected : this.props.dateCurrent);
     }
 }
 
@@ -80,24 +70,24 @@ const styles = StyleSheet.create({
     calendar: {
         borderTopWidth: 1,
         borderBottomWidth: 1,
-        borderColor: "#eee",
-        height: 350
+        borderColor: '#eee',
+        height: 350,
     },
     text: {
-        textAlign: "center",
+        textAlign: 'center',
         padding: 10,
-        fontWeight: "bold",
-        color: Colors.COLOR_WHITE
+        fontWeight: 'bold',
+        color: Colors.COLOR_WHITE,
     },
     barView: {
-        backgroundColor: Colors.COLOR_ORANGE
+        backgroundColor: Colors.COLOR_ORANGE,
     },
     daySelectedText: {
-        fontWeight: "bold",
+        fontWeight: 'bold',
         backgroundColor: Colors.COLOR_ORANGE,
         color: Colors.COLOR_WHITE,
         borderRadius: 15,
-        borderColor: "transparent",
-        overflow: "hidden"
-    }
+        borderColor: 'transparent',
+        overflow: 'hidden',
+    },
 });

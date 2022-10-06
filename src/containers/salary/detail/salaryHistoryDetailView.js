@@ -1,24 +1,22 @@
-import React, { Component } from 'react';
-import { View, Text, RefreshControl, BackHandler } from 'react-native';
-import styles from './styles';
-import { Container, Root, Header, Content, Footer } from 'native-base';
-import commonStyles from 'styles/commonStyles';
-import { Colors } from 'values/colors';
-import * as actions from "actions/userActions";
-import * as salaryActions from "actions/salaryAction";
-import * as commonActions from "actions/commonActions";
-import { connect } from "react-redux";
-import { ActionEvent, getActionSuccess } from "actions/actionEvent";
-import { ErrorCode } from "config/errorCode";
-import BaseView from 'containers/base/baseView';
-import { Constants } from 'values/constants';
-import { filter } from 'rxjs/operators';
+import {ActionEvent, getActionSuccess} from 'actions/actionEvent';
+import * as commonActions from 'actions/commonActions';
+import * as salaryActions from 'actions/salaryAction';
+import * as actions from 'actions/userActions';
 import FlatListCustom from 'components/flatListCustom';
-import Utils from 'utils/utils';
-import ItemSalary from './itemSalary';
+import {ErrorCode} from 'config/errorCode';
+import BaseView from 'containers/base/baseView';
 import salaryDetailType from 'enum/salaryDetailType';
+import {localizes} from 'locales/i18n';
+import {Container} from 'native-base';
+import {BackHandler, RefreshControl, Text, View} from 'react-native';
+import {connect} from 'react-redux';
+import commonStyles from 'styles/commonStyles';
 import StringUtil from 'utils/stringUtil';
-import { localizes } from 'locales/i18n';
+import Utils from 'utils/utils';
+import {Colors} from 'values/colors';
+import {Constants} from 'values/constants';
+import ItemSalary from './itemSalary';
+import styles from './styles';
 
 class SalaryHistoryDetailView extends BaseView {
     constructor(props) {
@@ -27,14 +25,14 @@ class SalaryHistoryDetailView extends BaseView {
             enableRefresh: true,
             refreshing: false,
             enableLoadMore: false,
-            isLoadingMore: false
+            isLoadingMore: false,
         };
-        const { salaryId, type, period } = this.props.navigation.state.params
-        this.total = 0
-        this.period = period
-        this.salaryId = salaryId
-        this.type = type
-        this.listSalary = []
+        const {salaryId, type, period} = this.props.navigation.state.params;
+        this.total = 0;
+        this.period = period;
+        this.salaryId = salaryId;
+        this.type = type;
+        this.listSalary = [];
         this.isLoadMore = true;
         this.handleRefresh = this.handleRefresh.bind(this);
         this.filter = {
@@ -42,25 +40,20 @@ class SalaryHistoryDetailView extends BaseView {
             type: this.type,
             paging: {
                 pageSize: 10,
-                page: 0
-            }
-        }
+                page: 0,
+            },
+        };
         this.showNoData = false;
     }
 
-    componentWillMount() {
-        BackHandler.addEventListener('hardwareBackPress', this.handlerBackButton)
+    componentDidMount() {
+        BackHandler.addEventListener('hardwareBackPress', this.handlerBackButton);
         if (!Utils.isNull(this.salaryId)) {
             this.state.refreshing = true;
             this.props.getDetailTypeSalary(this.filter);
         } else {
             this.showNoData = true;
         }
-    }
-
-
-    componentDidMount() {
-
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -74,9 +67,9 @@ class SalaryHistoryDetailView extends BaseView {
         BackHandler.removeEventListener('hardwareBackPress', this.handlerBackButton);
     }
 
-	/**
-	 * Handle data when request
-	 */
+    /**
+     * Handle data when request
+     */
     handleData() {
         let data = this.props.data;
         if (this.props.errorCode != ErrorCode.ERROR_INIT) {
@@ -91,7 +84,7 @@ class SalaryHistoryDetailView extends BaseView {
                         this.state.enableLoadMore = !(data.data.length < Constants.PAGE_SIZE);
                         if (data.data.length > 0) {
                             data.data.forEach(item => {
-                                this.listSalary.push({ ...item });
+                                this.listSalary.push({...item});
                             });
                         }
                     }
@@ -104,21 +97,22 @@ class SalaryHistoryDetailView extends BaseView {
         }
     }
 
-
-
     render() {
         return (
             <Container style={styles.container}>
-                <Root>
-                    <Header style={[commonStyles.header]}>
+                <View style={{flex: 1}}>
+                    <HStack style={[commonStyles.header]}>
                         {this.renderHeaderView({
-                            title: this.type == salaryDetailType.BONUS ? `${localizes("salaryHistoryDetail.titleBonus")} ${this.period}` : `${localizes("salaryHistoryDetail.titleFine")} ${this.period}`,
-                            titleStyle: { color: Colors.COLOR_WHITE },
-                            renderRightMenu: this.renderRightHeader
+                            title:
+                                this.type == salaryDetailType.BONUS
+                                    ? `${localizes('salaryHistoryDetail.titleBonus')} ${this.period}`
+                                    : `${localizes('salaryHistoryDetail.titleFine')} ${this.period}`,
+                            titleStyle: {color: Colors.COLOR_WHITE},
+                            renderRightMenu: this.renderRightHeader,
                         })}
-                    </Header>
+                    </HStack>
                     <FlatListCustom
-                        contentContainerStyle={{ paddingVertical: Constants.PADDING_LARGE }}
+                        contentContainerStyle={{paddingVertical: Constants.PADDING_LARGE}}
                         keyExtractor={item => item.code}
                         data={this.listSalary}
                         renderItem={this.renderItemSalary}
@@ -132,11 +126,13 @@ class SalaryHistoryDetailView extends BaseView {
                         }
                         isShowEmpty={this.showNoData}
                         isShowImageEmpty={true}
-                        textForEmpty={this.type == salaryDetailType.BONUS
-                            ? localizes("salaryHistoryDetail.emptyBonus")
-                            : localizes("salaryHistoryDetail.emptyFine")}
+                        textForEmpty={
+                            this.type == salaryDetailType.BONUS
+                                ? localizes('salaryHistoryDetail.emptyBonus')
+                                : localizes('salaryHistoryDetail.emptyFine')
+                        }
                         styleEmpty={{
-                            marginTop: Constants.MARGIN_LARGE
+                            marginTop: Constants.MARGIN_LARGE,
                         }}
                         enableLoadMore={this.state.enableLoadMore}
                         onLoadMore={() => {
@@ -144,20 +140,43 @@ class SalaryHistoryDetailView extends BaseView {
                         }}
                         showsVerticalScrollIndicator={false}
                     />
-                    <View style={{ position: 'bottom'[styles.total] }}>
-                        <View style={{ flexDirection: 'row', borderWidth: Constants.BORDER_WIDTH, borderColor: this.type == salaryDetailType.BONUS ? Colors.COLOR_PRIMARY : Colors.COLOR_RED }}>
-                            <View style={{ flex: 1[styles.viewLeft] }}>
-                                <Text style={[this.type == salaryDetailType.BONUS ? styles.textLeftBonus : styles.textLeftFine]} >{localizes("salaryHistoryDetail.total")} {this.type == salaryDetailType.BONUS
-                                    ? `${localizes("salaryHistoryDetail.bonus")}`
-                                    : `${localizes("salaryHistoryDetail.fine")}`} :</Text>
+                    <View style={{position: 'bottom'[styles.total]}}>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                borderWidth: Constants.BORDER_WIDTH,
+                                borderColor:
+                                    this.type == salaryDetailType.BONUS ? Colors.COLOR_PRIMARY : Colors.COLOR_RED,
+                            }}>
+                            <View style={{flex: (1)[styles.viewLeft]}}>
+                                <Text
+                                    style={[
+                                        this.type == salaryDetailType.BONUS
+                                            ? styles.textLeftBonus
+                                            : styles.textLeftFine,
+                                    ]}>
+                                    {localizes('salaryHistoryDetail.total')}{' '}
+                                    {this.type == salaryDetailType.BONUS
+                                        ? `${localizes('salaryHistoryDetail.bonus')}`
+                                        : `${localizes('salaryHistoryDetail.fine')}`}{' '}
+                                    :
+                                </Text>
                             </View>
-                            <View style={{ flex: 1 }}>
-                                <Text style={styles.textRight} >{this.total < 0 ? (this.total != 0 ? '- ' + StringUtil.formatStringCash(this.total * (-1)) : '0 VND') : StringUtil.formatStringCash(this.total)}</Text>
+                            <View style={{flex: 1}}>
+                                <Text style={styles.textRight}>
+                                    {this.total < 0
+                                        ? this.total != 0
+                                            ? '- ' + StringUtil.formatStringCash(this.total * -1)
+                                            : '0 VND'
+                                        : StringUtil.formatStringCash(this.total)}
+                                </Text>
                             </View>
                         </View>
                     </View>
-                    {this.state.isLoadingMore || this.state.refreshing ? null : this.showLoadingBar(this.props.isLoading)}
-                </Root>
+                    {this.state.isLoadingMore || this.state.refreshing
+                        ? null
+                        : this.showLoadingBar(this.props.isLoading)}
+                </View>
             </Container>
         );
     }
@@ -178,9 +197,9 @@ class SalaryHistoryDetailView extends BaseView {
         if (!Utils.isNull(this.salaryId)) {
             this.state.refreshing = true;
             this.filter.paging.page = 0;
-            this.props.getDetailTypeSalary(this.filter)
+            this.props.getDetailTypeSalary(this.filter);
         }
-    }
+    };
 
     /**
      * Render item row
@@ -192,11 +211,10 @@ class SalaryHistoryDetailView extends BaseView {
                 index={index}
                 parentIndex={parentIndex}
                 indexInParent={indexInParent}
-            // onPressItem={() => this.onPressedItem(item, index)}
+                // onPressItem={() => this.onPressedItem(item, index)}
             />
-        )
-    }
-
+        );
+    };
 }
 
 const mapStateToProps = state => ({
@@ -204,16 +222,13 @@ const mapStateToProps = state => ({
     isLoading: state.salaryDetail.isLoading,
     error: state.salaryDetail.error,
     errorCode: state.salaryDetail.errorCode,
-    action: state.salaryDetail.action
+    action: state.salaryDetail.action,
 });
 
 const mapDispatchToProps = {
     ...actions,
     ...salaryActions,
-    ...commonActions
+    ...commonActions,
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(SalaryHistoryDetailView);
+export default connect(mapStateToProps, mapDispatchToProps)(SalaryHistoryDetailView);
