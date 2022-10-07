@@ -27,7 +27,7 @@ class SalaryHistoryDetailView extends BaseView {
             enableLoadMore: false,
             isLoadingMore: false,
         };
-        const {salaryId, type, period} = this.props.navigation.state.params;
+        const {salaryId, type, period} = this.props.route.params;
         this.total = 0;
         this.period = period;
         this.salaryId = salaryId;

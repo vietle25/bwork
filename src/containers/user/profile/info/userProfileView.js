@@ -1,4 +1,4 @@
-import { ActionEvent, getActionSuccess } from 'actions/actionEvent';
+import {ActionEvent, getActionSuccess} from 'actions/actionEvent';
 import * as commonActions from 'actions/commonActions';
 import * as actions from 'actions/userActions';
 import BackgroundShadow from 'components/backgroundShadow';
@@ -6,7 +6,7 @@ import DialogCustom from 'components/dialogCustom';
 import FlatListCustom from 'components/flatListCustom';
 import Hr from 'components/hr';
 import ImageLoader from 'components/imageLoader';
-import { ErrorCode } from 'config/errorCode';
+import {ErrorCode} from 'config/errorCode';
 import BaseView from 'containers/base/baseView';
 import GenderType from 'enum/genderType';
 import loginType from 'enum/loginType';
@@ -20,8 +20,8 @@ import ic_next_grey from 'images/ic_next_grey.png';
 import ic_send_image from 'images/ic_send_image.png';
 import shadow_black_42 from 'images/shadow_black_42.png';
 import shadow_black_44 from 'images/shadow_black_44.png';
-import { localizes } from 'locales/i18n';
-import { Box, HStack } from 'native-base';
+import {localizes} from 'locales/i18n';
+import {Box, HStack} from 'native-base';
 import {
     Animated,
     DeviceEventEmitter,
@@ -30,21 +30,23 @@ import {
     Platform,
     Pressable,
     RefreshControl,
+    SafeAreaView,
     ScrollView,
     Text,
     TouchableOpacity,
-    View
+    View,
 } from 'react-native';
-import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
-import { SceneMap, TabView } from 'react-native-tab-view';
-import { connect } from 'react-redux';
+import {Menu, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
+
+import {SceneMap, TabView} from 'react-native-tab-view';
+import {connect} from 'react-redux';
 import commonStyles from 'styles/commonStyles';
 import DateUtil from 'utils/dateUtil';
 import StorageUtil from 'utils/storageUtil';
 import Utils from 'utils/utils';
-import { Colors } from 'values/colors';
-import { Constants } from 'values/constants';
-import { Fonts } from 'values/fonts';
+import {Colors} from 'values/colors';
+import {Constants} from 'values/constants';
+import {Fonts} from 'values/fonts';
 import ItemSlidingMenu from './itemSlidingMenu';
 import styles from './styles';
 
@@ -410,7 +412,7 @@ class UserProfileView extends BaseView {
         const {source, lockedTab} = this.state;
         let height = Platform.OS === 'ios' ? Constants.STATUS_BAR_HEIGHT : 0;
         return (
-            <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
                 <View style={{flex: 1}}>
                     <HStack hasTabs style={commonStyles.header}>
                         {this.renderHeaderView({
@@ -443,11 +445,11 @@ class UserProfileView extends BaseView {
                         renderTabBar={this.renderTabBar}
                         initialLayout={{width: Dimensions.get('window').width}}
                     />
-                
+
                     {this.logoutDialog()}
                     {this.state.refreshing ? null : this.showLoadingBar(this.props.isLoading)}
                 </View>
-            </View>
+            </SafeAreaView>
         );
     }
 

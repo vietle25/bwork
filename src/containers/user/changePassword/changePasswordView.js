@@ -10,8 +10,8 @@ import ic_lock_grey from 'images/ic_lock_grey.png';
 import ic_transparent from 'images/ic_transparent.png';
 import ic_unlock_grey from 'images/ic_unlock_grey.png';
 import {localizes} from 'locales/i18n';
-import {Container, Content, Form} from 'native-base';
-import {BackHandler, Image, Keyboard, TouchableHighlight, View} from 'react-native';
+import {Box, Content, Form} from 'native-base';
+import {BackHandler, Image, Keyboard, SafeAreaView, TouchableHighlight, View} from 'react-native';
 import {connect} from 'react-redux';
 import commonStyles from 'styles/commonStyles';
 import Utils from 'utils/utils';
@@ -156,175 +156,181 @@ class ChangePassword extends BaseView {
 
     render() {
         return (
-            <Container style={styles.container}>
+            <Box style={styles.container}>
                 <View style={{flex: 1}}>
-                    <HStack style={commonStyles.header}>
-                        {this.renderHeaderView({
-                            title: 'Đổi mật khẩu',
-                            titleStyle: {color: Colors.COLOR_WHITE},
-                            renderRightMenu: this.renderRightHeader,
-                        })}
-                    </HStack>
-                    <Content contentContainerStyle={{flexGrow: 1}} style={{flex: 1}}>
-                        <View style={{flexGrow: 1}}>
-                            <Form style={{flex: 1}}>
-                                <View
-                                    style={{
-                                        paddingHorizontal: Constants.PADDING_X_LARGE,
-                                        backgroundColor: Colors.COLOR_WHITE,
-                                        borderRadius: Constants.CORNER_RADIUS,
-                                        margin: Constants.MARGIN_X_LARGE,
-                                    }}>
-                                    {/* Old password */}
-                                    <TextInputCustom
-                                        refInput={ref => (this.password = ref)}
-                                        isInputNormal={true}
-                                        placeholder="Mật khẩu cũ"
-                                        value={this.state.oldPass}
-                                        underlineColorAndroid="transparent"
-                                        secureTextEntry={this.state.hideOldPassword}
-                                        onChangeText={text => {
-                                            this.setState({
-                                                oldPass: text,
-                                            });
-                                        }}
-                                        onSubmitEditing={() => {
-                                            this.newPassword.focus();
-                                        }}
-                                        returnKeyType={'next'}
-                                        inputNormalStyle={{
-                                            paddingVertical: Constants.MARGIN_LARGE + Constants.MARGIN,
-                                            paddingRight: Constants.PADDING_XX_LARGE,
-                                        }}
-                                        contentLeft={ic_key_grey}
-                                        autoFocus={true}
-                                        contentRight={
-                                            <TouchableHighlight
-                                                onPress={this.manageOldPasswordVisibility}
-                                                style={[
-                                                    commonStyles.shadowOffset,
-                                                    {
-                                                        position: 'absolute',
-                                                        right: 0,
-                                                        padding: Constants.PADDING_LARGE,
-                                                        marginRight: -Constants.MARGIN_LARGE,
-                                                    },
-                                                ]}
-                                                underlayColor="transparent">
-                                                <Image
-                                                    style={{resizeMode: 'contain', opacity: 0.5}}
-                                                    source={this.state.hideOldPassword ? ic_unlock_grey : ic_lock_grey}
-                                                />
-                                            </TouchableHighlight>
-                                        }
-                                    />
-                                    {/* New password */}
-                                    <TextInputCustom
-                                        refInput={ref => (this.newPassword = ref)}
-                                        isInputNormal={true}
-                                        placeholder="Mật khẩu mới(6 - 20 ký tự)"
-                                        value={this.state.newPass}
-                                        underlineColorAndroid="transparent"
-                                        secureTextEntry={this.state.hideNewPassword}
-                                        onChangeText={text => {
-                                            this.setState({
-                                                newPass: text,
-                                            });
-                                        }}
-                                        onSubmitEditing={() => {
-                                            this.confirmPassword.focus();
-                                        }}
-                                        returnKeyType={'next'}
-                                        inputNormalStyle={{
-                                            paddingVertical: Constants.MARGIN_LARGE + Constants.MARGIN,
-                                            paddingRight: Constants.PADDING_XX_LARGE,
-                                        }}
-                                        contentLeft={ic_transparent}
-                                        contentRight={
-                                            <TouchableHighlight
-                                                onPress={this.manageNewPasswordVisibility}
-                                                style={[
-                                                    commonStyles.shadowOffset,
-                                                    {
-                                                        position: 'absolute',
-                                                        right: 0,
-                                                        padding: Constants.PADDING_LARGE,
-                                                        marginRight: -Constants.MARGIN_LARGE,
-                                                    },
-                                                ]}
-                                                underlayColor="transparent">
-                                                <Image
-                                                    style={{resizeMode: 'contain', opacity: 0.5}}
-                                                    source={this.state.hideNewPassword ? ic_unlock_grey : ic_lock_grey}
-                                                />
-                                            </TouchableHighlight>
-                                        }
-                                    />
-                                    {/* Confirm new password */}
-                                    <TextInputCustom
-                                        refInput={ref => (this.confirmPassword = ref)}
-                                        isInputNormal={true}
-                                        placeholder="Nhập lại mật khẩu mới"
-                                        value={this.state.confirmPass}
-                                        onSubmitEditing={() => {
-                                            Keyboard.dismiss();
-                                        }}
-                                        underlineColorAndroid="transparent"
-                                        secureTextEntry={this.state.hideNewPasswordConfirm}
-                                        onChangeText={text => {
-                                            this.setState({
-                                                confirmPass: text,
-                                            });
-                                        }}
-                                        returnKeyType={'done'}
-                                        inputNormalStyle={{
-                                            paddingVertical: Constants.MARGIN_LARGE + Constants.MARGIN,
-                                            paddingRight: Constants.PADDING_XX_LARGE,
-                                        }}
-                                        contentLeft={ic_transparent}
-                                        borderBottomWidth={0}
-                                        contentRight={
-                                            <TouchableHighlight
-                                                onPress={this.manageNewPasswordConfirmVisibility}
-                                                style={[
-                                                    {
-                                                        position: 'absolute',
-                                                        right: 0,
-                                                        padding: Constants.PADDING_LARGE,
-                                                        marginRight: -Constants.MARGIN_LARGE,
-                                                    },
-                                                ]}
-                                                underlayColor="transparent">
-                                                <Image
-                                                    style={{resizeMode: 'contain', opacity: 0.5}}
-                                                    source={
-                                                        this.state.hideNewPasswordConfirm
-                                                            ? ic_unlock_grey
-                                                            : ic_lock_grey
-                                                    }
-                                                />
-                                            </TouchableHighlight>
-                                        }
-                                    />
-                                </View>
-                                {/* Button save */}
-                                <View style={{flex: 1, justifyContent: 'flex-end'}}>
-                                    {this.renderCommonButton(
-                                        localizes('forgot_password.btnSave'),
-                                        {color: Colors.COLOR_WHITE},
-                                        {marginHorizontal: Constants.MARGIN_X_LARGE},
-                                        () => {
-                                            this.onPressCommonButton();
-                                        },
-                                    )}
-                                </View>
-                            </Form>
-                        </View>
-                        {this.renderAlertSuccess()}
-                    </Content>
-                    {this.showLoadingBar(this.props.isLoading)}
+                    <SafeAreaView>
+                        <HStack style={commonStyles.header}>
+                            {this.renderHeaderView({
+                                title: 'Đổi mật khẩu',
+                                titleStyle: {color: Colors.COLOR_WHITE},
+                                renderRightMenu: this.renderRightHeader,
+                            })}
+                        </HStack>
+                        <Content contentContainerStyle={{flexGrow: 1}} style={{flex: 1}}>
+                            <View style={{flexGrow: 1}}>
+                                <Form style={{flex: 1}}>
+                                    <View
+                                        style={{
+                                            paddingHorizontal: Constants.PADDING_X_LARGE,
+                                            backgroundColor: Colors.COLOR_WHITE,
+                                            borderRadius: Constants.CORNER_RADIUS,
+                                            margin: Constants.MARGIN_X_LARGE,
+                                        }}>
+                                        {/* Old password */}
+                                        <TextInputCustom
+                                            refInput={ref => (this.password = ref)}
+                                            isInputNormal={true}
+                                            placeholder="Mật khẩu cũ"
+                                            value={this.state.oldPass}
+                                            underlineColorAndroid="transparent"
+                                            secureTextEntry={this.state.hideOldPassword}
+                                            onChangeText={text => {
+                                                this.setState({
+                                                    oldPass: text,
+                                                });
+                                            }}
+                                            onSubmitEditing={() => {
+                                                this.newPassword.focus();
+                                            }}
+                                            returnKeyType={'next'}
+                                            inputNormalStyle={{
+                                                paddingVertical: Constants.MARGIN_LARGE + Constants.MARGIN,
+                                                paddingRight: Constants.PADDING_XX_LARGE,
+                                            }}
+                                            contentLeft={ic_key_grey}
+                                            autoFocus={true}
+                                            contentRight={
+                                                <TouchableHighlight
+                                                    onPress={this.manageOldPasswordVisibility}
+                                                    style={[
+                                                        commonStyles.shadowOffset,
+                                                        {
+                                                            position: 'absolute',
+                                                            right: 0,
+                                                            padding: Constants.PADDING_LARGE,
+                                                            marginRight: -Constants.MARGIN_LARGE,
+                                                        },
+                                                    ]}
+                                                    underlayColor="transparent">
+                                                    <Image
+                                                        style={{resizeMode: 'contain', opacity: 0.5}}
+                                                        source={
+                                                            this.state.hideOldPassword ? ic_unlock_grey : ic_lock_grey
+                                                        }
+                                                    />
+                                                </TouchableHighlight>
+                                            }
+                                        />
+                                        {/* New password */}
+                                        <TextInputCustom
+                                            refInput={ref => (this.newPassword = ref)}
+                                            isInputNormal={true}
+                                            placeholder="Mật khẩu mới(6 - 20 ký tự)"
+                                            value={this.state.newPass}
+                                            underlineColorAndroid="transparent"
+                                            secureTextEntry={this.state.hideNewPassword}
+                                            onChangeText={text => {
+                                                this.setState({
+                                                    newPass: text,
+                                                });
+                                            }}
+                                            onSubmitEditing={() => {
+                                                this.confirmPassword.focus();
+                                            }}
+                                            returnKeyType={'next'}
+                                            inputNormalStyle={{
+                                                paddingVertical: Constants.MARGIN_LARGE + Constants.MARGIN,
+                                                paddingRight: Constants.PADDING_XX_LARGE,
+                                            }}
+                                            contentLeft={ic_transparent}
+                                            contentRight={
+                                                <TouchableHighlight
+                                                    onPress={this.manageNewPasswordVisibility}
+                                                    style={[
+                                                        commonStyles.shadowOffset,
+                                                        {
+                                                            position: 'absolute',
+                                                            right: 0,
+                                                            padding: Constants.PADDING_LARGE,
+                                                            marginRight: -Constants.MARGIN_LARGE,
+                                                        },
+                                                    ]}
+                                                    underlayColor="transparent">
+                                                    <Image
+                                                        style={{resizeMode: 'contain', opacity: 0.5}}
+                                                        source={
+                                                            this.state.hideNewPassword ? ic_unlock_grey : ic_lock_grey
+                                                        }
+                                                    />
+                                                </TouchableHighlight>
+                                            }
+                                        />
+                                        {/* Confirm new password */}
+                                        <TextInputCustom
+                                            refInput={ref => (this.confirmPassword = ref)}
+                                            isInputNormal={true}
+                                            placeholder="Nhập lại mật khẩu mới"
+                                            value={this.state.confirmPass}
+                                            onSubmitEditing={() => {
+                                                Keyboard.dismiss();
+                                            }}
+                                            underlineColorAndroid="transparent"
+                                            secureTextEntry={this.state.hideNewPasswordConfirm}
+                                            onChangeText={text => {
+                                                this.setState({
+                                                    confirmPass: text,
+                                                });
+                                            }}
+                                            returnKeyType={'done'}
+                                            inputNormalStyle={{
+                                                paddingVertical: Constants.MARGIN_LARGE + Constants.MARGIN,
+                                                paddingRight: Constants.PADDING_XX_LARGE,
+                                            }}
+                                            contentLeft={ic_transparent}
+                                            borderBottomWidth={0}
+                                            contentRight={
+                                                <TouchableHighlight
+                                                    onPress={this.manageNewPasswordConfirmVisibility}
+                                                    style={[
+                                                        {
+                                                            position: 'absolute',
+                                                            right: 0,
+                                                            padding: Constants.PADDING_LARGE,
+                                                            marginRight: -Constants.MARGIN_LARGE,
+                                                        },
+                                                    ]}
+                                                    underlayColor="transparent">
+                                                    <Image
+                                                        style={{resizeMode: 'contain', opacity: 0.5}}
+                                                        source={
+                                                            this.state.hideNewPasswordConfirm
+                                                                ? ic_unlock_grey
+                                                                : ic_lock_grey
+                                                        }
+                                                    />
+                                                </TouchableHighlight>
+                                            }
+                                        />
+                                    </View>
+                                    {/* Button save */}
+                                    <View style={{flex: 1, justifyContent: 'flex-end'}}>
+                                        {this.renderCommonButton(
+                                            localizes('forgot_password.btnSave'),
+                                            {color: Colors.COLOR_WHITE},
+                                            {marginHorizontal: Constants.MARGIN_X_LARGE},
+                                            () => {
+                                                this.onPressCommonButton();
+                                            },
+                                        )}
+                                    </View>
+                                </Form>
+                            </View>
+                            {this.renderAlertSuccess()}
+                        </Content>
+                        {this.showLoadingBar(this.props.isLoading)}
+                    </SafeAreaView>
                 </View>
-            </Container>
+            </Box>
         );
     }
 

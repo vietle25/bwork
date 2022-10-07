@@ -10,8 +10,8 @@ import salaryInputType from 'enum/salaryInputType';
 import screenType from 'enum/screenType';
 import ic_down_grey from 'images/ic_down_grey.png';
 import {localizes} from 'locales/i18n';
-import {Container, Content, Text} from 'native-base';
-import {BackHandler, Dimensions, Image, RefreshControl, TouchableOpacity, View} from 'react-native';
+import {Content, Text} from 'native-base';
+import {BackHandler, Dimensions, Image, RefreshControl, SafeAreaView, TouchableOpacity, View} from 'react-native';
 import {connect} from 'react-redux';
 import commonStyles from 'styles/commonStyles';
 import DateUtil from 'utils/dateUtil';
@@ -38,7 +38,7 @@ class SalaryHistoryView extends BaseView {
                 DateUtil.FORMAT_MONTH_OF_YEAR,
             ),
         };
-        const {user, screen} = this.props.navigation.state.params;
+        const {user, screen} = this.props.route.params;
         this.screenType = screen;
         this.firstDay = '01';
         this.dataSalary = null;
@@ -195,7 +195,7 @@ class SalaryHistoryView extends BaseView {
         today.setDate(today.getDate() - 1);
         return (
             // <MyApp />
-            <Container style={styles.container}>
+            <SafeAreaView style={styles.container}>
                 <View style={{flex: 1}}>
                     <HStack style={[commonStyles.header]}>
                         {this.renderHeaderView({
@@ -502,7 +502,7 @@ class SalaryHistoryView extends BaseView {
                     />
                     {this.state.refreshing ? null : this.showLoadingBar(this.props.isLoading)}
                 </View>
-            </Container>
+            </SafeAreaView>
         );
     }
 }

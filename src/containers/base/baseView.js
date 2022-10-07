@@ -350,17 +350,6 @@ class BaseView extends Component {
     onPressCommonButton() {}
 
     /**
-     * Go next screen
-     * @param {*} className
-     * @param {*} params
-     * @param {*} isNavigate
-     */
-    goNextScreen(className, params = this.props.navigation.state.params, isNavigate = true) {
-        if (isNavigate) this.props.navigation.navigate(className, params);
-        else this.props.navigation.push(className, params);
-    }
-
-    /**
      * Go to notification
      * @param {*} className
      * @param {*} params

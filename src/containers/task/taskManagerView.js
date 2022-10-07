@@ -10,7 +10,7 @@ import CompanyType from 'enum/companyType';
 import ic_down_grey from 'images/ic_down_grey.png';
 import {localizes} from 'locales/i18n';
 import {HStack} from 'native-base';
-import {Image, RefreshControl, Text, TouchableOpacity, View} from 'react-native';
+import {Image, RefreshControl, SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from 'react-redux';
 import commonStyles from 'styles/commonStyles';
 import DateUtil from 'utils/dateUtil';
@@ -153,7 +153,7 @@ class TaskManagerView extends BaseView {
     render() {
         const {visibleMonth, showMonth, daySelect} = this.state;
         return (
-            <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
                 <View style={{flex: 1}}>
                     <HStack hasTabs style={commonStyles.header}>
                         {this.renderHeaderView({
@@ -202,7 +202,7 @@ class TaskManagerView extends BaseView {
                         ? null
                         : this.showLoadingBar(this.props.isLoading)}
                 </View>
-            </View>
+            </SafeAreaView>
         );
     }
 

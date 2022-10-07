@@ -1112,15 +1112,7 @@ class UserInfoView extends BaseView {
             this.showMessage(localizes('userInfoView.invalidPersonalImages'));
         } else {
             this.setState({isLoading: true});
-            if (this.faceRecognizeEnable(faceRecognize)) {
-                if (this.hasPersonGroup) {
-                    this.detectFace(1);
-                } else {
-                    this.addPersonToAPI();
-                }
-            } else {
-                this.onEditData();
-            }
+            this.onEditData();
         }
     }
 

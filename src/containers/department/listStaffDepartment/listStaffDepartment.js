@@ -52,7 +52,7 @@ class ListStaffDepartmentView extends BaseView {
             contentText: '',
             userActionStatus: null,
         };
-        const {departmentId, nameDepartment} = this.props.navigation.state.params;
+        const {departmentId, nameDepartment} = this.props.route.params;
         this.departmentId = !Utils.isNull(departmentId) ? departmentId : null;
         this.nameDepartment = !Utils.isNull(nameDepartment) ? nameDepartment : null;
         this.filter = {

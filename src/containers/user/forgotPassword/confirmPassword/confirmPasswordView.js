@@ -64,7 +64,7 @@ class ConfirmPasswordView extends BaseView {
     // On press change password
     onPressUpdatePass = () => {
         let {newPass, retypePass} = this.state;
-        const {phone} = this.props.navigation.state.params;
+        const {phone} = this.props.route.params;
         if (newPass == '') {
             this.showMessage(localizes('confirmPassword.enterNewPass'));
             this.newPass.focus();
@@ -101,7 +101,7 @@ class ConfirmPasswordView extends BaseView {
                             {this.renderHeaderView({
                                 title: 'Đặt lại mật khẩu',
                                 titleStyle: {marginRight: Constants.MARGIN_X_LARGE * 2, color: Colors.COLOR_WHITE},
-                                onBack: () => this.props.navigation.state.params.onBack(),
+                                onBack: () => this.props.route.params.onBack(),
                             })}
                         </HStack>
                         <Content contentContainerStyle={{flexGrow: 1}} style={{flex: 1}}>

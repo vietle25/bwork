@@ -9,8 +9,7 @@ import BaseView from 'containers/base/baseView';
 import repeatWindowType from 'enum/repeatWindowType';
 import taskStatusType from 'enum/taskStatusType';
 import moment from 'moment';
-import {Container, Content} from 'native-base';
-import {BackHandler, RefreshControl, Text, View} from 'react-native';
+import {BackHandler, RefreshControl, SafeAreaView, ScrollView, Text, View} from 'react-native';
 import {CheckBox} from 'react-native-elements';
 import HTML from 'react-native-render-html';
 import {connect} from 'react-redux';
@@ -32,7 +31,7 @@ class TaskDetailView extends BaseView {
             showDialog: false,
             isSelectedCompleted: true,
         };
-        const {data, taskId, callback} = this.props.navigation.state.params;
+        const {data, taskId, callback} = this.props.route.params;
         this.createdAt = !Utils.isNull(data)
             ? data.scheduledDate
             : DateUtil.convertFromFormatToFormat(
@@ -91,7 +90,7 @@ class TaskDetailView extends BaseView {
 
     render() {
         return (
-            <Container style={styles.container}>
+            <SafeAreaView style={styles.container}>
                 <View style={{flex: 1}}>
                     <HStack style={[commonStyles.header]}>
                         {this.renderHeaderView({
@@ -100,7 +99,7 @@ class TaskDetailView extends BaseView {
                             renderRightMenu: this.renderRightHeader,
                         })}
                     </HStack>
-                    <Content
+                    <ScrollView
                         showsVerticalScrollIndicator={false}
                         enableRefresh={this.state.enableRefresh}
                         refreshControl={
@@ -113,7 +112,7 @@ class TaskDetailView extends BaseView {
                         contentContainerStyle={{flexGrow: 1}}
                         style={{flex: 1}}>
                         {this.renderContent()}
-                    </Content>
+                    </ScrollView>
                     {!this.state.disableButton ? (
                         <View style={{position: 'absolute', bottom: 16, width: '100%'}}>
                             {this.renderCommonButton(
@@ -132,7 +131,7 @@ class TaskDetailView extends BaseView {
                     {this.state.refreshing ? null : this.showLoadingBar(this.props.isLoading)}
                     {this.renderDialogUpdateTask()}
                 </View>
-            </Container>
+            </SafeAreaView>
         );
     }
 

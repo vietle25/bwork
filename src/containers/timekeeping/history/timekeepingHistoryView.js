@@ -9,7 +9,7 @@ import ModalMonth from 'containers/common/modalMonth';
 import ic_down_grey from 'images/ic_down_grey.png';
 import {localizes} from 'locales/i18n';
 import {HStack} from 'native-base';
-import {BackHandler, Image, RefreshControl, Text, TouchableOpacity, View} from 'react-native';
+import {BackHandler, Image, RefreshControl, SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
 import {connect} from 'react-redux';
 import commonStyles from 'styles/commonStyles';
 import DateUtil from 'utils/dateUtil';
@@ -23,7 +23,7 @@ import styles from './styles';
 class TimekeepingHistoryView extends BaseView {
     constructor(props) {
         super(props);
-        const {navigation, route} = this.props;
+        const {route} = this.props;
         this.state = {
             enableRefresh: true,
             refreshing: true,
@@ -133,7 +133,7 @@ class TimekeepingHistoryView extends BaseView {
     render() {
         const {visibleMonth, showMonth, daySelect} = this.state;
         return (
-            <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
                 <View style={{flex: 1}}>
                     <HStack style={[commonStyles.header]}>
                         {this.renderHeaderView({
@@ -179,7 +179,7 @@ class TimekeepingHistoryView extends BaseView {
                     />
                     {this.state.refreshing ? null : this.showLoadingBar(this.props.isLoading)}
                 </View>
-            </View>
+            </SafeAreaView>
         );
     }
 

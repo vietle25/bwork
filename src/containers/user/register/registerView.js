@@ -42,7 +42,7 @@ const MARGIN_BETWEEN_ITEM = 0;
 class RegisterView extends BaseView {
     constructor(props) {
         super(props);
-        const {emailOrPhone} = this.props.navigation.state.params;
+        const {emailOrPhone} = this.props.route.params;
         this.state = {
             telephoneNumber: !Utils.validateEmail(emailOrPhone) ? emailOrPhone : '',
             registerCode: '',

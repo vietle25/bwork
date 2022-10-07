@@ -10,7 +10,16 @@ import ic_playlist_add_check_grey from 'images/ic_playlist_add_check_grey.png';
 import ic_search_white from 'images/ic_search_white.png';
 import {localizes} from 'locales/i18n';
 import {Box, HStack} from 'native-base';
-import {BackHandler, Image, Keyboard, RefreshControl, TextInput, TouchableOpacity, View} from 'react-native';
+import {
+    BackHandler,
+    Image,
+    Keyboard,
+    RefreshControl,
+    SafeAreaView,
+    TextInput,
+    TouchableOpacity,
+    View,
+} from 'react-native';
 import I18n from 'react-native-i18n';
 import {connect} from 'react-redux';
 import commonStyles from 'styles/commonStyles';
@@ -271,45 +280,44 @@ class NotificationView extends BaseView {
         return (
             <Box style={styles.container}>
                 <View style={{flex: 1}}>
-                    {/* <View style={{ backgroundColor: Colors.COLOR_PRIMARY }}>
-                        {this.renderSearchBar()}
-                    </View> */}
-                    <HStack style={[commonStyles.header]}>
-                        {this.renderHeaderView({
-                            visibleBack: true,
-                            title: localizes('notificationView.title'),
-                            titleStyle: {color: Colors.COLOR_WHITE},
-                        })}
-                    </HStack>
-                    <FlatListCustom
-                        contentContainerStyle={{}}
-                        keyExtractor={item => item.code}
-                        data={this.listNotifications}
-                        renderItem={this.renderItemNotification}
-                        enableRefresh={this.state.enableRefresh}
-                        refreshControl={
-                            <RefreshControl
-                                progressViewOffset={Constants.HEIGHT_HEADER_OFFSET_REFRESH}
-                                refreshing={this.state.refreshing}
-                                onRefresh={this.handleRefresh}
-                            />
-                        }
-                        enableLoadMore={this.state.enableLoadMore}
-                        onLoadMore={() => {
-                            this.getMoreNotifications();
-                        }}
-                        showsVerticalScrollIndicator={false}
-                        isShowEmpty={this.showNoData}
-                        isShowImageEmpty={true}
-                        textForEmpty={localizes('notificationView.notNotification')}
-                        styleEmpty={{
-                            marginTop: Constants.MARGIN_X_LARGE,
-                        }}
-                    />
-                    <ModalContent ref={'modalContent'} />
-                    {this.state.isLoadingMore || this.state.refreshing
-                        ? null
-                        : this.showLoadingBar(this.props.isLoading)}
+                    <SafeAreaView>
+                        <HStack style={[commonStyles.header]}>
+                            {this.renderHeaderView({
+                                visibleBack: true,
+                                title: localizes('notificationView.title'),
+                                titleStyle: {color: Colors.COLOR_WHITE},
+                            })}
+                        </HStack>
+                        <FlatListCustom
+                            contentContainerStyle={{}}
+                            keyExtractor={item => item.code}
+                            data={this.listNotifications}
+                            renderItem={this.renderItemNotification}
+                            enableRefresh={this.state.enableRefresh}
+                            refreshControl={
+                                <RefreshControl
+                                    progressViewOffset={Constants.HEIGHT_HEADER_OFFSET_REFRESH}
+                                    refreshing={this.state.refreshing}
+                                    onRefresh={this.handleRefresh}
+                                />
+                            }
+                            enableLoadMore={this.state.enableLoadMore}
+                            onLoadMore={() => {
+                                this.getMoreNotifications();
+                            }}
+                            showsVerticalScrollIndicator={false}
+                            isShowEmpty={this.showNoData}
+                            isShowImageEmpty={true}
+                            textForEmpty={localizes('notificationView.notNotification')}
+                            styleEmpty={{
+                                marginTop: Constants.MARGIN_X_LARGE,
+                            }}
+                        />
+                        <ModalContent ref={'modalContent'} />
+                        {this.state.isLoadingMore || this.state.refreshing
+                            ? null
+                            : this.showLoadingBar(this.props.isLoading)}
+                    </SafeAreaView>
                 </View>
             </Box>
         );

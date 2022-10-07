@@ -24,7 +24,7 @@ class OTPView extends BaseView {
         this.state = {
             isSignUp: false,
         };
-        const {screenType, dataUser} = this.props.navigation.state.params;
+        const {screenType, dataUser} = this.props.route.params;
         this.screenType = screenType;
         this.dataUser = dataUser;
         if (screenType == screenTypes.FROM_REGISTER) {

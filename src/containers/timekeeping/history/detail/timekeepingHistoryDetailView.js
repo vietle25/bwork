@@ -10,8 +10,8 @@ import ItemTimekeeping from 'containers/home/timekeeping/itemTimekeeping';
 import screenType from 'enum/screenType';
 import {localizes} from 'locales/i18n';
 import moment from 'moment';
-import {Container, Content} from 'native-base';
-import {BackHandler, RefreshControl, Text, View} from 'react-native';
+import {HStack} from 'native-base';
+import {BackHandler, RefreshControl, SafeAreaView, ScrollView, Text, View} from 'react-native';
 import {connect} from 'react-redux';
 import commonStyles from 'styles/commonStyles';
 import DateUtil from 'utils/dateUtil';
@@ -27,7 +27,7 @@ class TimekeepingHistoryDetailView extends BaseView {
             enableRefresh: true,
             refreshing: true,
         };
-        const {createdAt, userId} = this.props.navigation.state.params;
+        const {createdAt, userId} = this.props.route.params;
         this.createdAt = DateUtil.convertFromFormatToFormat(
             createdAt,
             DateUtil.FORMAT_DATE_TIME_ZONE,
@@ -92,7 +92,7 @@ class TimekeepingHistoryDetailView extends BaseView {
 
     render() {
         return (
-            <Container style={styles.container}>
+            <SafeAreaView style={styles.container}>
                 <View style={{flex: 1}}>
                     <HStack style={[commonStyles.header]}>
                         {this.renderHeaderView({
@@ -101,7 +101,7 @@ class TimekeepingHistoryDetailView extends BaseView {
                             renderRightMenu: this.renderRightHeader,
                         })}
                     </HStack>
-                    <Content
+                    <ScrollView
                         showsVerticalScrollIndicator={false}
                         enableRefresh={this.state.enableRefresh}
                         refreshControl={
@@ -114,10 +114,10 @@ class TimekeepingHistoryDetailView extends BaseView {
                         contentContainerStyle={{flexGrow: 1}}
                         style={{flex: 1}}>
                         {this.renderProcessCheck()}
-                    </Content>
+                    </ScrollView>
                     {this.state.refreshing ? null : this.showLoadingBar(this.props.isLoading)}
                 </View>
-            </Container>
+            </SafeAreaView>
         );
     }
 

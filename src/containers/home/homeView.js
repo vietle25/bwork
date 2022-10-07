@@ -21,7 +21,6 @@ import workingOnSaturdayType from 'enum/workingOnSaturdayType';
 import workingTimeShiftType from 'enum/workingTimeShiftType';
 import ic_down_grey from 'images/ic_down_grey.png';
 import ic_wi_fi_grey from 'images/ic_wi_fi_grey.png';
-import RNAlarm from 'lib/react-native-alarm';
 import {localizes} from 'locales/i18n';
 import moment from 'moment';
 import {HStack} from 'native-base';
@@ -33,6 +32,7 @@ import {
     Linking,
     Platform,
     RefreshControl,
+    SafeAreaView,
     ScrollView,
     Text,
     TouchableOpacity,
@@ -140,7 +140,7 @@ class HomeView extends GeoLocationView {
         this.todayTimeStamp = DateUtil.getTimestamp(DateUtil.now());
 
         global.onExitApp = this.onExitApp;
-        global.toggleAlarm = this.toggleAlarm;
+        // global.toggleAlarm = this.toggleAlarm;
 
         this.filter = null;
     }
@@ -740,20 +740,20 @@ class HomeView extends GeoLocationView {
                                 message: message,
                                 fire_date: formatDay + ' ' + DateUtil.convertTimestampToDate(alarmCheckIn1),
                             };
-                            this.setAlarm(alarmData);
+                            // this.setAlarm(alarmData);
                         } else {
-                            RNAlarm.setAlarm(
-                                alarmCheckIn1.toString(),
-                                message,
-                                'YES',
-                                '',
-                                () => {
-                                    console.log('Event triggered');
-                                },
-                                () => {
-                                    console.log('Event trigger Failed');
-                                },
-                            );
+                            // RNAlarm.setAlarm(
+                            //     alarmCheckIn1.toString(),
+                            //     message,
+                            //     'YES',
+                            //     '',
+                            //     () => {
+                            //         console.log('Event triggered');
+                            //     },
+                            //     () => {
+                            //         console.log('Event trigger Failed');
+                            //     },
+                            // );
                         }
                     }
                 }
@@ -769,20 +769,20 @@ class HomeView extends GeoLocationView {
                                 message: message,
                                 fire_date: formatDay + ' ' + DateUtil.convertTimestampToDate(alarmCheckOut1),
                             };
-                            this.setAlarm(alarmData);
+                            // this.setAlarm(alarmData);
                         } else {
-                            RNAlarm.setAlarm(
-                                alarmCheckOut1.toString(),
-                                message,
-                                'YES',
-                                '',
-                                () => {
-                                    console.log('Event triggered');
-                                },
-                                () => {
-                                    console.log('Event trigger Failed');
-                                },
-                            );
+                            // RNAlarm.setAlarm(
+                            //     alarmCheckOut1.toString(),
+                            //     message,
+                            //     'YES',
+                            //     '',
+                            //     () => {
+                            //         console.log('Event triggered');
+                            //     },
+                            //     () => {
+                            //         console.log('Event trigger Failed');
+                            //     },
+                            // );
                         }
                     }
                 }
@@ -798,20 +798,20 @@ class HomeView extends GeoLocationView {
                                 message: message,
                                 fire_date: formatDay + ' ' + DateUtil.convertTimestampToDate(alarmCheckIn2),
                             };
-                            this.setAlarm(alarmData);
+                            // this.setAlarm(alarmData);
                         } else {
-                            RNAlarm.setAlarm(
-                                alarmCheckIn2.toString(),
-                                message,
-                                'YES',
-                                '',
-                                () => {
-                                    console.log('Event triggered');
-                                },
-                                () => {
-                                    console.log('Event trigger Failed');
-                                },
-                            );
+                            // RNAlarm.setAlarm(
+                            //     alarmCheckIn2.toString(),
+                            //     message,
+                            //     'YES',
+                            //     '',
+                            //     () => {
+                            //         console.log('Event triggered');
+                            //     },
+                            //     () => {
+                            //         console.log('Event trigger Failed');
+                            //     },
+                            // );
                         }
                     }
                 }
@@ -827,20 +827,20 @@ class HomeView extends GeoLocationView {
                                 message: message,
                                 fire_date: formatDay + ' ' + DateUtil.convertTimestampToDate(alarmCheckOut2),
                             };
-                            this.setAlarm(alarmData);
+                            // this.setAlarm(alarmData);
                         } else {
-                            RNAlarm.setAlarm(
-                                alarmCheckOut2.toString(),
-                                message,
-                                'YES',
-                                '',
-                                () => {
-                                    console.log('Event triggered');
-                                },
-                                () => {
-                                    console.log('Event trigger Failed');
-                                },
-                            );
+                            // RNAlarm.setAlarm(
+                            //     alarmCheckOut2.toString(),
+                            //     message,
+                            //     'YES',
+                            //     '',
+                            //     () => {
+                            //         console.log('Event triggered');
+                            //     },
+                            //     () => {
+                            //         console.log('Event trigger Failed');
+                            //     },
+                            // );
                         }
                     }
                 }
@@ -1185,7 +1185,7 @@ class HomeView extends GeoLocationView {
         }
         console.log('Home view');
         return (
-            <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
                 <View style={{flex: 1}}>
                     <HStack style={[commonStyles.header]}>
                         {this.renderHeaderView({
@@ -1384,7 +1384,7 @@ class HomeView extends GeoLocationView {
                     {this.renderAlertVersion()}
                     {this.state.refreshing ? null : this.showLoadingBar(this.props.isLoading)}
                 </View>
-            </View>
+            </SafeAreaView>
         );
     }
 

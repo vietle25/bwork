@@ -13,8 +13,8 @@ import workingTimeShiftType from 'enum/workingTimeShiftType';
 import ic_calendar_grey from 'images/ic_calendar_grey.png';
 import ic_down_grey from 'images/ic_down_grey.png';
 import ic_send_white from 'images/ic_send_white.png';
-import {Box, HStack, ScrollView} from 'native-base';
-import {BackHandler, Dimensions, Image, RefreshControl, Text, TouchableOpacity, View} from 'react-native';
+import {HStack, ScrollView} from 'native-base';
+import {BackHandler, Dimensions, Image, RefreshControl, SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
 import {TextInputMask} from 'react-native-masked-text';
 import {Menu, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
 import {connect} from 'react-redux';
@@ -234,7 +234,7 @@ class RegisterSabbaticalView extends BaseView {
                 ? DateUtil.getTimestamp(offToDateInput)
                 : 0;
         return (
-            <Box style={styles.container}>
+            <SafeAreaView style={styles.container}>
                 <View style={{flex: 1}}>
                     <HStack hasTabs style={commonStyles.header}>
                         {this.renderHeaderView({
@@ -409,7 +409,7 @@ class RegisterSabbaticalView extends BaseView {
                     />
                     {this.state.refreshing ? null : this.showLoadingBar(this.props.isLoading)}
                 </View>
-            </Box>
+            </SafeAreaView>
         );
     }
 

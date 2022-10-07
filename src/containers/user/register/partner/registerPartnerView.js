@@ -34,7 +34,7 @@ class RegisterPartnerView extends BaseView {
             next: false,
             data: null,
         };
-        const {callBack, data, partnerCurrent, screen} = this.props.navigation.state.params;
+        const {callBack, data, partnerCurrent, screen} = this.props.route.params;
         this.listPartner = [];
         this.onItemSelected = this.onItemSelected.bind(this);
         this.confirmAction = this.confirmAction.bind(this);
