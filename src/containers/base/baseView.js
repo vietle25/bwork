@@ -21,7 +21,6 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import Toast from 'react-native-root-toast';
 import commonStyles from 'styles/commonStyles';
 import StorageUtil from 'utils/storageUtil';
@@ -197,13 +196,13 @@ class BaseView extends Component {
 
     //Save exception
     saveException(error, func) {
-        let filter = {
-            className: this.props.navigation ? this.props.navigation.state.routeName : this.className,
-            exception: error.message + ' in ' + func,
-            osVersion: DeviceInfo.getSystemVersion(),
-            appVersion: DeviceInfo.getVersion(),
-        };
-        this.props.saveException(filter);
+        // let filter = {
+        //     className: this.props.navigation ? this.props.navigation.state.routeName : this.className,
+        //     exception: error.message + ' in ' + func,
+        //     osVersion: DeviceInfo.getSystemVersion(),
+        //     appVersion: DeviceInfo.getVersion(),
+        // };
+        // this.props.saveException(filter);
     }
 
     componentWillUnmount() {

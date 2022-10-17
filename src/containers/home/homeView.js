@@ -1071,8 +1071,8 @@ class HomeView extends GeoLocationView {
             this.showMessage(localizes('homeView.notShift'));
         } else {
             let checkInRule = !Utils.isNull(this.checkInRule.textValue) ? JSON.parse(this.checkInRule.textValue) : {};
-            let faceRecognize = checkInRule.faceRecognize || {};
-            let isWiFiAllows = !Utils.isNull(modemMacAddress) ? this.isWiFiAllows() : false;
+            // let isWiFiAllows = !Utils.isNull(modemMacAddress) ? this.isWiFiAllows() : false;
+            let isWiFiAllows = true;
             if (this.isTimekeeping()) {
                 this.showMessage(localizes('homeView.isTimekeeping'));
             }
@@ -1098,11 +1098,7 @@ class HomeView extends GeoLocationView {
                     localizes('homeView.wiFiOutList') + tvCheck + '!',
                     timekeepingType.CONNECTED_TO_INCORRECT_WI_FI,
                 );
-            }
-            // else if (this.faceRecognizeEnable(faceRecognize)) {
-            //     this.showFaceDetection(faceRecognize);
-            // }
-            else {
+            } else {
                 this.check();
             }
         }

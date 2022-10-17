@@ -6,6 +6,7 @@ import companyListView from 'containers/company/companyListView';
 import configStaffView from 'containers/configStaff/configStaffView';
 import companyDetailView from 'containers/home/company/companyDetailView';
 import Main from 'containers/main/bottomTabNavigator';
+import MapCustomView from 'containers/map/mapCustomView';
 import registerSabbaticalView from 'containers/sabbatical/register/registerSabbaticalView';
 import salaryHistoryDetailView from 'containers/salary/detail/salaryHistoryDetailView';
 import salaryHistoryView from 'containers/salary/history/salaryHistoryView';
@@ -66,6 +67,7 @@ const AppNavigator = () => {
                 <Stack.Screen name="ConfigStaff" component={configStaffView} />
                 <Stack.Screen name="TaskManager" component={taskManagerView} />
                 <Stack.Screen name="TaskDetail" component={taskDetailView} />
+                <Stack.Screen name="Map" component={MapCustomView} />
             </Stack.Navigator>
         </NavigationContainer>
     );

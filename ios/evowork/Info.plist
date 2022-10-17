@@ -35,8 +35,10 @@
 			</dict>
 		</dict>
 	</dict>
-  <key>NSPhotoLibraryUsageDescription</key>
-  <string>$(PRODUCT_NAME) uses photos for personalize</string>
+  	<key>NSPhotoLibraryUsageDescription</key>
+  	<string>$(PRODUCT_NAME) uses photos for personalize</string>
+	<key>NSCameraUsageDescription</key>
+  	<string>$(PRODUCT_NAME) uses photos for personalize</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>$(PRODUCT_NAME) uses for locate the user for timekeeping</string>
 	<key>UILaunchStoryboardName</key>

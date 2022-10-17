@@ -1,24 +1,24 @@
-import {ActionEvent, getActionSuccess} from 'actions/actionEvent';
+import { ActionEvent, getActionSuccess } from 'actions/actionEvent';
 import * as commonActions from 'actions/commonActions';
 import * as taskActions from 'actions/taskActions';
 import * as actions from 'actions/userActions';
 import DialogCustom from 'components/dialogCustom';
 import Hr from 'components/hr';
-import {ErrorCode} from 'config/errorCode';
+import { ErrorCode } from 'config/errorCode';
 import BaseView from 'containers/base/baseView';
 import repeatWindowType from 'enum/repeatWindowType';
 import taskStatusType from 'enum/taskStatusType';
 import moment from 'moment';
-import {BackHandler, RefreshControl, SafeAreaView, ScrollView, Text, View} from 'react-native';
-import {CheckBox} from 'react-native-elements';
-import HTML from 'react-native-render-html';
-import {connect} from 'react-redux';
+import { HStack } from 'native-base';
+import { BackHandler, RefreshControl, SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { CheckBox } from 'react-native-elements';
+import { connect } from 'react-redux';
 import commonStyles from 'styles/commonStyles';
 import DateUtil from 'utils/dateUtil';
 import Utils from 'utils/utils';
-import {Colors} from 'values/colors';
-import {Constants} from 'values/constants';
-import {Fonts} from 'values/fonts';
+import { Colors } from 'values/colors';
+import { Constants } from 'values/constants';
+import { Fonts } from 'values/fonts';
 import styles from './styles';
 
 class TaskDetailView extends BaseView {
@@ -140,6 +140,7 @@ class TaskDetailView extends BaseView {
      */
     renderContent() {
         const htmlContent = !Utils.isNull(this.task) ? this.task.description : null;
+        console.log(' this.task.description', this.task.description);
         return (
             <View style={[styles.boxProcess, {justifyContent: 'flex-start'}]}>
                 <View style={{flexDirection: 'row'}}>
@@ -226,7 +227,9 @@ class TaskDetailView extends BaseView {
                             padding: Constants.PADDING_LARGE,
                             paddingHorizontal: Constants.PADDING_LARGE + Constants.MARGIN,
                         }}>
-                        {htmlContent ? <HTML html={htmlContent} /> : null}
+                        <Text>
+                            {htmlContent}
+                        </Text>
                     </View>
                 </View>
             </View>

@@ -25,20 +25,21 @@ import ic_phone_number_grey from 'images/ic_phone_number_grey.png';
 import ic_place_grey from 'images/ic_place_grey.png';
 import {localizes} from 'locales/i18n';
 import moment from 'moment';
-import {Box, HStack} from 'native-base';
+import {HStack} from 'native-base';
 import {
     BackHandler,
     Dimensions,
     Image,
     Platform,
     RefreshControl,
+    SafeAreaView,
     ScrollView,
     Text,
     TouchableOpacity,
     View,
 } from 'react-native';
 import Upload from 'react-native-background-upload';
-import ImagePicker from 'react-native-image-picker';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
 import {TextInputMask} from 'react-native-masked-text';
 import {Menu, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
@@ -378,7 +379,7 @@ class UserInfoView extends BaseView {
     render() {
         const {avatarPath, isLoading} = this.state;
         return (
-            <Box style={styles.container}>
+            <SafeAreaView style={styles.container}>
                 <View style={{flex: 1}}>
                     <HStack style={[commonStyles.header]}>
                         {this.renderHeaderView({
@@ -668,7 +669,7 @@ class UserInfoView extends BaseView {
                     />
                     {this.state.refreshing ? null : this.showLoadingBar(this.props.isLoading || isLoading)}
                 </View>
-            </Box>
+            </SafeAreaView>
         );
     }
 
@@ -714,32 +715,35 @@ class UserInfoView extends BaseView {
      * Take a photo
      */
     takePhoto = () => {
-        ImagePicker.launchCamera(optionsCamera, response => {
-            const {error, uri, originalRotation, didCancel} = response;
-            this.hideDialog();
-            if (uri && !error) {
-                let rotation = Utils.rotateImage(originalRotation);
-                this.setState({isLoading: true});
-                ImageResizer.createResizedImage(uri, 800, 600, 'JPEG', 80, rotation)
-                    .then(({uri}) => {
-                        this.uploadAvatar(uri);
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
-            } else if (error) {
-                console.log('The photo picker errored. Check ImagePicker.launchCamera func');
-                console.log(error);
-            }
-        });
+        try {
+            launchCamera(optionsCamera, response => {
+                const {error, uri, originalRotation, didCancel} = response;
+                this.hideDialog();
+                if (uri && !error) {
+                    let rotation = Utils.rotateImage(originalRotation);
+                    this.setState({isLoading: true});
+                    ImageResizer.createResizedImage(uri, 800, 600, 'JPEG', 80, rotation)
+                        .then(({uri}) => {
+                            this.uploadAvatar(uri);
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                } else if (error) {
+                    console.log('The photo picker errored. Check ImagePicker.launchCamera func');
+                    console.log(error);
+                }
+            });
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     /**
      * Show document picker
      */
     showDocumentPicker = fileType => {
-        const {params} = this.props.navigation.state;
-        ImagePicker.launchImageLibrary(optionsCamera, response => {
+        launchImageLibrary(optionsCamera, response => {
             const {error, uri, originalRotation, didCancel} = response;
             this.hideDialog();
             if (uri && !error) {

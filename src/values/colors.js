@@ -1,5 +1,5 @@
 export const Colors = {
-    COLOR_PRIMARY: '#00832c', 
+    COLOR_PRIMARY: '#3080e8',
     COLOR_PRIMARY_OPACITY_20: 'rgba(37,170,227,0.2)',
     COLOR_PRIMARY_OPACITY_50: 'rgba(37,170,227,0.5)',
     COLOR_BACKGROUND: '#f5f6fa',
@@ -54,5 +54,5 @@ export const Colors = {
     COLOR_LEVEL_SILVER_20: 'rgba(121, 141, 243,0.2)',
     COLOR_LEVEL_GOLD_20: 'rgba(255, 188, 0,0.2)',
     COLOR_HR: 'rgb(246,247,251)',
-    COLOR_BACKGROUND_ITEM_CHAT: '#F8F8F8'
-}
+    COLOR_BACKGROUND_ITEM_CHAT: '#F8F8F8',
+};

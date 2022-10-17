@@ -67,6 +67,7 @@ class TimekeepingHistoryDetailView extends BaseView {
             if (this.props.errorCode == ErrorCode.ERROR_SUCCESS) {
                 this.state.refreshing = false;
                 if (this.props.action == getActionSuccess(ActionEvent.GET_TIMEKEEPING_HISTORY_DETAIL)) {
+                    console.log('GET_TIMEKEEPING_HISTORY_DETAIL', data);
                     if (!Utils.isNull(data)) {
                         if (!Utils.isNull(data.timekeepingRecords)) {
                             this.dataTimekeeping = data.timekeepingRecords;
@@ -206,9 +207,27 @@ class TimekeepingHistoryDetailView extends BaseView {
                 item={item}
                 index={index}
                 screen={screenType.FROM_TIMEKEEPING_HISTORY_DETAIL}
+                showMap={true}
+                gotoMap={this.gotoMap}
             />
         );
     }
+
+    gotoMap = item => {
+        console.log('Goto map: , ', item);
+        let longitude = '';
+        let latitude = '';
+        if (item.checkOutGpsLongitude != null && item.checkOutGpsLatitude != null) {
+            longitude = item.checkOutGpsLongitude;
+            latitude = item.checkOutGpsLatitude;
+        } else if (item.checkInGpsLongitude != null && item.checkInGpsLatitude != null) {
+            longitude = item.checkInGpsLongitude;
+            latitude = item.checkInGpsLatitude;
+        }
+        console.log('longitude', longitude);
+        console.log('latitude', latitude);
+        this.props.navigation.navigate('Map', {latitude: latitude, longitude: longitude});
+    };
 
     /**
      * Handle request

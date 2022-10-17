@@ -84,6 +84,7 @@ class TimekeepingHistoryView extends BaseView {
             if (this.props.errorCode == ErrorCode.ERROR_SUCCESS) {
                 this.state.refreshing = false;
                 if (this.props.action == getActionSuccess(ActionEvent.GET_TIMEKEEPING_HISTORY)) {
+                    console.log('GET_TIMEKEEPING_HISTORY ', data);
                     if (!Utils.isNull(data)) {
                         this.dataHistories = data;
                     } else {
